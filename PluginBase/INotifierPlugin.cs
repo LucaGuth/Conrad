@@ -1,6 +1,6 @@
 ﻿namespace PluginInterfaces
 {
-    public interface INotifierPlugin : IExecutorPlugin
+    public interface INotifierPlugin : IPlugin
     {
 
     }
