@@ -11,4 +11,12 @@
     <ProjectReference Include="..\PluginBase\PluginBase.csproj" />
   </ItemGroup>
 
+    <Target Name="CopyPlugins" AfterTargets="Build">
+        <ItemGroup>
+            <PluginDLLs Include="$(SolutionDir)bin\$(Configuration)\Plugins\*.dll" />
+        </ItemGroup>
+        <Copy SourceFiles="@(PluginDLLs)" DestinationFolder="$(OutputPath)Plugins\%(RecursiveDir)" />
+        <Message Importance="high" Text="Copy Plugin DLLs from Plugin folder: @(PluginDLLs)"/>
+    </Target>
+
 </Project>
