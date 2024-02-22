@@ -1,6 +1,5 @@
-﻿using Sequencer;
-using System;
-using System.Reflection;
+﻿using System.Reflection;
+using Sequencer;
 
 namespace MyApp // Note: actual namespace depends on the project name.
 {
