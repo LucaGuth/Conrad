@@ -10,7 +10,7 @@ namespace MyApp // Note: actual namespace depends on the project name.
         {
             Console.WriteLine("Hello World!");
 
-            string pluginPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "");
+            string pluginPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "plugins");
             PluginLoader.LoadPluginsFromDirectory(pluginPath);
 
             var sequence = new Sequence(PluginLoader.GetNotifierPlugins(), PluginLoader.GetExecutorPlugins());

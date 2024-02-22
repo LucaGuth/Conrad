@@ -1,20 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
 
-	<ItemGroup>
-		<ProjectReference Include="..\..\PluginBase\PluginBase.csproj" />
-	</ItemGroup>
-	
-	<Target Name="CopyPlugins" AfterTargets="AfterBuild">
-		<ItemGroup>
-			<PluginDLLs Include="$(OutputPath)*.dll" />
-		</ItemGroup>
-		<Copy SourceFiles="@(PluginDLLs)" DestinationFolder="$(SolutionDir)Sequencer/bin/$(Configuration)/$(TargetFramework)/Plugins" />
-		<Message Importance="high" Text="Copy Plugin DLLs @(PluginDLLs) to Plugin folder: $(SolutionDir)Sequencer/bin/$(Configuration)/$(TargetFramework)/Plugins"/>
-	</Target>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+
+    <OutputPath>../../out/$(Configuration)/plugins</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\PluginBase\PluginBase.csproj" >
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </ProjectReference>
+  </ItemGroup>
+
 </Project>
