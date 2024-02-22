@@ -35,7 +35,7 @@ class Program
 
     internal static void RunProgram(string configFile, string pluginPath)
     {
-        PluginLoader pluginLoader = new PluginLoader(pluginPath, configFile);
+        PluginLoader pluginLoader = new(pluginPath, configFile);
 
         var sequence = new Sequence(pluginLoader);
         sequence.Run();
