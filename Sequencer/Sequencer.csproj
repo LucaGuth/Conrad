@@ -5,10 +5,15 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <OutputPath>../out/$(Configuration)/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PluginBase\PluginBase.csproj" />
+    <ProjectReference Include="..\Plugins\*\*.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
 </Project>
