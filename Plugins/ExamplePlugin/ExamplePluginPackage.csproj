@@ -11,11 +11,10 @@
 	</ItemGroup>
 	
 	<Target Name="CopyPlugins" AfterTargets="AfterBuild">
-		<Copy SourceFiles="$(OutputPath)/$(ProjectName).dll" DestinationFolder="$(SolutionDir)bin/$(Configuration)/Plugins" />
 		<ItemGroup>
 			<PluginDLLs Include="$(OutputPath)*.dll" />
 		</ItemGroup>
-		<Copy SourceFiles="@(PluginDLLs)" DestinationFolder="$(SolutionDir)bin\$(Configuration)\Plugins%(RecursiveDir)" />
-		<Message Importance="high" Text="Copy Plugin DLLs to Plugin folder: @(PluginDLLs)"/>
+		<Copy SourceFiles="@(PluginDLLs)" DestinationFolder="$(SolutionDir)Sequencer/bin/$(Configuration)/$(TargetFramework)/Plugins" />
+		<Message Importance="high" Text="Copy Plugin DLLs @(PluginDLLs) to Plugin folder: $(SolutionDir)Sequencer/bin/$(Configuration)/$(TargetFramework)/Plugins"/>
 	</Target>
 </Project>
