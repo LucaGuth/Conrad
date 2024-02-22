@@ -2,7 +2,7 @@
 
 namespace ExamplePluginPackage
 {
-    internal class ExampleNotifier : INotifierPlugin
+    public class ExampleNotifier : INotifierPlugin
     {
         public string Name { get; } = nameof(ExampleNotifier);
 
@@ -10,12 +10,12 @@ namespace ExamplePluginPackage
 
         public event NotifyEventHandler? OnNotify;
 
-        public Task Run()
+        public void Run()
         {
             while (true)
             {
                 OnNotify?.Invoke(this, "Hello Event Raised from Example Notifier");
-                Task.Delay(5000).Wait();
+                Task.Delay(3000).Wait();
             }
         }
     }
