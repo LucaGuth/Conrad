@@ -34,6 +34,8 @@ namespace Sequencer
             {
                 notifier.Run();
             }
+
+            while (true);
         }
     }
 }
