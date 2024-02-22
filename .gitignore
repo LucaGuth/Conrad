@@ -12,3 +12,5 @@ project.lock.json
 nupkg/
 
 .vs/
+
+out/
