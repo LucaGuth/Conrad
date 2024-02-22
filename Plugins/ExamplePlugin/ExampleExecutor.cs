@@ -1,4 +1,5 @@
 ﻿using PluginInterfaces;
+using System.Text.Json.Serialization;
 
 namespace ExamplePlugin
 {

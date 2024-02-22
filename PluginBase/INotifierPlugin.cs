@@ -4,7 +4,7 @@
     {
         public event NotifyEventHandler OnNotify;
 
-        public Task Run();
+        public void Run();
     }
 
     public delegate void NotifyEventHandler(INotifierPlugin sender, string message);

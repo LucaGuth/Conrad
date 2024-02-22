@@ -1,4 +1,6 @@
-﻿namespace PluginInterfaces
+﻿using System.Text.Json.Serialization;
+
+namespace PluginInterfaces
 {
     public interface IPlugin
     {
