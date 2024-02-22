@@ -12,7 +12,6 @@ namespace Sequencer
             _pluginLoader = pluginLoader;
 
             _notifierPlugins = _pluginLoader.GetPluginsOfType(typeof(INotifierPlugin)).Cast<INotifierPlugin>();
-            _executorPlugins = _pluginLoader.GetPluginsOfType(typeof(IExecutorPlugin)).Cast<IExecutorPlugin>();
 
             foreach (var notifier in _notifierPlugins)
             {
@@ -22,7 +21,7 @@ namespace Sequencer
 
         public void Run()
         {
-            List<Task> tasks = new List<Task>();
+            List<Task> tasks = [];
             foreach (var notifier in _notifierPlugins)
             {
                 tasks.Add(new Task(notifier.Run));
@@ -36,14 +35,13 @@ namespace Sequencer
             while (true);
         }
 
-        private NotifyEventHandler OnNotify = (INotifierPlugin sender, string message) =>
+        private readonly NotifyEventHandler OnNotify = (INotifierPlugin sender, string message) =>
         {
             Console.WriteLine($"Received message from {sender.Name}: {message}");
         };
 
-        private PluginLoader _pluginLoader;
+        private readonly PluginLoader _pluginLoader;
 
-        private IEnumerable<IExecutorPlugin> _executorPlugins;
-        private IEnumerable<INotifierPlugin> _notifierPlugins;
+        private readonly IEnumerable<INotifierPlugin> _notifierPlugins;
     }
 }
