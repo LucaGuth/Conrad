@@ -11,18 +11,10 @@ namespace MyApp // Note: actual namespace depends on the project name.
 
             string pluginPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Plugins");
 
-            var pluginLoader = new PluginLoader();
-
-
-            //File.WriteAllText("config.json", pluginLoader.GenerateConfig());
-
-            var configString = File.ReadAllText("config.json");
-
-            pluginLoader.LoadConfig(configString);
+            PluginLoader pluginLoader = new PluginLoader(pluginPath, "config.json");
 
             var sequence = new Sequence(pluginLoader);
             sequence.Run();
-
         }
     }
 }

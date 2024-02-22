@@ -2,7 +2,7 @@
 
 namespace ExamplePluginPackage
 {
-    internal class ExampleNotifier : INotifierPlugin
+    public class ExampleNotifier : INotifierPlugin
     {
         public string Name { get; } = nameof(ExampleNotifier);
 

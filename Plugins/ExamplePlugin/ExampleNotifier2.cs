@@ -4,13 +4,15 @@ using System.Text.Json.Nodes;
 
 namespace ExamplePluginPackage
 {
-    internal class ExampleNotifier2 : INotifierPlugin, IConfigurablePlugin
+    [Serializable]
+    public class ExampleNotifier2 : INotifierPlugin, IConfigurablePlugin
     {
         public string Name { get; } = "Example Notifier 2";
 
         public string Description { get; } = "This is a second example notifier plugin.";
 
-        public int SpecialConfig { get; private set; } = 50;
+
+        public int SpecialConfig { get; set; }
         public JsonNode GetConfig()
         {
             var localConfig = JsonSerializer.Serialize(this);

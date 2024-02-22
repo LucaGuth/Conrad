@@ -1,20 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.Versioning;
+﻿using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
-using PluginInterfaces;
 
+using PluginInterfaces;
 
 namespace Sequencer
 {
     internal class PluginLoader
     {
-        public static readonly string PluginBaseInterfaceName = "IPlugin";
-
-        private List<IPlugin> _plugins = new();
+        #region Public
+        public static readonly Type PluginBaseInterfaceName = typeof(IPlugin);
 
         public void LoadPluginFromFile(string pluginPath)
         {
@@ -22,7 +18,7 @@ namespace Sequencer
             Type[] types = pluginAssembly.GetTypes();
             List<IPlugin> plugins = new();
 
-            types.Where(t => t.GetInterface(PluginBaseInterfaceName) != null && t.IsClass).ToList().ForEach(t =>
+            types.Where(t => t.GetInterface(PluginBaseInterfaceName.Name) != null && t.IsClass).ToList().ForEach(t =>
             {
                 IPlugin plugin = (IPlugin)Activator.CreateInstance(t)!;
                 plugins.Add(plugin);
@@ -30,6 +26,7 @@ namespace Sequencer
 
             _plugins.AddRange(plugins);
         }
+
         public void LoadPluginsFromDirectory(string pluginFolderPath)
         {
             List<IPlugin> plugins = new List<IPlugin>();
@@ -44,20 +41,24 @@ namespace Sequencer
             }
         }
 
-        private void LoadPlugins()
+        public PluginLoader(string pluginFolder, string configPath)
         {
-            string pluginPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Plugins");
-            LoadPluginsFromDirectory(pluginPath);
-        }
-
-        public PluginLoader(string? pluginPath = null)
-        {
-            if (pluginPath == null)
+            if (pluginFolder == null)
             {
-                pluginPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Plugins");
+                pluginFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Plugins");
             }
 
-            LoadPlugins();
+            LoadPlugins(pluginFolder);
+
+            if (File.Exists(configPath))
+            {
+                var config = File.ReadAllText(configPath);
+                LoadConfig(config);
+            }
+            else
+            {
+                File.WriteAllText(configPath, GenerateConfig());
+            }
         }
 
         public IEnumerable<IPlugin> GetPluginsOfType(Type type)
@@ -85,8 +86,6 @@ namespace Sequencer
             return JsonSerializer.Serialize(pluginConfigs, jsonSerializerOptions);
         }
 
-        private JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
-
         public void LoadConfig(string config)
         {
             var loadedConfig = JsonSerializer.Deserialize<PluginConfig[]>(config);
@@ -94,11 +93,6 @@ namespace Sequencer
             foreach (var pluginConfig in loadedConfig)
             {
                 Type type = Type.GetType(pluginConfig.PluginClassName)!;
-
-                //if (!type.IsSubclassOf(typeof(IConfigurablePlugin)))
-                //{
-                //    throw new InvalidOperationException($"The Configuration of {type.FullName} is not possible because it does not Implement {nameof(IConfigurablePlugin)}");
-                //}
 
                 var plugin = _plugins.First(p => type.IsAssignableFrom(p.GetType())) as IConfigurablePlugin;
 
@@ -108,6 +102,18 @@ namespace Sequencer
                 }
             }
         }
+        #endregion
+
+        #region Private
+        private List<IPlugin> _plugins = new();
+        private void LoadPlugins(string pluginPath)
+        {
+            LoadPluginsFromDirectory(pluginPath);
+        }
+
+        private JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
+
+        #endregion
     }
 
     [Serializable]
