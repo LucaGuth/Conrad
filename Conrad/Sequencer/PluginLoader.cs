@@ -12,7 +12,40 @@ namespace Sequencer
         #region Public
         public static readonly Type PluginBaseInterfaceName = typeof(IPlugin);
 
-        public void LoadPluginFromFile(string pluginPath)
+        public IEnumerable<IPlugin> GetPluginsOfType(Type type)
+        {
+            if (!type.IsAssignableFrom(type))
+            {
+                throw new ArgumentOutOfRangeException(type.ToString(), $"The requested plugin must be based on {nameof(IPlugin)}");
+            }
+
+            var plugins = _plugins.Where(p => type.IsAssignableFrom(p.GetType()));
+            return plugins;
+        }
+
+        public PluginLoader(string pluginFolder, string configFilePath)
+        {
+            _configFilePath = configFilePath;
+            _pluginFolder = pluginFolder;
+            pluginFolder ??= Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Plugins");
+
+            LoadPlugins(pluginFolder);
+
+            if (File.Exists(configFilePath))
+            {
+                var config = File.ReadAllText(configFilePath);
+                LoadConfig(config);
+            }
+            else
+            {
+                File.WriteAllText(configFilePath, GenerateConfig());
+            }
+        }
+
+        #endregion
+
+        #region Private
+        private void LoadPluginFromFile(string pluginPath)
         {
             Assembly pluginAssembly = Assembly.LoadFrom(pluginPath);
             Type[] types = pluginAssembly.GetTypes();
@@ -27,7 +60,7 @@ namespace Sequencer
             _plugins.AddRange(plugins);
         }
 
-        public void LoadPluginsFromDirectory(string pluginFolderPath)
+        private void LoadPluginsFromDirectory(string pluginFolderPath)
         {
             if (!Directory.Exists(pluginFolderPath))
             {
@@ -40,63 +73,51 @@ namespace Sequencer
             }
         }
 
-        public PluginLoader(string pluginFolder, string configPath)
-        {
-            pluginFolder ??= Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Plugins");
-
-            LoadPlugins(pluginFolder);
-
-            if (File.Exists(configPath))
-            {
-                var config = File.ReadAllText(configPath);
-                LoadConfig(config);
-            }
-            else
-            {
-                File.WriteAllText(configPath, GenerateConfig());
-            }
-        }
-
-        public IEnumerable<IPlugin> GetPluginsOfType(Type type)
-        {
-            if (!type.IsAssignableFrom(type))
-            {
-                throw new ArgumentOutOfRangeException(type.ToString(), $"The requested plugin must be based on {nameof(IPlugin)}");
-            }
-
-            var plugins = _plugins.Where(p => type.IsAssignableFrom(p.GetType()));
-            return plugins;
-        }
-
-        public string GenerateConfig()
+        private string GenerateConfig(IEnumerable<PluginConfig>? additionlConfigs = null)
         {
             IEnumerable<IConfigurablePlugin> configurablePlugins = GetPluginsOfType(typeof(IConfigurablePlugin)).Cast<IConfigurablePlugin>();
-            IList<PluginConfig> pluginConfigs = [];
+            List<PluginConfig> pluginConfigs = [];
 
             foreach (var configurablePlugin in configurablePlugins)
             {
                 pluginConfigs.Add(new PluginConfig(configurablePlugin.GetType().AssemblyQualifiedName!, configurablePlugin.GetConfig()));
             }
 
+            if (additionlConfigs is not null)
+            {
+                pluginConfigs.AddRange(additionlConfigs);
+            }
+
 
             return JsonSerializer.Serialize(pluginConfigs, jsonSerializerOptions);
         }
 
-        public void LoadConfig(string config)
+        private void LoadConfig(string config)
         {
+            List<PluginConfig> configWithoutPlugins = new();
+
             var loadedConfig = JsonSerializer.Deserialize<PluginConfig[]>(config) ?? throw new InvalidDataException("The configuration file is not valid");
             foreach (var pluginConfig in loadedConfig)
             {
-                Type type = Type.GetType(pluginConfig.PluginClassName)!;
+                Type? type = Type.GetType(pluginConfig.PluginClassName);
+                if (type is not null)
+                {
+                    var plugin = _plugins.First(p => type.IsAssignableFrom(p.GetType())) as IConfigurablePlugin;
+                    plugin?.LoadConfig(pluginConfig.Config);
+                }
+                else
+                {
+                    configWithoutPlugins.Add(pluginConfig);
+                }
+            }
 
-                var plugin = _plugins.First(p => type.IsAssignableFrom(p.GetType())) as IConfigurablePlugin;
-
-                plugin?.LoadConfig(pluginConfig.Config);
+            if (configWithoutPlugins.Count > 0 || GetPluginsOfType(typeof(IConfigurablePlugin)).Count() > loadedConfig.Length)
+            {
+                var configTest = GenerateConfig(configWithoutPlugins);
+                File.WriteAllText(_configFilePath, configTest);
             }
         }
-        #endregion
 
-        #region Private
         private readonly List<IPlugin> _plugins = [];
         private void LoadPlugins(string pluginPath)
         {
@@ -104,6 +125,10 @@ namespace Sequencer
         }
 
         private readonly JsonSerializerOptions jsonSerializerOptions = new() { WriteIndented = true };
+
+        private string _configFilePath;
+
+        private string _pluginFolder;
 
         #endregion
     }
