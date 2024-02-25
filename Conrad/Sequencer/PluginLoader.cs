@@ -94,7 +94,7 @@ namespace Sequencer
 
         private void LoadConfig(string config)
         {
-            List<PluginConfig> configWithoutPlugins = new();
+            List<PluginConfig> configWithoutPlugins = [];
 
             var loadedConfig = JsonSerializer.Deserialize<PluginConfig[]>(config) ?? throw new InvalidDataException("The configuration file is not valid");
             foreach (var pluginConfig in loadedConfig)
@@ -126,9 +126,9 @@ namespace Sequencer
 
         private readonly JsonSerializerOptions jsonSerializerOptions = new() { WriteIndented = true };
 
-        private string _configFilePath;
+        private readonly string _configFilePath;
 
-        private string _pluginFolder;
+        private readonly string _pluginFolder;
 
         #endregion
     }
