@@ -23,21 +23,31 @@ class Program
         configFile.AddAlias("-c");
         configFile.SetDefaultValue(conradConfigPath);
 
+        var generateConfig = new Option<bool>(
+            name: "--generate-config",
+            description: "Generate or update the current configuration file based on the current set of plugins. The Program will not start the sequencer and exit immediately after generating the configuration file.");
+            configFile.SetDefaultValue(false);
+        configFile.SetDefaultValue(false);
+
         var rootCommand = new RootCommand("Conrad - Cognitive Optimizer for Notifications, Recommendations and Automated Data management");
 
         rootCommand.AddOption(pluginFolder);
         rootCommand.AddOption(configFile);
+        rootCommand.AddOption(generateConfig);
 
-        rootCommand.SetHandler(RunProgram!, configFile, pluginFolder);
+        rootCommand.SetHandler(RunProgram!, configFile, pluginFolder, generateConfig);
 
         return await rootCommand.InvokeAsync(args);
     }
 
-    internal static void RunProgram(string configFile, string pluginPath)
+    internal static void RunProgram(string configFile, string pluginPath, bool generateConfig)
     {
         PluginLoader pluginLoader = new(pluginPath, configFile);
 
-        var sequence = new Sequence(pluginLoader);
-        sequence.Run();
+        if (!generateConfig)
+        {
+            var sequence = new Sequence(pluginLoader);
+            sequence.Run();
+        }
     }
 }
