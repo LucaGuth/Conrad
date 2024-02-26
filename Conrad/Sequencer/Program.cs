@@ -1,14 +1,29 @@
 ﻿using Sequencer;
 using Serilog;
 using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
 using System.CommandLine;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace scl;
 
 class Program
 {
+    private static readonly string Logo = @"
+   _____                          _
+  / ____|                        | |
+ | |     ___  _ __  _ __ __ _  __| |
+ | |    / _ \| '_ \| '__/ _` |/ _` |
+ | |___| (_) | | | | | | (_| | (_| |
+  \_____\___/|_| |_|_|  \__,_|\__,_|
+
+Cognitive Optimizer for Notifications, Recommendations and Automated Data management
+
+";
     static async Task<int> Main(string[] args)
     {
+        // Logo
+        Console.WriteLine(Logo);
 
         var conradBasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".conrad");
         var conradConfigPath = Path.Combine(conradBasePath, "config.json");
@@ -55,20 +70,9 @@ class Program
             // Setup the logger
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Is(logEventLevel)
-                .WriteTo.Console(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .WriteTo.Console(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}", theme: AnsiConsoleTheme.Literate)
                 .WriteTo.File("log.txt")
                 .CreateLogger();
-
-            // Logo
-            Console.WriteLine("   _____                          _ \r\n" +
-                "  / ____|                        | |\r\n" +
-                " | |     ___  _ __  _ __ __ _  __| |\r\n" +
-                " | |    / _ \\| '_ \\| '__/ _` |/ _` |\r\n" +
-                " | |___| (_) | | | | | | (_| | (_| |\r\n" +
-                "  \\_____\\___/|_| |_|_|  \\__,_|\\__,_|");
-            Console.WriteLine();
-            Console.WriteLine("Cognitive Optimizer for Notifications, Recommendations and Automated Data management");
-            Console.WriteLine();
 
             // Start the program
             Log.Information("Starting the program");
@@ -79,7 +83,7 @@ class Program
                 sequence.Run();
             }
         }
-        catch (Exception ex)
+        catch (ArgumentOutOfRangeException ex)
         {
             Log.Fatal(ex, "An error occurred");
         }
