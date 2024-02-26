@@ -1,7 +1,5 @@
 ﻿using PluginInterfaces;
-using System.Linq;
-using System.Text.Json;
-using System.Xml;
+using Serilog;
 
 namespace Sequencer
 {
@@ -37,7 +35,7 @@ namespace Sequencer
 
         private readonly NotifyEventHandler OnNotify = (INotifierPlugin sender, string message) =>
         {
-            Console.WriteLine($"Received message from {sender.Name}: {message}");
+            Log.Information("Received message from {PluginName}: {Message}", sender.Name, message);
         };
 
         private readonly PluginLoader _pluginLoader;

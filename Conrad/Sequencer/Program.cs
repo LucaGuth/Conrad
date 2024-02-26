@@ -11,12 +11,12 @@ class Program
         // Setup the logger 
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
-            .WriteTo.Console()
+            .WriteTo.Console(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
             .WriteTo.File("log.txt")
             .CreateLogger();
         Log.Information("Starting the program");
 
-            try{
+        try{
             var conradBasePath   = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".conrad");
             var conradConfigPath = Path.Combine(conradBasePath, "config.json");
             var conradPluginPath = Path.Combine(conradBasePath, "plugins");

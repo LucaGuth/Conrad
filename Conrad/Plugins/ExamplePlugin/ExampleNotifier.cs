@@ -1,4 +1,5 @@
 ﻿using PluginInterfaces;
+using Serilog;
 
 namespace ExamplePluginPackage
 {
@@ -15,7 +16,9 @@ namespace ExamplePluginPackage
             while (true)
             {
                 OnNotify?.Invoke(this, "Hello Event Raised from Example Notifier");
+                Log.Information("Hello from Example Notifier");
                 Task.Delay(3000).Wait();
+
             }
         }
     }
