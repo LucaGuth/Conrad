@@ -84,7 +84,7 @@ namespace Sequencer
             var pluginFiles = Directory.GetFiles(pluginFolderPath, "*.dll");
 
             if (pluginFiles.Length == 0) Log.Warning("No Plugins found in {pluginFolderPath}", pluginFolderPath);
-            else Log.Information("Found {pluginCount} Plugins in {pluginFolderPath}", pluginFiles.Length, pluginFolderPath);
+            else Log.Information("Found {pluginCount} plugin assemblies in {pluginFolderPath}", pluginFiles.Length, pluginFolderPath);
 
             foreach (var file in pluginFiles)
             {
