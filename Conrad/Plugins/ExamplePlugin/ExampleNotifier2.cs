@@ -25,7 +25,7 @@ namespace ExamplePluginPackage
 
         public void LoadConfig(JsonNode settings)
         {
-            var deseri = settings.Deserialize<ExampleNotifier2>() ?? throw new InvalidDataException("The Config could not be loaded.");
+            var deseri = settings.Deserialize<ExampleNotifier2>() ?? throw new InvalidDataException("The config could not be loaded.");
             SpecialConfig = deseri.SpecialConfig;
         }
 
