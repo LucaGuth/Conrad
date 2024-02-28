@@ -4,7 +4,11 @@ namespace PluginInterfaces
 {
     public interface IConfigurablePlugin : IPlugin
     {
-        public JsonNode GetConfig();
-        public void LoadConfig(JsonNode settings);
+        public JsonNode GetConfigiguration();
+        public void LoadConfiguration(JsonNode configuration);
+
+        public event ConfigurationChangeEventHandler OnConfigurationChange;
     }
+
+    public delegate void ConfigurationChangeEventHandler(IConfigurablePlugin plugin);
 }
