@@ -83,7 +83,7 @@ Cognitive Optimizer for Notifications, Recommendations and Automated Data manage
                 sequence.Run();
             }
         }
-        catch (ArgumentOutOfRangeException ex)
+        catch (Exception ex)
         {
             Log.Fatal(ex, "An error occurred");
         }
