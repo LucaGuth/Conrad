@@ -28,6 +28,7 @@ Cognitive Optimizer for Notifications, Recommendations and Automated Data manage
         var conradBasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".conrad");
         var conradConfigPath = Path.Combine(conradBasePath, "config.json");
         var conradPluginPath = Path.Combine(conradBasePath, "plugins");
+        var conradLogPath = Path.Combine(conradBasePath, "logs");
 
         var logLevel = new Option<LogEventLevel>(
             name: "--log-level",
@@ -40,6 +41,11 @@ Cognitive Optimizer for Notifications, Recommendations and Automated Data manage
             description: "The folder to load all plugins from.");
         pluginFolder.AddAlias("-p");
         pluginFolder.SetDefaultValue(conradPluginPath);
+
+        var logFolder = new Option<string?>(
+            name: "--log-path",
+            description: "The folder to store logs files in.");
+        logFolder.SetDefaultValue(conradLogPath);
 
         var configFile = new Option<string?>(
             name: "--config",
@@ -58,12 +64,12 @@ Cognitive Optimizer for Notifications, Recommendations and Automated Data manage
         rootCommand.AddOption(configFile);
         rootCommand.AddOption(generateConfig);
 
-        rootCommand.SetHandler(RunProgram!, configFile, pluginFolder, logLevel, generateConfig);
+        rootCommand.SetHandler(RunProgram!, configFile, pluginFolder, logFolder, logLevel, generateConfig);
 
         return await rootCommand.InvokeAsync(args);
     }
 
-    internal static void RunProgram(string configFile, string pluginPath, LogEventLevel logEventLevel, bool generateConfig)
+    internal static void RunProgram(string configFile, string pluginPath, string logFolder, LogEventLevel logEventLevel, bool generateConfig)
     {
         try
         {
@@ -71,7 +77,7 @@ Cognitive Optimizer for Notifications, Recommendations and Automated Data manage
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Is(logEventLevel)
                 .WriteTo.Console(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}", theme: AnsiConsoleTheme.Literate)
-                .WriteTo.File("log.txt")
+                .WriteTo.File(Path.Combine(logFolder, "log.txt"))
                 .CreateLogger();
 
             // Start the program
