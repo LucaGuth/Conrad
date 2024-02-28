@@ -48,6 +48,13 @@ namespace Sequencer
             }
         }
 
+        public void UpdateConfiguration()
+        {
+            var updatedConfig = GenerateConfig(configWithoutPlugins);
+                    Log.Information("The new configuration file will be written to {configFilePath}", _configFilePath);
+                    File.WriteAllText(_configFilePath, updatedConfig);
+        }
+
         #endregion
 
         #region Private
@@ -101,7 +108,7 @@ namespace Sequencer
 
             foreach (var configurablePlugin in configurablePlugins)
             {
-                pluginConfigs.Add(new PluginConfig(configurablePlugin.GetType().AssemblyQualifiedName!, configurablePlugin.GetConfig()));
+                pluginConfigs.Add(new PluginConfig(configurablePlugin.GetType().AssemblyQualifiedName!, configurablePlugin.GetConfigiguration()));
             }
 
             if (additionlConfigs is not null)
@@ -112,10 +119,10 @@ namespace Sequencer
             return JsonSerializer.Serialize(pluginConfigs, jsonSerializerOptions);
         }
 
+        List<PluginConfig> configWithoutPlugins = [];
+
         private void LoadConfig(string config)
         {
-            List<PluginConfig> configWithoutPlugins = [];
-
             try
             {
                 var loadedConfig = JsonSerializer.Deserialize<PluginConfig[]>(config) ?? throw new InvalidDataException("The configuration file is not valid");
@@ -125,7 +132,7 @@ namespace Sequencer
                     if (type is not null)
                     {
                         var plugin = _plugins.First(p => type.IsAssignableFrom(p.GetType())) as IConfigurablePlugin;
-                        plugin?.LoadConfig(pluginConfig.Config);
+                        plugin?.LoadConfiguration(pluginConfig.Config);
                         Log.Information("Loaded Configuration for {plugin}", plugin?.GetType().Name);
                     }
                     else
@@ -139,9 +146,7 @@ namespace Sequencer
                 if (configWithoutPlugins.Count > 0 || GetPluginsOfType(typeof(IConfigurablePlugin)).Count() > loadedConfig.Length)
                 {
                     Log.Warning("The configuration file contains entries for plugins that could not be found or new plugins were added. The configuration file will be updated.");
-                    var updatedConfig = GenerateConfig(configWithoutPlugins);
-                    Log.Information("The new configuration file will be written to {configFilePath}", _configFilePath);
-                    File.WriteAllText(_configFilePath, updatedConfig);
+                    UpdateConfiguration();
                 }
             }
             catch (Exception)

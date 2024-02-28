@@ -13,11 +13,30 @@ namespace Sequencer
             Log.Information("Loading Notifier Plugins");
             _notifierPlugins = _pluginLoader.GetPluginsOfType(typeof(INotifierPlugin)).Cast<INotifierPlugin>();
 
+            NotifyEventHandler OnNotify = (INotifierPlugin sender, string message) =>
+            {
+                Log.Information("Received message from {PluginName}: {Message}", sender.Name, message);
+            };
+
             foreach (var notifier in _notifierPlugins)
             {
-                Log.Debug("Subscribing to {PluginName}", notifier.Name);
+                Log.Debug("Subscribing to notifications to {PluginName}", notifier.Name);
                 notifier.OnNotify += OnNotify;
             }
+
+            ConfigurationChangeEventHandler OnConfigurationChange = (IConfigurablePlugin plugin) =>
+            {
+                _pluginLoader.UpdateConfiguration();
+            };
+
+            Log.Information("Loading Configurable Plugins");
+            var configurablePluigns = _pluginLoader.GetPluginsOfType(typeof(IConfigurablePlugin)).Cast<IConfigurablePlugin>();
+            foreach (var configurablePlugin in configurablePluigns)
+            {
+                Log.Debug("Subscribing to Configuration Change Event for Plugin {PluginName}", configurablePlugin.Name);
+                configurablePlugin.OnConfigurationChange += OnConfigurationChange;
+            }
+
         }
 
         public void Run()
@@ -38,13 +57,8 @@ namespace Sequencer
             }
 
             Log.Information("Sequence Running");
-            while (true);
+            while (true) ;
         }
-
-        private readonly NotifyEventHandler OnNotify = (INotifierPlugin sender, string message) =>
-        {
-            Log.Information("Received message from {PluginName}: {Message}", sender.Name, message);
-        };
 
         private readonly PluginLoader _pluginLoader;
 
