@@ -8,11 +8,23 @@ using Serilog;
 
 namespace Sequencer
 {
+    /// <summary>
+    /// The class that is responsible for loading and managing the plugins.
+    /// </summary>
     internal class PluginLoader
     {
         #region Public
+        /// <summary>
+        /// The name of the interface that all plugins must implement.
+        /// </summary>
         public static readonly Type PluginBaseInterfaceName = typeof(IPlugin);
 
+        /// <summary>
+        /// Filters the plugins by the type of the plugin.
+        /// </summary>
+        /// <param name="type">The type to filter the plugins by.</param>
+        /// <returns>The list of plugins having the requested type.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">If the Requested type is not based on <see cref="ArgumentOutOfRangeException"/></exception>
         public IEnumerable<IPlugin> GetPluginsOfType(Type type)
         {
             if (!type.IsAssignableFrom(type))
@@ -25,6 +37,11 @@ namespace Sequencer
             return plugins;
         }
 
+        /// <summary>
+        /// Creates a new PluginLoader instance.
+        /// </summary>
+        /// <param name="pluginFolder">The folder to load the plugins from.</param>
+        /// <param name="configFilePath">The location of the configuration file.</param>
         public PluginLoader(string pluginFolder, string configFilePath)
         {
             _configFilePath = configFilePath;
@@ -48,6 +65,9 @@ namespace Sequencer
             }
         }
 
+        /// <summary>
+        /// Updates the configuration file with the current configuration of the plugins.
+        /// </summary>
         public void UpdateConfiguration()
         {
             var updatedConfig = GenerateConfig(configWithoutPlugins);
@@ -119,7 +139,7 @@ namespace Sequencer
             return JsonSerializer.Serialize(pluginConfigs, jsonSerializerOptions);
         }
 
-        List<PluginConfig> configWithoutPlugins = [];
+        readonly List<PluginConfig> configWithoutPlugins = [];
 
         private void LoadConfig(string config)
         {
