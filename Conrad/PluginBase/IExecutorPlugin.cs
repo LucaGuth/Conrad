@@ -3,6 +3,6 @@
     public interface IExecutorPlugin : IPlugin
     {
         public string ParameterFormat { get; }
-        public string Execute(string parameter);
+        public Task<string> Execute(string parameter);
     }
 }

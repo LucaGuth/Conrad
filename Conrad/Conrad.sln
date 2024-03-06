@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{B69C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamplePluginPackage", "Plugins\ExamplePlugin\ExamplePluginPackage.csproj", "{216D7024-3678-485F-8347-1666222FB390}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherPlugin", "Plugins\WeatherPlugin\WeatherPlugin.csproj", "{9B8127B1-A3C9-46B8-9A63-4F087B330DA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,12 +31,17 @@ Global
 		{216D7024-3678-485F-8347-1666222FB390}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{216D7024-3678-485F-8347-1666222FB390}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{216D7024-3678-485F-8347-1666222FB390}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B8127B1-A3C9-46B8-9A63-4F087B330DA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B8127B1-A3C9-46B8-9A63-4F087B330DA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B8127B1-A3C9-46B8-9A63-4F087B330DA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B8127B1-A3C9-46B8-9A63-4F087B330DA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{216D7024-3678-485F-8347-1666222FB390} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
+		{9B8127B1-A3C9-46B8-9A63-4F087B330DA0} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9EB62EB3-515E-42FC-A67F-8AD9472C5E80}
