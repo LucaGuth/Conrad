@@ -11,10 +11,10 @@ namespace ExamplePlugin
 
         public string Description { get; } = "This is an example executor plugin.";
 
-        public string Execute(string parameter)
+        public async Task<string> Execute(string parameter)
         {
-            Task.Delay(3000).Wait();
-            return "Example Executor Executed!";
+            await Task.Delay(3000); // Asynchronously wait for 3 seconds
+            return "Example Executor Executed!"; // This line executes after the delay
         }
     }
 }
