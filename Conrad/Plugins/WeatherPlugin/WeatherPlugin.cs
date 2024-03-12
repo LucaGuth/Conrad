@@ -13,22 +13,19 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
     public string Name { get; } = "Weather Forecast";
     private readonly HttpClient _client = new();
     private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
-    
+
     public string Description { get; } =
         "This plugin returns a weather forecast for a period of time. The time span ranges from the current date to" +
         "a maximum of five days in the future. A city must be specified as the location for the weather forecast.";
-    
-    public async Task<string> Execute(string parameter)
+
+    public async Task<string> ExecuteAsync(string parameter)
     {
         Log.Debug("Start execution of the WeatherPlugin");
         try
         {
             var parameterModel = new ParameterModel(parameter);
             var forecastString =  await GetWeatherForecastAsync(parameterModel.City);
-            var forecastResponse = JsonSerializer.Deserialize<WeatherForecast>(forecastString, _options);
-            
-            if (forecastResponse == null) throw new ArgumentException("The weather data could not be parsed.");
-            
+            var forecastResponse = JsonSerializer.Deserialize<WeatherForecast>(forecastString, _options) ?? throw new ArgumentException("The weather data could not be parsed.");
             var forecast = new WeatherForecast();
             const string format = "yyyy-MM-dd HH:mm:ss";
             foreach (var forecastListItem in forecastResponse.List)
@@ -66,12 +63,10 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
                     return string.Empty;
             }
         }
-        
     }
 
     public string ParameterFormat { get; } = "ForecastFromDate:'{YYYY-MM-DD}', ForecastUntilDate:'{YYYY-MM-DD}', " +
                                              "ForecastCity:'{city}'";
-    
     private WeatherPluginConfig _config = new();
     public JsonNode GetConfigiguration()
     {
@@ -87,11 +82,11 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
     }
 
     public event ConfigurationChangeEventHandler? OnConfigurationChange;
-    
+
     private async Task<string> GetWeatherForecastAsync(string city)
     {
         var url = $"{_config.BaseUrl}?q={city}&appid={_config.ApiKey}&units={_config.Units}";
-        
+
         var response = await _client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync();

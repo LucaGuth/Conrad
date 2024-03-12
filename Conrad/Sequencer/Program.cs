@@ -3,7 +3,6 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using System.CommandLine;
-using System.Runtime.InteropServices.Marshalling;
 
 namespace scl;
 
@@ -63,6 +62,7 @@ Cognitive Optimizer for Notifications, Recommendations and Automated Data manage
         rootCommand.AddOption(pluginFolder);
         rootCommand.AddOption(configFile);
         rootCommand.AddOption(generateConfig);
+        rootCommand.AddOption(logFolder);
 
         rootCommand.SetHandler(RunProgram!, configFile, pluginFolder, logFolder, logLevel, generateConfig);
 

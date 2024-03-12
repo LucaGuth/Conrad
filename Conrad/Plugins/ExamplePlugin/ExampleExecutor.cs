@@ -11,7 +11,7 @@ namespace ExamplePlugin
 
         public string Description { get; } = "This is an example executor plugin.";
 
-        public async Task<string> Execute(string parameter)
+        public async Task<string> ExecuteAsync(string parameter)
         {
             await Task.Delay(3000); // Asynchronously wait for 3 seconds
             return "Example Executor Executed!"; // This line executes after the delay
