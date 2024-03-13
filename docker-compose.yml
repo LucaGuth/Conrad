@@ -2,9 +2,9 @@ version: '3.0'
 
 services:
   conrad:
-    ports:
-      - 4000:4000
     container_name: conrad
     build: Conrad
     volumes:
       - ./Conrad/config/:/app/config/:delegated
+    ports:
+      - 127.0.0.1:4000:4000
