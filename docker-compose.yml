@@ -2,6 +2,8 @@ version: '3.0'
 
 services:
   conrad:
+    ports:
+      - 4000:4000
     container_name: conrad
     build: Conrad
     volumes:

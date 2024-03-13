@@ -20,11 +20,6 @@ namespace Sequencer
             Log.Information("Loading Notifier Plugins");
             _notifierPlugins = _pluginLoader.GetPluginsOfType(typeof(INotifierPlugin)).Cast<INotifierPlugin>();
 
-            void OnNotify(INotifierPlugin sender, string message)
-            {
-                Log.Information("Received message from {PluginName}: {Message}", sender.Name, message);
-            }
-
             foreach (var notifier in _notifierPlugins)
             {
                 Log.Debug("Subscribing to notifications to {PluginName}", notifier.Name);
@@ -44,6 +39,15 @@ namespace Sequencer
                 configurablePlugin.OnConfigurationChange += OnConfigurationChange;
             }
 
+        }
+
+        /// <summary>
+        /// Callback that runs whenever an INotifierPlugin has a notification.
+        /// This is the main sequence of Conrad:
+        /// notification -> llm -> IExecutorPlugin's -> llm -> output to user
+        /// </summary>
+        private void OnNotify(INotifierPlugin sender, string message) {
+            Log.Information("Received message from {PluginName}: {Message}", sender.Name, message);
         }
 
         /// <summary>
@@ -68,7 +72,7 @@ namespace Sequencer
 
             // Idle loop
             Log.Information("Sequence Running...");
-            while (true) ;
+            Thread.Sleep(Timeout.Infinite);
         }
 
         private readonly PluginLoader _pluginLoader;
