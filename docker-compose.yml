@@ -4,5 +4,5 @@ services:
   conrad:
     container_name: conrad
     build: Conrad
-    volumes:  
-      - ./Conrad/config/config.json:/app/config.json:delegated
+    volumes:
+      - ./Conrad/config/:/app/config/:delegated
