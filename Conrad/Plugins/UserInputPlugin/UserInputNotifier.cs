@@ -18,50 +18,46 @@ namespace UserInputNotifierPackage
 
         public void Run()
         {
-            try {
-                TcpListener server = new TcpListener(IPAddress.Any, config.tcpPort);
+            TcpListener server = new TcpListener(IPAddress.Any, config.tcpPort);
 
-                server.Start();
-                Log.Information("[{Name}] listening on {endpoint}", Name, server.LocalEndpoint);
+            server.Start();
+            Log.Information("[{Name}] listening on {endpoint}", Name, server.LocalEndpoint);
 
-                Byte[] bytes = new Byte[512];
-                StringBuilder promptBuilder = new StringBuilder();
+            Byte[] bytes = new Byte[512];
+            StringBuilder promptBuilder = new StringBuilder();
 
-                while(true)
+            while(true)
+            {
+                using TcpClient client = server.AcceptTcpClient();
+                Log.Information("[{Name}] connection from {endpoint}", Name, client.Client.RemoteEndPoint);
+
+                NetworkStream stream = client.GetStream();
+                stream.ReadTimeout = config.tcpReadTimeoutInMs;
+
+                promptBuilder.Clear();
+
+                while (true)
                 {
-                    using TcpClient client = server.AcceptTcpClient();
-                    Log.Information("[{Name}] connection from {endpoint}", Name, client.Client.RemoteEndPoint);
-
-                    NetworkStream stream = client.GetStream();
-                    stream.ReadTimeout = config.tcpReadTimeoutInMs;
-
-                    promptBuilder.Clear();
-
-                    while (true)
-                    {
-                        int byteCount;
-                        try {
-                            byteCount = stream.Read(bytes, 0, bytes.Length);
-                        }
-                        catch (IOException) {
-                            break;
-                        }
-                        if (byteCount == 0) break;
-                        promptBuilder.Append(System.Text.Encoding.UTF8.GetString(bytes, 0, byteCount));
+                    int byteCount;
+                    try {
+                        byteCount = stream.Read(bytes, 0, bytes.Length);
                     }
-
-                    String prompt = promptBuilder.ToString();
-                    if (prompt.Length > 0)
-                    {
-                        Log.Information("[{Name}] received prompt: {prompt}", Name, prompt);
-                        OnNotify?.Invoke(this, prompt);
+                    catch (IOException) {
+                        break;
                     }
-                    else {
-                        Log.Information("[{Name}] no prompt received (timed out)", Name);
-                    }
+                    if (byteCount == 0) break;
+                    promptBuilder.Append(System.Text.Encoding.UTF8.GetString(bytes, 0, byteCount));
                 }
-            } catch(Exception e) {
-                Log.Information("[{Name}] {adsf}", Name, e);
+
+                String prompt = promptBuilder.ToString();
+                if (prompt.Length > 0)
+                {
+                    Log.Information("[{Name}] received prompt: {prompt}", Name, prompt);
+                    OnNotify?.Invoke(this, prompt);
+                }
+                else {
+                    Log.Information("[{Name}] no prompt received (timed out)", Name);
+                }
             }
         }
 
