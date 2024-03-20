@@ -22,4 +22,4 @@ COPY --from=build /app/out/Release/*.runtimeconfig.json .
 COPY --from=build /app/out/Release/plugins/*.dll plugins/
 
 # Entry point when the container starts
-ENTRYPOINT ["dotnet", "Sequencer.dll", "--plugins", "plugins", "--config", "/app/config.json"]
+ENTRYPOINT ["dotnet", "Sequencer.dll", "--plugins", "plugins", "--config", "/app/config/config.json"]
