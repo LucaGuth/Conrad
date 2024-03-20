@@ -18,13 +18,13 @@ namespace UserInputNotifierPackage
 
         public void Run()
         {
-            TcpListener server = new TcpListener(IPAddress.Any, config.tcpPort);
+            TcpListener server = new(IPAddress.Any, config.TcpPort);
 
             server.Start();
             Log.Information("[{Name}] listening on {endpoint}", Name, server.LocalEndpoint);
 
             Byte[] bytes = new Byte[512];
-            StringBuilder promptBuilder = new StringBuilder();
+            StringBuilder promptBuilder = new();
 
             while(true)
             {
@@ -32,7 +32,7 @@ namespace UserInputNotifierPackage
                 Log.Information("[{Name}] connection from {endpoint}", Name, client.Client.RemoteEndPoint);
 
                 NetworkStream stream = client.GetStream();
-                stream.ReadTimeout = config.tcpReadTimeoutInMs;
+                stream.ReadTimeout = config.TcpReadTimeoutInMs;
 
                 promptBuilder.Clear();
 
@@ -77,14 +77,14 @@ namespace UserInputNotifierPackage
             return jsonNode;
         }
 
-        private Config config = new Config();
+        private Config config = new();
 
     }
 
     [Serializable]
     internal class Config
     {
-        public int tcpPort { get; set; } = 4000;
-        public int tcpReadTimeoutInMs { get; set; } = 1000;
+        public int TcpPort { get; set; } = 4000;
+        public int TcpReadTimeoutInMs { get; set; } = 1000;
     }
 }

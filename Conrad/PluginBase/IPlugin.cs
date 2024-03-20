@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace PluginInterfaces
+﻿namespace PluginInterfaces
 {
     /// <summary>
     /// The base interface for all plugins containing basic information about the plugin.

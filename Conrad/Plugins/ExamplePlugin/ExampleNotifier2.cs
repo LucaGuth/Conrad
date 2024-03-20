@@ -35,13 +35,13 @@ namespace ExamplePluginPackage
             return jsonNode;
         }
 
-        private ExampleNotifier2Configuration config = new ExampleNotifier2Configuration();
+        private ExampleNotifier2Configuration config = new();
     }
 
     [Serializable]
     public class ExampleNotifier2Configuration
     {
         public int ImplementationSpecificVaiue { get; set; } = 0;
-        public string[] texts { get; set; } = ["hallo", "tschüssi", "hallihallo"];
+        public string[] Texts { get; set; } = ["hallo", "tschüssi", "hallihallo"];
     }
 }
