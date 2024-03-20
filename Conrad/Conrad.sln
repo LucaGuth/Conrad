@@ -11,9 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{B69C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamplePluginPackage", "Plugins\ExamplePlugin\ExamplePluginPackage.csproj", "{216D7024-3678-485F-8347-1666222FB390}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherPlugin", "Plugins\WeatherPlugin\WeatherPlugin.csproj", "{9B8127B1-A3C9-46B8-9A63-4F087B330DA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherPlugin", "Plugins\WeatherPlugin\WeatherPlugin.csproj", "{9B8127B1-A3C9-46B8-9A63-4F087B330DA0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInputPlugin", "Plugins\UserInputPlugin\UserInputPlugin.csproj", "{6ECA0378-1AB9-4898-98A2-B00B607F9CB4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DebugOutputPlugin", "Plugins\DebugOutputPlugin\DebugOutputPlugin.csproj", "{D159E69C-6C2B-4B22-9AED-A06BFE31C5DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{6ECA0378-1AB9-4898-98A2-B00B607F9CB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6ECA0378-1AB9-4898-98A2-B00B607F9CB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6ECA0378-1AB9-4898-98A2-B00B607F9CB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D159E69C-6C2B-4B22-9AED-A06BFE31C5DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D159E69C-6C2B-4B22-9AED-A06BFE31C5DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D159E69C-6C2B-4B22-9AED-A06BFE31C5DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D159E69C-6C2B-4B22-9AED-A06BFE31C5DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +55,7 @@ Global
 		{216D7024-3678-485F-8347-1666222FB390} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 		{9B8127B1-A3C9-46B8-9A63-4F087B330DA0} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 		{6ECA0378-1AB9-4898-98A2-B00B607F9CB4} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
+		{D159E69C-6C2B-4B22-9AED-A06BFE31C5DE} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9EB62EB3-515E-42FC-A67F-8AD9472C5E80}

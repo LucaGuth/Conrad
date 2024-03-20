@@ -23,7 +23,7 @@ namespace Sequencer
             _pluginLoader = pluginLoader;
 
             Log.Information("Loading Notifier Plugins");
-            _notifierPlugins = _pluginLoader.GetPluginsOfType(typeof(INotifierPlugin)).Cast<INotifierPlugin>();
+            _notifierPlugins = _pluginLoader.GetPlugins<INotifierPlugin>();
 
             foreach (var notifier in _notifierPlugins)
             {
@@ -37,13 +37,14 @@ namespace Sequencer
             }
 
             Log.Information("Loading Configurable Plugins");
-            var configurablePluigns = _pluginLoader.GetPluginsOfType(typeof(IConfigurablePlugin)).Cast<IConfigurablePlugin>();
+            var configurablePluigns = _pluginLoader.GetPlugins<IConfigurablePlugin>();
             foreach (var configurablePlugin in configurablePluigns)
             {
                 Log.Debug("Subscribing to Configuration Change Event for Plugin {PluginName}", configurablePlugin.Name);
                 configurablePlugin.OnConfigurationChange += OnConfigurationChange;
             }
 
+            _outputPlugins = _pluginLoader.GetPlugins<IOutputPlugin>();
         }
 
         /// <summary>
@@ -61,25 +62,9 @@ namespace Sequencer
             var response = message;
 
             Log.Information("[Sequencer] final response: {response}", response);
-            SendResponse(response);
-        }
 
-        private void SendResponse(string response) {
-            var bytes = System.Text.Encoding.UTF8.GetBytes(response);
-            foreach (UserOutputEndpoint endpoint in _userOutputEndpoint) {
-                try {
-                    using TcpClient client = new TcpClient(AddressFamily.InterNetwork);
-                    client.Connect(endpoint.Hostname, endpoint.Port);
-                    //using TcpClient client = new TcpClient(endpoint.Hostname, endpoint.Port);
-                    using NetworkStream stream = client.GetStream();
-                    stream.WriteTimeout = endpoint.WriteTimeoutInMs;
-                    stream.Write(bytes);
-                }
-                catch (Exception e) when (e is SocketException || e is ObjectDisposedException)
-                {
-                    Log.Error("[Sequencer] could not send response to {Name} ({Hostname}:{Port})", endpoint.Name, endpoint.Hostname, endpoint.Port, e);
-                }
-            }
+            // output to user
+            Parallel.ForEach(_outputPlugins, outputPlugin => outputPlugin.PushMessage(response));
         }
 
         /// <summary>
@@ -111,15 +96,6 @@ namespace Sequencer
 
         private readonly IEnumerable<INotifierPlugin> _notifierPlugins;
 
-        private readonly UserOutputEndpoint[] _userOutputEndpoint = [
-            new UserOutputEndpoint { Name = "cli output", Hostname = "192.168.178.143", Port = 4001, WriteTimeoutInMs = 250 }
-        ];
-    }
-
-    internal struct UserOutputEndpoint {
-        public string Name;
-        public string Hostname;
-        public int Port;
-        public int WriteTimeoutInMs;
+        private readonly IEnumerable<IOutputPlugin> _outputPlugins;
     }
 }

@@ -25,16 +25,13 @@ namespace Sequencer
         /// <param name="type">The type to filter the plugins by.</param>
         /// <returns>The list of plugins having the requested type.</returns>
         /// <exception cref="ArgumentOutOfRangeException">If the Requested type is not based on <see cref="ArgumentOutOfRangeException"/></exception>
-        public IEnumerable<IPlugin> GetPluginsOfType(Type type)
+        public IEnumerable<T> GetPlugins<T>() where T : IPlugin
         {
-            if (!type.IsAssignableFrom(type))
-            {
-                throw new ArgumentOutOfRangeException(type.ToString(), $"The requested plugin must be based on {nameof(IPlugin)}");
-            }
+            Type type = typeof(T);
 
             var plugins = _plugins.Where(p => type.IsAssignableFrom(p.GetType()));
             Log.Verbose("Filtered Plugins of type {type}: {plugins}", type.Name, plugins);
-            return plugins;
+            return plugins.Cast<T>();
         }
 
         /// <summary>
@@ -45,7 +42,6 @@ namespace Sequencer
         public PluginLoader(string pluginFolder, string configFilePath)
         {
             _configFilePath = configFilePath;
-            _pluginFolder = pluginFolder;
 
             Log.Information("Loading Plugins from {pluginFolder}", pluginFolder);
 
@@ -123,7 +119,7 @@ namespace Sequencer
 
         private string GenerateConfig(IEnumerable<PluginConfig>? additionlConfigs = null)
         {
-            IEnumerable<IConfigurablePlugin> configurablePlugins = GetPluginsOfType(typeof(IConfigurablePlugin)).Cast<IConfigurablePlugin>();
+            IEnumerable<IConfigurablePlugin> configurablePlugins = GetPlugins<IConfigurablePlugin>();
             List<PluginConfig> pluginConfigs = [];
 
             foreach (var configurablePlugin in configurablePlugins)
@@ -163,7 +159,7 @@ namespace Sequencer
                     }
                 }
 
-                if (configWithoutPlugins.Count > 0 || GetPluginsOfType(typeof(IConfigurablePlugin)).Count() > loadedConfig.Length)
+                if (configWithoutPlugins.Count > 0 || GetPlugins<IConfigurablePlugin>().Count() > loadedConfig.Length)
                 {
                     Log.Warning("The configuration file contains entries for plugins that could not be found or new plugins were added. The configuration file will be updated.");
                     UpdateConfiguration();
@@ -184,9 +180,6 @@ namespace Sequencer
         private readonly JsonSerializerOptions jsonSerializerOptions = new() { WriteIndented = true };
 
         private readonly string _configFilePath;
-
-        private readonly string _pluginFolder;
-
         #endregion
     }
 
