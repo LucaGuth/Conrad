@@ -31,6 +31,8 @@ namespace OllamaPluginPackage
 
             var localModels = _ollama.ListLocalModels().Result;
 
+            Log.Debug("Local Models: {LocalModels}", localModels);
+
             int currentPercentage = 0;
 
             if (!localModels.Where(model => model.Name == _config.Model).Any())
@@ -49,7 +51,7 @@ namespace OllamaPluginPackage
                 }).Wait();
             }
 
-            _ollama.SelectedModel = _config.Model;
+           _ollama.SelectedModel = _config.Model;
 
         }
         public JsonNode GetConfigiguration()
@@ -89,7 +91,7 @@ namespace OllamaPluginPackage
     public class OllamaConfig
     {
         public string Uri { get; set; } = "http://localhost:11434";
-        public string Model { get; set; } = "gemma";
+        public string Model { get; set; } = "gemma:latest";
         public int Timeout { get; set; } = 60000;
     }
 }
