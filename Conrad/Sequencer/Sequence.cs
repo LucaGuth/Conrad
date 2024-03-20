@@ -45,6 +45,7 @@ namespace Sequencer
             }
 
             _outputPlugins = _pluginLoader.GetPlugins<IOutputPlugin>();
+            _llm = _pluginLoader.GetPlugins<ILangaugeModel>().First();
         }
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace Sequencer
             // llm
             // executor plugins
             // llm
-            var response = message;
+            var response = _llm.Process(message);
 
             Log.Information("[Sequencer] final response: {response}", response);
 
@@ -97,5 +98,7 @@ namespace Sequencer
         private readonly IEnumerable<INotifierPlugin> _notifierPlugins;
 
         private readonly IEnumerable<IOutputPlugin> _outputPlugins;
+
+        private readonly ILangaugeModel _llm;
     }
 }
