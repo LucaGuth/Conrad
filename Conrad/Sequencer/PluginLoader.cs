@@ -148,8 +148,16 @@ namespace Sequencer
                     if (type is not null)
                     {
                         var plugin = _plugins.First(p => type.IsAssignableFrom(p.GetType())) as IConfigurablePlugin;
-                        plugin?.LoadConfiguration(pluginConfig.Config);
-                        Log.Information("Loaded Configuration for {plugin}", plugin?.GetType().Name);
+                        try
+                        {
+                            plugin?.LoadConfiguration(pluginConfig.Config);
+                            Log.Information("Loaded Configuration for {plugin}", plugin?.GetType().Name);
+
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Error(e, "Error loading configuration for {plugin}. It will run with default settings.", plugin?.GetType().Name);
+                        }
                     }
                     else
                     {

@@ -1,4 +1,7 @@
-﻿namespace PluginInterfaces
+﻿using Serilog;
+using Serilog.Events;
+
+namespace PluginInterfaces
 {
     /// <summary>
     /// The base interface for all plugins containing basic information about the plugin.

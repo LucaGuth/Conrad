@@ -13,7 +13,7 @@ namespace ExamplePluginPackage
         {
             while (true)
             {
-                OnNotify?.Invoke(this, $"Hello My Value: {config.ImplementationSpecificVaiue}");
+                //OnNotify?.Invoke(this, $"Hello My Value: {config.ImplementationSpecificVaiue}");
 
                 Task.Delay(3000).Wait();
             }
