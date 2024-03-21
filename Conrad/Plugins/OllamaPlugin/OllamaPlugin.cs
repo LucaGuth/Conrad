@@ -91,7 +91,7 @@ namespace OllamaPluginPackage
     [Serializable]
     public class OllamaConfig
     {
-        public string Uri { get; set; } = "http://localhost:11434";
+        public string Uri { get; set; } = "http://ollama:11434";
         public string Model { get; set; } = "gemma:latest";
         public int Timeout { get; set; } = 60000;
     }
