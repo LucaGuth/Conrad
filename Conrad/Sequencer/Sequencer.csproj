@@ -10,18 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\PluginBase\PluginBase.csproj" />
-    <ProjectReference Include="..\Plugins\DebugOutputPlugin\DebugOutputPlugin.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\ExamplePlugin\ExamplePluginPackage.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\UserInputPlugin\UserInputPlugin.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\WeatherPlugin\WeatherPlugin.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />

@@ -1,6 +1,7 @@
 ﻿using PluginInterfaces;
 using Serilog;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -44,6 +45,34 @@ namespace Sequencer
                 configurablePlugin.OnConfigurationChange += OnConfigurationChange;
             }
 
+            Log.Information("Initializing Plugins");
+
+            object lockNotInitializedPlugins = new object();
+            List<IPlugin> notInitializedPlugins = new List<IPlugin>();
+
+            Parallel.ForEach(_pluginLoader.GetPlugins<IPlugin>(), plugin =>
+            {
+                Log.Debug("Initializing Plugin {PluginName}", plugin.Name);
+
+                try
+                {
+                    plugin.Initialize();
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, "Error while initializing plugin {PluginName}. It will be removed from Plugin list.", plugin.Name);
+                    lock (lockNotInitializedPlugins)
+                    {
+                        notInitializedPlugins.Add(plugin);
+                    }
+                }
+            });
+
+            foreach (var plugin in notInitializedPlugins)
+            {
+                _pluginLoader.RemovePlugin(plugin);
+            }
+
             _outputPlugins = _pluginLoader.GetPlugins<IOutputPlugin>();
             _llm = _pluginLoader.GetPlugins<ILangaugeModel>().First();
         }
@@ -64,8 +93,37 @@ namespace Sequencer
 
             Log.Information("[Sequencer] final response: {response}", response);
 
+            CancellationTokenSource cts = new CancellationTokenSource();
+
             // output to user
-            Parallel.ForEach(_outputPlugins, outputPlugin => outputPlugin.PushMessage(response));
+            List<Task> outputTasks = new List<Task>();
+            object lockOutputTasks = new object();
+            foreach (var outputPlugin in _outputPlugins)
+            {
+                var task = new Task(() => outputPlugin.PushMessage(response), cts.Token);
+                Log.Debug("Created task for {PluginName} with task ID {taskID}.", outputPlugin.Name, task.Id);
+                task.ContinueWith(t =>
+                {
+                    lock (lockOutputTasks)
+                    {
+                        outputTasks.Remove(t);
+                    }
+                    Log.Debug("Task {taskID} completed.", t.Id);
+                });
+                outputTasks.Add(task);
+                task.Start();
+            }
+
+            var time = Stopwatch.StartNew();
+            while (outputTasks.Count > 0)
+            {
+                if (time.ElapsedMilliseconds > 30000)
+                {
+                    Log.Warning("Output Plugins are taking too long to respond. Cancelling tasks: {tasks}", outputTasks);
+                    cts.Cancel();
+                    break;
+                }
+            }
         }
 
         /// <summary>

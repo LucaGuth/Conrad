@@ -22,8 +22,17 @@ namespace OllamaPluginPackage
         public void LoadConfiguration(JsonNode settings)
         {
             _config = settings.Deserialize<OllamaConfig>() ?? throw new InvalidDataException("The config could not be loaded.");
-            Log.Information("Loaded configuration for {Name}", Name);
-            // set up the client
+        }
+        public JsonNode GetConfigiguration()
+        {
+            var localConfig = JsonSerializer.Serialize(_config);
+            var jsonNode = JsonNode.Parse(localConfig)!;
+
+            return jsonNode;
+        }
+
+        public void Initialize()
+        {
             var uri = new Uri(_config.Uri);
             _ollama = new OllamaApiClient(uri);
 
@@ -31,13 +40,13 @@ namespace OllamaPluginPackage
 
             var localModels = _ollama.ListLocalModels().Result;
 
-            Log.Debug("Local Models: {LocalModels}", localModels);
+            Log.Debug("[Ollama] Local Models: {LocalModels}", localModels);
 
             int currentPercentage = 0;
 
             if (!localModels.Where(model => model.Name == _config.Model).Any())
             {
-                Log.Warning("Model {Model} not found. Downloading it now.", _config.Model);
+                Log.Warning("[Ollama] Model {Model} not found. Downloading it now.", _config.Model);
                 _ollama.PullModel(_config.Model, status =>
                 {
                     int newPercentage = (int)status.Percent;
@@ -51,15 +60,7 @@ namespace OllamaPluginPackage
                 }).Wait();
             }
 
-           _ollama.SelectedModel = _config.Model;
-
-        }
-        public JsonNode GetConfigiguration()
-        {
-            var localConfig = JsonSerializer.Serialize(_config);
-            var jsonNode = JsonNode.Parse(localConfig)!;
-
-            return jsonNode;
+            _ollama.SelectedModel = _config.Model;
         }
 
         public string Process(string promt)
@@ -90,7 +91,7 @@ namespace OllamaPluginPackage
     [Serializable]
     public class OllamaConfig
     {
-        public string Uri { get; set; } = "http://localhost:11434";
+        public string Uri { get; set; } = "http://ollama:11434";
         public string Model { get; set; } = "gemma:latest";
         public int Timeout { get; set; } = 60000;
     }

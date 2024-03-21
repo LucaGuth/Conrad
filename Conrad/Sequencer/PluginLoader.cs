@@ -185,6 +185,11 @@ namespace Sequencer
             LoadPluginsFromDirectory(pluginPath);
         }
 
+        internal void RemovePlugin(IPlugin plugin)
+        {
+            _plugins.Remove(plugin);
+        }
+
         private readonly JsonSerializerOptions jsonSerializerOptions = new() { WriteIndented = true };
 
         private readonly string _configFilePath;

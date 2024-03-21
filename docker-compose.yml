@@ -8,3 +8,23 @@ services:
       - ./Conrad/config/:/app/config/:delegated
     ports:
       - 127.0.0.1:4000:4000
+    depends_on:
+      ollama:
+        condition: service_healthy
+
+  ollama:
+    container_name: ollama
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM ollama/ollama
+        RUN apt-get install curl -y
+    volumes:
+      - ./ollama_models:/root/.ollama
+    ports:
+      - 11434:11434
+    healthcheck:
+      test: curl -f localhost:11434 || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 10
