@@ -44,6 +44,34 @@ namespace Sequencer
                 configurablePlugin.OnConfigurationChange += OnConfigurationChange;
             }
 
+            Log.Information("Initializing Plugins");
+
+            object lockNotInitializedPlugins = new object();
+            List<IPlugin> notInitializedPlugins = new List<IPlugin>();
+
+            Parallel.ForEach(_pluginLoader.GetPlugins<IPlugin>(), plugin =>
+            {
+                Log.Debug("Initializing Plugin {PluginName}", plugin.Name);
+
+                try
+                {
+                    plugin.Initialize();
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, "Error while initializing plugin {PluginName}. It will be removed from Plugin list.", plugin.Name);
+                    lock (lockNotInitializedPlugins)
+                    {
+                        notInitializedPlugins.Add(plugin);
+                    }
+                }
+            });
+
+            foreach (var plugin in notInitializedPlugins)
+            {
+                _pluginLoader.RemovePlugin(plugin);
+            }
+
             _outputPlugins = _pluginLoader.GetPlugins<IOutputPlugin>();
             _llm = _pluginLoader.GetPlugins<ILangaugeModel>().First();
         }
