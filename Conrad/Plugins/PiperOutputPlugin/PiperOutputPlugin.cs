@@ -21,17 +21,6 @@ namespace PiperOutputPlugin
         public void LoadConfiguration(JsonNode settings)
         {
             config = settings.Deserialize<PiperOutputPluginConfig>() ?? throw new InvalidDataException("The config could not be loaded.");
-
-            PiperProcess.StartInfo.FileName = config.PiperPath;
-            PiperProcess.StartInfo.Arguments = $"--model {config.ModelPath} --config {config.ConfigPath} --length-scale {config.LengthScale.ToString("0.00", CultureInfo.InvariantCulture)} --output_file conrad_test_audio.wav";
-            PiperProcess.StartInfo.UseShellExecute = false;
-            PiperProcess.StartInfo.RedirectStandardInput = true;
-            PiperProcess.StartInfo.RedirectStandardOutput = true;
-            PiperProcess.StartInfo.RedirectStandardError = true;
-            PiperProcess.StartInfo.CreateNoWindow = true;
-            PiperProcess.ErrorDataReceived += (sender, e) => Log.Debug("[Piper]: {Piper Message}", e.Data);
-
-            PiperProcess.OutputDataReceived += (sender, e) => Log.Debug("[Piper]: {Piper Message}", e.Data);
         }
         public JsonNode GetConfigiguration()
         {
@@ -49,6 +38,29 @@ namespace PiperOutputPlugin
             PiperProcess.StandardInput.WriteLine(message);
             PiperProcess.StandardInput.Close();
             PiperProcess.WaitForExit();
+        }
+
+        public void Initialize()
+        {
+            if (File.Exists(config.PiperPath))
+            {
+                Log.Information("Piper found at {PiperPath}", config.PiperPath);
+            }
+            else
+            {
+                throw new FileNotFoundException("Piper not found at {PiperPath}");
+            }
+
+            PiperProcess.StartInfo.FileName = config.PiperPath;
+            PiperProcess.StartInfo.Arguments = $"--model {config.ModelPath} --config {config.ConfigPath} --length-scale {config.LengthScale.ToString("0.00", CultureInfo.InvariantCulture)} --output_file conrad_test_audio.wav";
+            PiperProcess.StartInfo.UseShellExecute = false;
+            PiperProcess.StartInfo.RedirectStandardInput = true;
+            PiperProcess.StartInfo.RedirectStandardOutput = true;
+            PiperProcess.StartInfo.RedirectStandardError = true;
+            PiperProcess.StartInfo.CreateNoWindow = true;
+            PiperProcess.ErrorDataReceived += (sender, e) => Log.Debug("[Piper]: {Piper Message}", e.Data);
+
+            PiperProcess.OutputDataReceived += (sender, e) => Log.Debug("[Piper]: {Piper Message}", e.Data);
         }
 
         #endregion
