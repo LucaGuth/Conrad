@@ -24,7 +24,7 @@ services:
     ports:
       - 11434:11434
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f localhost:11434 || exit 1" ]
-      interval: 15s
+      test: curl -f localhost:11434 || exit 1
+      interval: 5s
       timeout: 10s
-      retries: 3
+      retries: 10
