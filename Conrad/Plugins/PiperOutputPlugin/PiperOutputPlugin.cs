@@ -38,29 +38,27 @@ namespace PiperOutputPlugin
             PiperProcess.StandardInput.WriteLine(message);
             PiperProcess.StandardInput.Close();
             PiperProcess.WaitForExit();
+
+            if (PiperProcess.ExitCode != 0) {
+                Log.Warning("[Piper]: piper exited with code: {ExitCode}, piper args: {Args}", PiperProcess.ExitCode, PiperProcess.StartInfo.Arguments);
+            }
         }
 
         public void Initialize()
         {
-            if (File.Exists(config.PiperPath))
-            {
-                Log.Information("Piper found at {PiperPath}", config.PiperPath);
-            }
-            else
-            {
-                throw new FileNotFoundException("Piper not found at {PiperPath}");
-            }
-
             PiperProcess.StartInfo.FileName = config.PiperPath;
-            PiperProcess.StartInfo.Arguments = $"--model {config.ModelPath} --config {config.ConfigPath} --length-scale {config.LengthScale.ToString("0.00", CultureInfo.InvariantCulture)} --output_file conrad_test_audio.wav";
             PiperProcess.StartInfo.UseShellExecute = false;
             PiperProcess.StartInfo.RedirectStandardInput = true;
             PiperProcess.StartInfo.RedirectStandardOutput = true;
             PiperProcess.StartInfo.RedirectStandardError = true;
             PiperProcess.StartInfo.CreateNoWindow = true;
             PiperProcess.ErrorDataReceived += (sender, e) => Log.Debug("[Piper]: {Piper Message}", e.Data);
-
             PiperProcess.OutputDataReceived += (sender, e) => Log.Debug("[Piper]: {Piper Message}", e.Data);
+
+            PiperProcess.StartInfo.Arguments = "--version";
+            PiperProcess.Start();
+            PiperProcess.WaitForExit();
+            PiperProcess.StartInfo.Arguments = $"--model {config.ModelPath} --config {config.ConfigPath} --length-scale {config.LengthScale.ToString("0.00", CultureInfo.InvariantCulture)} --output_file conrad_test_audio.wav";
         }
 
         #endregion
@@ -78,8 +76,8 @@ namespace PiperOutputPlugin
     public class PiperOutputPluginConfig
     {
         public string PiperPath { get; set; } = "piper";
-        public string ModelPath { get; set; } = @"C:\Users\markz\.piper\en_GB-northern_english_male-medium.onnx";
-        public string ConfigPath { get; set; } = @"C:\Users\markz\.piper\en_GB-northern_english_male-medium.onnx.json";
+        public string ModelPath { get; set; } = "piper_models/en_US-ryan-high.onnx";
+        public string ConfigPath { get; set; } = "piper_models/en_US-ryan-high.onnx.json";
 
         public double LengthScale { get; set; } = 1.0;
     }
