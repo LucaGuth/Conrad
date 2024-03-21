@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamplePluginPackage", "Plu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherPlugin", "Plugins\WeatherPlugin\WeatherPlugin.csproj", "{9B8127B1-A3C9-46B8-9A63-4F087B330DA0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BahnPlugin", "Plugins\BahnPlugin\BahnPlugin.csproj", "{63E334B5-5B6A-465E-919E-103F174CB337}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{9B8127B1-A3C9-46B8-9A63-4F087B330DA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B8127B1-A3C9-46B8-9A63-4F087B330DA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B8127B1-A3C9-46B8-9A63-4F087B330DA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63E334B5-5B6A-465E-919E-103F174CB337}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63E334B5-5B6A-465E-919E-103F174CB337}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63E334B5-5B6A-465E-919E-103F174CB337}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63E334B5-5B6A-465E-919E-103F174CB337}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +48,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{216D7024-3678-485F-8347-1666222FB390} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 		{9B8127B1-A3C9-46B8-9A63-4F087B330DA0} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
+		{63E334B5-5B6A-465E-919E-103F174CB337} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9EB62EB3-515E-42FC-A67F-8AD9472C5E80}
