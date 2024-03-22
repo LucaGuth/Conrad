@@ -18,11 +18,13 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
     public async Task<string> ExecuteAsync(string parameter)
     {
         Log.Debug("Start execution of the BahnPlugin");
+
         try
         {
             var parameterModel = new ParameterModel(parameter);
-            var stationsStr = await GetStationsByNameAsync(parameterModel.DepartureStation);
-            var root = JsonDocument.Parse(stationsStr);
+            var departureStationStr = await GetStationsByNameAsync(parameterModel.DepartureStation);
+            _ = await GetStationsByNameAsync(parameterModel.DestinationStation);
+            var root = JsonDocument.Parse(departureStationStr);
             var results = root.RootElement.GetProperty("result");
 
             if (results.ValueKind != JsonValueKind.Array || results.GetArrayLength() <= 0)
@@ -35,19 +37,17 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
                 ParseAndFormatXmlResponse(timetableXml, parameterModel.DestinationStation);
             var connections = formattedConnections as string[] ?? formattedConnections.ToArray();
 
-            return connections.Length != 0? string.Join("\n", connections)
-                : "No direct connections could be found or the destination station was not found.";
+            return connections.Length != 0? string.Join("\n", connections) : "No direct connections could be found.";
         }
         catch (Exception e)
         {
             switch (e)
             {
                 case HttpRequestException:
-                    Log.Error(e.Message);
-                    return "The data for the train connection could not be retrieved.";
+                    return e.Message;
                 case ArgumentException exception:
-                    Log.Error($"ArgumentNullException: {exception.ParamName} - {exception.Message}");
-                    return "The train data could not be parsed.";
+                    Log.Error($"ArgumentException: {exception.Message}");
+                    return "The connection data could not be parsed.";
                 default:
                     Log.Error(e.Message);
                     return "An error occurred while processing the train data.";
@@ -74,26 +74,26 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
                 Index = index + 1,
                 TrainCategory = s.Element("tl")?
                     .Attribute("c")?
-                    .Value ?? throw new ArgumentNullException(nameof(xmlResponse), "Train category is null."),
-                TrainNumber = s.Element("dp")?
-                    .Attribute("l")?
-                    .Value ?? throw new ArgumentNullException(nameof(xmlResponse), "Train number is null."),
+                    .Value ?? throw new ArgumentNullException(nameof(xmlResponse), "Train category could not be parsed."),
+                TrainNumber = s.Element("dp")?.Attribute("l")?.Value ??
+                              s.Element("tl")?.Attribute("n")?.Value ??
+                              throw new ArgumentNullException(nameof(xmlResponse), "Train number could not be parsed."),
                 DepartureTime = DateTime.ParseExact(s.Element("dp")?
                     .Attribute("pt")?
-                    .Value ?? throw new ArgumentNullException(nameof(xmlResponse), "Departure time is null."),
+                    .Value ?? throw new ArgumentNullException(nameof(xmlResponse), "Departure time could not be parsed."),
                     "yyMMddHHmm", null),
                 DestinationStation = s.Element("dp")?
                     .Attribute("ppth")?.Value.Split('|')
                     .LastOrDefault()?
                     .Replace("Hbf", "Hauptbahnhof")
-                                     ?? throw new ArgumentNullException(nameof(xmlResponse), "Destination station is null."),
+                                     ?? throw new ArgumentNullException(nameof(xmlResponse), "Destination station could not be parsed."),
                 ViaStations = s.Element("dp")?.Attribute("ppth")?.Value.Split('|').TakeWhile(v =>
                     v != destination).Select(v =>
                 {
                     v = v.Replace("Hbf", "Hauptbahnhof");
                     v = Regex.Replace(v, patternForLocation, replacementForLocation);
                     return v;
-                }).ToArray() ?? throw new ArgumentNullException(nameof(xmlResponse), "Via stations are null.")
+                }).ToArray() ?? throw new ArgumentNullException(nameof(xmlResponse), "Via stations could not be parsed.")
             })
             .Select(c => $"Connection {c.Index}: {c.TrainCategory} {c.TrainNumber} to " +
                          $"{c.DestinationStation}, departure on {c.DepartureTime:yy-MM-dd} at " +
@@ -144,8 +144,15 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
 
     private async Task<string> GetStationsByNameAsync(string station)
     {
-        return await StationGetRequestAsync($"{_config.StationApiUrl}?searchstring=*"
+        try {
+            return await StationGetRequestAsync($"{_config.StationApiUrl}?searchstring=*"
                                             + $"{System.Net.WebUtility.UrlEncode(station)}*");
+        }
+        catch(HttpRequestException e)
+        {
+            Log.Error(e.Message);
+            throw new HttpRequestException($"The station: {station} could not be found.");
+        }
     }
 
     private async Task<string> StationGetRequestAsync(string url)
@@ -164,6 +171,7 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
 
         var response = await _client.SendAsync(request);
         response.EnsureSuccessStatusCode();
+
         return await response.Content.ReadAsStringAsync();
     }
 
@@ -186,7 +194,15 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
             };
 
             var response = await _client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException e)
+            {
+                Log.Error(e.Message);
+                throw new HttpRequestException("The timetable for the station could not be found.");
+            }
             return await response.Content.ReadAsStringAsync();
         }
 }
