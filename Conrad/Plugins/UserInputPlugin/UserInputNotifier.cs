@@ -18,7 +18,7 @@ namespace UserInputNotifierPackage
 
         public void Run()
         {
-            TcpListener server = new(IPAddress.Any, config.TcpPort);
+            TcpListener server = new(IPAddress.Parse(config.ListenAddress), config.TcpPort);
 
             server.Start();
             Log.Information("[{Name}] listening on {endpoint}", Name, server.LocalEndpoint);
@@ -49,7 +49,7 @@ namespace UserInputNotifierPackage
                     promptBuilder.Append(System.Text.Encoding.UTF8.GetString(bytes, 0, byteCount));
                 }
 
-                String prompt = promptBuilder.ToString();
+                string prompt = promptBuilder.ToString();
                 if (prompt.Length > 0)
                 {
                     Log.Information("[{Name}] received prompt: {prompt}", Name, prompt);
@@ -84,6 +84,7 @@ namespace UserInputNotifierPackage
     [Serializable]
     internal class Config
     {
+        public string ListenAddress { get; set; } = "0.0.0.0";
         public int TcpPort { get; set; } = 4000;
         public int TcpReadTimeoutInMs { get; set; } = 1000;
     }
