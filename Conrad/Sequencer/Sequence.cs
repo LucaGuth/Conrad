@@ -1,5 +1,11 @@
 ﻿using PluginInterfaces;
 using Serilog;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 
 namespace Sequencer
 {
@@ -18,12 +24,7 @@ namespace Sequencer
             _pluginLoader = pluginLoader;
 
             Log.Information("Loading Notifier Plugins");
-            _notifierPlugins = _pluginLoader.GetPluginsOfType(typeof(INotifierPlugin)).Cast<INotifierPlugin>();
-
-            void OnNotify(INotifierPlugin sender, string message)
-            {
-                Log.Information("Received message from {PluginName}: {Message}", sender.Name, message);
-            }
+            _notifierPlugins = _pluginLoader.GetPlugins<INotifierPlugin>();
 
             foreach (var notifier in _notifierPlugins)
             {
@@ -37,13 +38,92 @@ namespace Sequencer
             }
 
             Log.Information("Loading Configurable Plugins");
-            var configurablePluigns = _pluginLoader.GetPluginsOfType(typeof(IConfigurablePlugin)).Cast<IConfigurablePlugin>();
+            var configurablePluigns = _pluginLoader.GetPlugins<IConfigurablePlugin>();
             foreach (var configurablePlugin in configurablePluigns)
             {
                 Log.Debug("Subscribing to Configuration Change Event for Plugin {PluginName}", configurablePlugin.Name);
                 configurablePlugin.OnConfigurationChange += OnConfigurationChange;
             }
 
+            Log.Information("Initializing Plugins");
+
+            object lockNotInitializedPlugins = new object();
+            List<IPlugin> notInitializedPlugins = new List<IPlugin>();
+
+            Parallel.ForEach(_pluginLoader.GetPlugins<IPlugin>(), plugin =>
+            {
+                Log.Debug("Initializing Plugin {PluginName}", plugin.Name);
+
+                try
+                {
+                    plugin.Initialize();
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, "Error while initializing plugin {PluginName}. It will be removed from Plugin list.", plugin.Name);
+                    lock (lockNotInitializedPlugins)
+                    {
+                        notInitializedPlugins.Add(plugin);
+                    }
+                }
+            });
+
+            foreach (var plugin in notInitializedPlugins)
+            {
+                _pluginLoader.RemovePlugin(plugin);
+            }
+
+            _outputPlugins = _pluginLoader.GetPlugins<IOutputPlugin>();
+            _llm = _pluginLoader.GetPlugins<ILangaugeModel>().First();
+        }
+
+        /// <summary>
+        /// Callback that runs whenever an INotifierPlugin has a notification.
+        /// This is the main sequence of Conrad:
+        /// notification -> llm -> IExecutorPlugin's -> llm -> output to user
+        /// </summary>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private void OnNotify(INotifierPlugin sender, string message) {
+            Log.Information("[Sequencer] Received message from {PluginName}: {Message}", sender.Name, message);
+
+            // llm
+            // executor plugins
+            // llm
+            var response = _llm.Process(message);
+
+            Log.Information("[Sequencer] final response: {response}", response);
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+
+            // output to user
+            List<Task> outputTasks = new List<Task>();
+            object lockOutputTasks = new object();
+            foreach (var outputPlugin in _outputPlugins)
+            {
+                var task = new Task(() => outputPlugin.PushMessage(response), cts.Token);
+                Log.Debug("Created task for {PluginName} with task ID {taskID}.", outputPlugin.Name, task.Id);
+                task.ContinueWith(t =>
+                {
+                    lock (lockOutputTasks)
+                    {
+                        outputTasks.Remove(t);
+                    }
+                    Log.Debug("Task {taskID} completed.", t.Id);
+                });
+                outputTasks.Add(task);
+                task.Start();
+            }
+
+            var time = Stopwatch.StartNew();
+            while (outputTasks.Count > 0)
+            {
+                if (time.ElapsedMilliseconds > 30000)
+                {
+                    Log.Warning("Output Plugins are taking too long to respond. Cancelling tasks: {tasks}", outputTasks);
+                    cts.Cancel();
+                    break;
+                }
+            }
         }
 
         /// <summary>
@@ -68,11 +148,15 @@ namespace Sequencer
 
             // Idle loop
             Log.Information("Sequence Running...");
-            while (true) ;
+            Thread.Sleep(Timeout.Infinite);
         }
 
         private readonly PluginLoader _pluginLoader;
 
         private readonly IEnumerable<INotifierPlugin> _notifierPlugins;
+
+        private readonly IEnumerable<IOutputPlugin> _outputPlugins;
+
+        private readonly ILangaugeModel _llm;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Serilog;
+using Serilog.Events;
 
 namespace PluginInterfaces
 {
@@ -16,5 +17,13 @@ namespace PluginInterfaces
         /// The Description of the plugin.
         /// </summary>
         public string Description { get; }
+
+        /// <summary>
+        /// The function that is called to initialize the plugin.
+        /// </summary>
+        public void Initialize()
+        {
+            // Default do nothing
+        }
     }
 }
