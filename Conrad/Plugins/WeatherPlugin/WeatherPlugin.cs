@@ -11,8 +11,13 @@ namespace WeatherPlugin;
 
 public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
 {
+    private readonly IHttpClientFactory _httpClientFactory;
+    public WeatherPlugin(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+    }
+
     public string Name => "Weather Forecast";
-    private readonly HttpClient _client = new();
     private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
 
     public string Description =>
@@ -66,8 +71,10 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
         }
     }
 
-    public string ParameterFormat { get; } = "ForecastFromDate:'{YYYY-MM-DD}', ForecastUntilDate:'{YYYY-MM-DD}', " +
-                                             "ForecastCity:'{city}'";
+    public string ParameterFormat =>
+        "ForecastFromDate:'{YYYY-MM-DD}', ForecastUntilDate:'{YYYY-MM-DD}', " +
+        "ForecastCity:'{city}'";
+
     private WeatherPluginConfig _config = new();
     public JsonNode GetConfigiguration()
     {
@@ -86,9 +93,10 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
 
     private async Task<string> GetWeatherForecastAsync(string city)
     {
+        var client = _httpClientFactory.CreateClient();
         var url = $"{_config.BaseUrl}?q={WebUtility.UrlEncode(city)}&appid={_config.ApiKey}&units={_config.Units}";
 
-        var response = await _client.GetAsync(url);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync();
     }
