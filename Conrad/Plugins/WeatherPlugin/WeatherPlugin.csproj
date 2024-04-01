@@ -14,10 +14,4 @@
             <ExcludeAssets>runtime</ExcludeAssets>
         </ProjectReference>
     </ItemGroup>
-    <ItemGroup>
-      <PackageReference Include="AutoMapper" Version="13.0.1" />
-    </ItemGroup>
-    <ItemGroup>
-      <Compile Remove="ApiToPluginMappingProfile.cs" />
-    </ItemGroup>
 </Project>
