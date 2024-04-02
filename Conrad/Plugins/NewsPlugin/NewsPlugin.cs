@@ -49,7 +49,7 @@ public class NewsPlugin : IExecutorPlugin, IConfigurablePlugin
                 let title = item.Element("title")?.Value
                 let description = item.Element("description")?.Value
                 select $"{title}: {description}")
-                .Take(5);
+                .Take(3);
 
             return items.ToList();
         }
