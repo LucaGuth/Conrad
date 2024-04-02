@@ -14,7 +14,7 @@ public class NewsPlugin : IExecutorPlugin, IConfigurablePlugin
     private NewsPluginConfig _config = new();
 
     public string Name => "Tagesschau News";
-    public string Description => "This plugin returns the five latest news from the Tagesschau.";
+    public string Description => "This plugin returns the three latest news from the Tagesschau.";
     public string ParameterFormat => "This plugin does not require any parameters. The parameter string is necessary, " +
                                      "but it is not used.";
 
