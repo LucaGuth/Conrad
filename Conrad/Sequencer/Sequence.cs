@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Sequencer
 {
@@ -14,6 +15,7 @@ namespace Sequencer
     /// </summary>
     internal class Sequence
     {
+
         /// <summary>
         /// The constructor of the sequence that initializes the plugins.
         /// </summary>
@@ -89,7 +91,9 @@ namespace Sequencer
             // llm
             // executor plugins
             // llm
-            var response = _llm.Process(message);
+            var promt = GenerateInputPromt(sender, message);
+            Log.Debug("Sending promt to LLM: {promt}", promt);
+            var response = _llm.Process(promt);
 
             Log.Information("[Sequencer] final response: {response}", response);
 
@@ -149,6 +153,29 @@ namespace Sequencer
             // Idle loop
             Log.Information("Sequence Running...");
             Thread.Sleep(Timeout.Infinite);
+        }
+
+        private string GenerateInputPromt(INotifierPlugin notifierPlugin, string message)
+        {
+            const string _llmPromtHeader = @"
+You are a personal digital assistant. You are designed to help people with their daily tasks. Your actions are split into plugins.
+";
+            StringBuilder promt = new StringBuilder(_llmPromtHeader);
+            promt.AppendLine("You have the following features:");
+            foreach (var plugin in _pluginLoader.GetPlugins<IExecutorPlugin>())
+            {
+                promt.AppendLine($"- {plugin.Name} (): {plugin.Description}");
+                promt.AppendLine($"\tThe parameter format is {plugin.ParameterFormat}");
+                promt.AppendLine();
+            }
+
+            promt.AppendLine($"You have received a message from {notifierPlugin.Name} ({notifierPlugin.Description})\"{message}\"");
+            promt.AppendLine("Choose which plugins and fill out corresponding parameters. If you cannot fill out parameters from the request, do not return the plugin. Return only necessary plugins and no others.");
+            promt.AppendLine("Return them in a machine readable format:");
+            promt.AppendLine("-PluginName(Patameters)");
+            promt.AppendLine("-SecondPluignName(OthersParameters)");
+            promt.AppendLine("If no plugin fits the request return an empty list.");
+            return promt.ToString();
         }
 
         private readonly PluginLoader _pluginLoader;
