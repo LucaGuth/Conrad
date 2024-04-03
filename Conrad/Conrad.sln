@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiperPlugin", "Plugins\Pipe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BahnPlugin", "Plugins\BahnPlugin\BahnPlugin.csproj", "{63E334B5-5B6A-465E-919E-103F174CB337}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharesPlugin", "Plugins\SharesPlugin\SharesPlugin.csproj", "{6A9624A1-71E3-42D3-9671-2861384551B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{1C35F0CD-D33A-402F-A8B2-8E128DDA24FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C35F0CD-D33A-402F-A8B2-8E128DDA24FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C35F0CD-D33A-402F-A8B2-8E128DDA24FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A9624A1-71E3-42D3-9671-2861384551B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A9624A1-71E3-42D3-9671-2861384551B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A9624A1-71E3-42D3-9671-2861384551B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A9624A1-71E3-42D3-9671-2861384551B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,6 +83,7 @@ Global
 		{D159E69C-6C2B-4B22-9AED-A06BFE31C5DE} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 		{B76333DC-A11E-4835-97A8-27989B03117D} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 		{1C35F0CD-D33A-402F-A8B2-8E128DDA24FE} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
+		{6A9624A1-71E3-42D3-9671-2861384551B3} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9EB62EB3-515E-42FC-A67F-8AD9472C5E80}
