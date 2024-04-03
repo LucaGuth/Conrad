@@ -11,11 +11,7 @@ namespace WeatherPlugin;
 
 public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
 {
-    private readonly IHttpClientFactory _httpClientFactory;
-    public WeatherPlugin(IHttpClientFactory httpClientFactory)
-    {
-        _httpClientFactory = httpClientFactory;
-    }
+    private readonly HttpClient _httpClient = new();
 
     public string Name => "Weather Forecast";
     private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
@@ -93,10 +89,9 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
 
     private async Task<string> GetWeatherForecastAsync(string city)
     {
-        var client = _httpClientFactory.CreateClient();
         var url = $"{_config.BaseUrl}?q={WebUtility.UrlEncode(city)}&appid={_config.ApiKey}&units={_config.Units}";
 
-        var response = await client.GetAsync(url);
+        var response = await _httpClient.GetAsync(url);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync();
     }
