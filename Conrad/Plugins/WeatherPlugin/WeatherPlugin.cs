@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Net;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.CSharp.RuntimeBinder;
@@ -10,11 +11,16 @@ namespace WeatherPlugin;
 
 public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
 {
-    public string Name { get; } = "Weather Forecast";
-    private readonly HttpClient _client = new();
+    private readonly IHttpClientFactory _httpClientFactory;
+    public WeatherPlugin(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+    }
+
+    public string Name => "Weather Forecast";
     private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
 
-    public string Description { get; } =
+    public string Description =>
         "This plugin returns a weather forecast for a period of time. The time span ranges from the current date to" +
         "a maximum of five days in the future. A city must be specified as the location for the weather forecast.";
 
@@ -65,8 +71,10 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
         }
     }
 
-    public string ParameterFormat { get; } = "ForecastFromDate:'{YYYY-MM-DD}', ForecastUntilDate:'{YYYY-MM-DD}', " +
-                                             "ForecastCity:'{city}'";
+    public string ParameterFormat =>
+        "ForecastFromDate:'{YYYY-MM-DD}', ForecastUntilDate:'{YYYY-MM-DD}', " +
+        "ForecastCity:'{city}'";
+
     private WeatherPluginConfig _config = new();
     public JsonNode GetConfigiguration()
     {
@@ -85,9 +93,10 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
 
     private async Task<string> GetWeatherForecastAsync(string city)
     {
-        var url = $"{_config.BaseUrl}?q={city}&appid={_config.ApiKey}&units={_config.Units}";
+        var client = _httpClientFactory.CreateClient();
+        var url = $"{_config.BaseUrl}?q={WebUtility.UrlEncode(city)}&appid={_config.ApiKey}&units={_config.Units}";
 
-        var response = await _client.GetAsync(url);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync();
     }
