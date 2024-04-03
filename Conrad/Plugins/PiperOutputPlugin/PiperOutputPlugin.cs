@@ -75,9 +75,9 @@ namespace PiperOutputPlugin
     [Serializable]
     public class PiperOutputPluginConfig
     {
-        public string PiperPath { get; set; } = "piper";
-        public string ModelPath { get; set; } = "piper_models/en_US-ryan-high.onnx";
-        public string ConfigPath { get; set; } = "piper_models/en_US-ryan-high.onnx.json";
+        public string PiperPath { get; set; } = "/python_venv/bin/piper";
+        public string ModelPath { get; set; } = "/app/piper_models/en_US-ryan-high.onnx";
+        public string ConfigPath { get; set; } = "/app/piper_models/en_US-ryan-high.onnx.json";
 
         public double LengthScale { get; set; } = 1.0;
     }
