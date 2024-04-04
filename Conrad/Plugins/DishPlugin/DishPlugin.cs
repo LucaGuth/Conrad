@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
-using PluginBase;
+using PluginInterfaces;
 using Serilog;
 using static System.String;
 
