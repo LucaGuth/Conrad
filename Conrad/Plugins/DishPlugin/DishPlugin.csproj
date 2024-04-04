@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
+        <OutputPath>../../out/$(Configuration)/plugins</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        <RootNamespace>FoodPlugin</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\PluginBase\PluginBase.csproj">
+            <Private>false</Private>
+            <ExcludeAssets>runtime</ExcludeAssets>
+        </ProjectReference>
+    </ItemGroup>
+</Project>
