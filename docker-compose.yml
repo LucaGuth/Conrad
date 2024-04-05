@@ -28,3 +28,15 @@ services:
       interval: 5s
       timeout: 10s
       retries: 10
+      
+  discord_adapter:
+    container_name: discord_adapter
+    restart: unless-stopped
+    volumes:
+      - ./ConradDiscordAdapter/config.json:/app/config.json:ro
+      - ./ConradDiscordAdapter/index.js:/app/index.js:ro
+      - ./ConradDiscordAdapter/recordings:/app/recordings:delegated
+    build:
+      context: ConradDiscordAdapter
+      dockerfile: Dockerfile
+    
