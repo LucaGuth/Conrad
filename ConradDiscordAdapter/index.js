@@ -26,6 +26,12 @@ client.on('ready', async () => {
     await createConnection(channel);
 });
 
+client.on('messageCreate', async (message) => {
+    if (message.author.bot) return;
+    if (message.channel.id !== discord.textChannel) return;
+    sendToConrad(message.content);
+});
+
 async function createConnection(channel) {
     const connection = DiscordVoice.joinVoiceChannel({
         channelId: channel.id,
@@ -118,16 +124,30 @@ function convertOggToMp3(oggFilePath, mp3FilePath) {
         .pipe(outStream, { end: true });
 }
 
-function sendToConrad(text) {
+async function sendToConrad(text, count = 0) {
     // send text over tcp to 127.0.0.1:4000
-    const client = new net.Socket();
+    const networkClient = new net.Socket();
 
-    client.connect(conrad.port, conrad.ip, () => {
+    networkClient.connect(conrad.port, conrad.ip, () => {
         console.log('Connected to server');
 
         // Send plain text message
-        client.write(text);
+        networkClient.write(text);
     });
+
+    networkClient.on('error', (error) => {
+        if (count >= 5) {
+            console.log('Connection refused too many times, giving up');
+            client.channels.cache.get(discord.textChannel).send('Conrad is not available right now, please try again later!');
+            return;
+        }
+        if (error.code === 'ECONNREFUSED') {
+            console.log('Connection refused, trying again in 2 seconds');
+            count++;
+            setTimeout(() => sendToConrad(text, count), 2000);
+        }
+    });
+
 }
 
 client.login(discord.token);

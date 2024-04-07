@@ -2,7 +2,8 @@
   "discord": {
     "token": "",
     "voiceChannel": "",
-    "user": ""
+    "user": "",
+    "textChannel": ""
   },
   "openAIKey": "",
   "conrad":{
