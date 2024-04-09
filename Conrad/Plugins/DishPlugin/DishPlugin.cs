@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using PluginInterfaces;
 using Serilog;
 using static System.String;
+using static System.Text.RegularExpressions.Regex;
 
 namespace FoodPlugin;
 
@@ -14,11 +15,12 @@ public class DishPlugin : IExecutorPlugin, IConfigurablePlugin
 
     public string Name => "Dish Suggestion Provider";
     public string Description => "Plugin to suggest a dish recipe based on the given dish and cuisine.";
-    public string ParameterFormat => "dish:'{dish}', cuisine:'{cuisine}'\n\t" +
-                                     "The two parameters dish and cuisine are required and must be strings. If the " +
+    public string ParameterFormat => "dish:'{dish}', cuisine:'{cuisine}'\n" +
+                                     "\tThe two parameters dish and cuisine are required and must be strings. If the " +
                                      "two parameters are not provided or invalid, the plugin will use the default " +
-                                     "parameters.\n\tA valid parameter format would be:\n\t" +
-                                     "dish:'pasta', cuisine:'italian'";
+                                     "parameters.\n" +
+                                     "\tA valid parameter format would be:\n" +
+                                     "\tdish:'pasta', cuisine:'italian'";
 
     public async Task<string> ExecuteAsync(string parameter)
     {
@@ -30,7 +32,7 @@ public class DishPlugin : IExecutorPlugin, IConfigurablePlugin
             var dishRaw = ParseAndFormatDishIdResponse(dishIdsResponseString);
             var recipeResponseString = await GetRecipeAsync(dishRaw.Id);
             var ingredients = ParseAndFormatDishRecipeResponse(recipeResponseString);
-            return $"Dish title: {dishRaw.Title}\nDish Ingredients: {ingredients}";
+            return $"For the dish '{dishRaw.Title}' one needs the following ingredients: {ingredients}";
         }
         catch (Exception e)
         {
@@ -46,21 +48,18 @@ public class DishPlugin : IExecutorPlugin, IConfigurablePlugin
         }
     }
 
-    private static string ParseAndFormatDishRecipeResponse(string recipeResponseString)
+    private string ParseAndFormatDishRecipeResponse(string recipeResponseString)
     {
         using var document = JsonDocument.Parse(recipeResponseString);
         var root = document.RootElement;
         var ingredients = root.GetProperty("ingredients");
 
-        // Using a HashSet to store ingredient names ensures uniqueness
-        var ingredientNames = new HashSet<string>();
         try
         {
-            foreach (var name in ingredients.EnumerateArray().Select(ingredient =>
-                         ingredient.GetProperty("name").GetString()).OfType<string>())
-            {
-                ingredientNames.Add(name);
-            }
+            // Using a HashSet to store ingredient names ensures uniqueness
+            var ingredientNames = ingredients.EnumerateArray()
+                .Select(ingredient => ingredient.GetProperty("name").GetString()).OfType<string>()
+                .Where(name => name != "removed").ToHashSet();
 
             // Joining the unique ingredient names with ", " and returning the result
             return ingredientNames.Count > 0 ? Join(", ", ingredientNames) :
@@ -96,28 +95,38 @@ public class DishPlugin : IExecutorPlugin, IConfigurablePlugin
 
     private (string dish, string cuisine) ParseInput(string parameter)
     {
-        // Regular expression pattern to extract dish and cuisine
-        const string pattern = @"dish:\s*'([^']*)',\s*cuisine:\s*'([^']*)'";
-
-        // Try to match the pattern to the input string
-        var match = Regex.Match(parameter, pattern);
+        // Flexible pattern to capture "dish" and "cuisine" values from various formats
+        const string pattern = """(?:dish\s*[:\*\s]*['\{\"]?\s*([^,}'\"\s]+)\s*['\}\"]?)\s*(?:,?\s*cuisine\s*[:\*\s]*['\{\"]?\s*([^,}'\"\s]+)\s*['\}\"]?|)|(?:cuisine\s*[:\*\s]*['\{\"]?\s*([^,}'\"\s]+)\s*['\}\"]?)\s*(?:,?\s*dish\s*[:\*\s]*['\{\"]?\s*([^,}'\"\s]+)\s*['\}\"]?|)""";
+        char[] charsToTrim = [ '{', '}', '*', ',', '.', ' ', '\'', '\"' ];
+        var match = Match(parameter, pattern, RegexOptions.IgnoreCase);
 
         if (match.Success)
         {
-            // If the pattern is matched, extract the groups corresponding to dish and cuisine
-            char[] charsToTrim = ['{', '}', '(', ')', '*', ',', '.', ' '];
-            var dish = match.Groups[1].Value.Trim(charsToTrim);
-            var cuisine = match.Groups[2].Value.Trim(charsToTrim);
+            string dish = Empty, cuisine = Empty;
 
-            return (dish, cuisine);
+            // Determine which group captured the dish and cuisine based on the pattern's structure
+            if (!IsNullOrWhiteSpace(match.Groups[1].Value) && !IsNullOrWhiteSpace(match.Groups[2].Value))
+            {
+                dish = match.Groups[1].Value.Trim(charsToTrim);
+                cuisine = match.Groups[2].Value.Trim(charsToTrim);
+            }
+            else if (!IsNullOrWhiteSpace(match.Groups[3].Value) && !IsNullOrWhiteSpace(match.Groups[4].Value))
+            {
+                cuisine = match.Groups[3].Value.Trim(charsToTrim);
+                dish = match.Groups[4].Value.Trim(charsToTrim);
+            }
+
+            if (!IsNullOrEmpty(dish) && !IsNullOrEmpty(cuisine))
+            {
+                return (dish, cuisine);
+            }
         }
 
-        // If the pattern is not matched, log the warning and return the default parameters
-        Log.Warning("The input parameter: {Parameter} does not match the required format for the" +
-                  " dish and cuisine. The default parameters of the plugin config will be used", parameter);
-
-        return (_config.Dish, _config.Cuisine);
+        Log.Warning($"The input parameter: \"{parameter}\" does not match the required or recognized " +
+                    $"formats for dish and cuisine. Default parameters will be used.");
+        return (_config.Dish, _config.Cuisine); // Fallback to default values
     }
+
 
     private async Task<string> GetDishIdsAsync(string dish, string cuisine)
     {
@@ -143,11 +152,12 @@ public class DishPlugin : IExecutorPlugin, IConfigurablePlugin
         catch (HttpRequestException e)
         {
             Log.Error($"{e.StatusCode}: {e.Message}");
-            if (e.StatusCode == HttpStatusCode.NotFound)
+            throw e.StatusCode switch
             {
-                throw new HttpRequestException("The dish could not be found.");
-            }
-            throw new HttpRequestException("The dish information could not be retrieved.");
+                HttpStatusCode.NotFound => new HttpRequestException("No recipe found for the given dish."),
+                HttpStatusCode.Unauthorized => new HttpRequestException("The API key is invalid."),
+                _ => new HttpRequestException("The dish information could not be retrieved.")
+            };
         }
     }
 
