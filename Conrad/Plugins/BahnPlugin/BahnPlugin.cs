@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Globalization;
+using System.Net;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using PluginInterfaces;
@@ -13,12 +14,18 @@ namespace BahnPlugin;
 
 public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
 {
-    public string Name => "DB Train Information";
-    private readonly HttpClient _client = new();
+    #region Public
 
-    public string Description => "This plugin provides train connection information between two stations. Train " +
+    public string Name => "DB Train Information";
+
+    public string Description => "This plugin provides train connection information. Train " +
                                  "connections with intermediate stops for changing trains cannot be called up. Only " +
                                  "train connections that have not yet left the departure station can be retrieved.";
+    public string ParameterFormat =>
+        "DepartureStation:'{trainStation}', DestinationStation:'{trainStation}', " +
+        "DepartureTime:'{yyyy-MM-dd HH:mm}'\n" +
+        $"\tThe departure time must be between {DateTime.Now:yyyy-MM-dd HH:mm} and {DateTime.Now.AddHours(18):yyyy-MM-dd HH:mm}" +
+        $"\tA valid example would be: DepartureStation:'Stuttgart', DestinationStation:'München', DepartureTime:'{DateTime.Now.AddHours(5):yyyy-MM-dd HH:mm}'";
 
     public async Task<string> ExecuteAsync(string parameter)
     {
@@ -37,29 +44,7 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
                 throw new ArgumentException("The train station could not be found.");
 
             // Prepare a list to hold all connections from all evaNumbers
-            var allConnections = new List<string>();
-
-            // Iterate through each result to process its evaNumbers
-            foreach (var evaNumber in
-                     from result in results.EnumerateArray()
-                     select result.GetProperty("evaNumbers").EnumerateArray()
-                     into evaNumbers
-                     from evaNumberElement in evaNumbers
-                     select evaNumberElement.GetProperty("number").GetInt32())
-            {
-                // Fetch the timetable XML for each evaNumber
-                var timetableXml =
-                    await GetStationTimetableAsync(evaNumber, Convert.ToDateTime(parameterModel.DepartureTime));
-                // Parse the fetched timetable XML to get formatted connections
-                var formattedConnections =
-                    ParseAndFormatXmlResponse(timetableXml, parameterModel.DestinationStation);
-
-                // If formattedConnections is not directly an array, ensure it's treated as one
-                var connections = formattedConnections as string[] ?? formattedConnections.ToArray();
-
-                // Add the fetched connections to the allConnections list
-                allConnections.AddRange(connections);
-            }
+            var allConnections = await ProcessStations(results, parameterModel);
 
             // Build the final result string from all accumulated connections
             return allConnections.Count != 0
@@ -71,7 +56,7 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
         {
             switch (e)
             {
-                case ArgumentException or HttpRequestException:
+                case ArgumentException or ArgumentNullException or HttpRequestException:
                     return e.Message;
                 default:
                     Log.Error($"{e.Source}\n{e.Message}");
@@ -79,103 +64,6 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
             }
         }
     }
-
-    private static IEnumerable<string> ParseAndFormatXmlResponse(string xmlResponse, string destination)
-    {
-        const string patternForLocation = @"\(([^)]+)\)";
-        const string replacementForLocation = " $1";
-        const string cantParseMessage = "The timetable data could not be parsed.";
-        var regex = new Regex(@"\s+\(", RegexOptions.Compiled);
-        destination = regex.Replace(destination, "(");
-
-        if (string.IsNullOrEmpty(xmlResponse))
-        {
-            Log.Error($"{nameof(xmlResponse)} - XML response is null or empty.");
-            throw new ArgumentException(cantParseMessage);
-        }
-
-        var doc = XDocument.Parse(xmlResponse);
-        if (doc.Root == null)
-        {
-            Log.Error($"{nameof(xmlResponse)} - XML document root is null.");
-            throw new ArgumentNullException(nameof(xmlResponse), cantParseMessage);
-        }
-
-        var connections = doc.Root.Elements("s")
-            .Where(s => s.Element("dp")?.Attribute("ppth")?.Value.Contains(destination) == true)
-            .Select((s) =>
-            {
-                // Using the local function
-                var trainCategory = GetAttributeValueOrThrow(s.Element("tl"), new[] { "c" }, "Train category could not be parsed.");
-                var trainNumber = GetAttributeValueOrThrow(s.Element("dp"), new[] { "l", "n" }, "Train number could not be parsed.");
-                var departureTimeString = GetAttributeValueOrThrow(s.Element("dp"), new[] { "pt" }, "Departure time could not be parsed.");
-                var departureTime = DateTime.ParseExact(departureTimeString, "yyMMddHHmm", null);
-
-                // Processing DestinationStation using a modified version of the local function
-                var destinationStationRaw = s.Element("dp")?.Attribute("ppth")?.Value ?? throw new ArgumentNullException(nameof(xmlResponse), "Destination station could not be parsed.");
-                var destinationStation = destinationStationRaw.Split('|').LastOrDefault()?.Replace("Hbf", "Hauptbahnhof")
-                                         ?? throw new ArgumentNullException(nameof(xmlResponse), "Destination station could not be parsed after processing.");
-
-                // Processing for ViaStations with additional logic
-                var viaStations = destinationStationRaw.Split('|').TakeWhile(v => v != destination).Select(v =>
-                {
-                    v = v.Replace("Hbf", "Hauptbahnhof");
-                    v = Regex.Replace(v, patternForLocation, replacementForLocation, RegexOptions.Compiled);
-                    return v;
-                }).ToArray();
-
-                return new
-                {
-                    TrainCategory = trainCategory,
-                    TrainNumber = trainNumber,
-                    DepartureTime = departureTime,
-                    DestinationStation = destinationStation,
-                    ViaStations = viaStations
-                };
-
-                // Local function for extracting attribute value or throwing exception
-                string GetAttributeValueOrThrow(XElement? element, IEnumerable<string> attributeNames, string exceptionMessage)
-                {
-                    foreach (var name in attributeNames)
-                    {
-                        var value = element?.Attribute(name)?.Value;
-                        if (!string.IsNullOrEmpty(value)) return value;
-                    }
-
-                    Log.Error(exceptionMessage);
-                    throw new ArgumentNullException(cantParseMessage);
-                }
-            }).ToArray()
-            .Select(c => $"{c.TrainCategory} {c.TrainNumber} to " +
-                         $"{c.DestinationStation}, departure on {c.DepartureTime:yy-MM-dd} at " +
-                         $"{c.DepartureTime:HH:mm}{(c.ViaStations.Length != 0 ? $", via " +
-                         $"{string.Join(", ", c.ViaStations)}" : " (no intermediate stop)")}.")
-            .ToArray();
-        return connections;
-    }
-
-    public string ParameterFormat => "DepartureStation:'{trainStation}', DestinationStation:'{trainStation}', " +
-                                     "DepartureTime:'{YYYY-MM-DD HH:mm}'\n" +
-                                     "When entering city names as parameters in this software application, please " +
-                                     "follow the below template to ensure accurate processing:\n" +
-                                     "1. General Format for Cities with Notable Features (e.g., Rivers):\n" +
-                                     "\tDo not use local prepositions (e.g., \"am\", \"an der\") that are commonly " +
-                                     "found in geographical names. Instead, encapsulate the distinguishing feature " +
-                                     "in parentheses following the city name.\n" +
-                                     "\tExample Format: City Name (Notable Feature)\n" +
-                                     "\tSpecific Example: Use Frankfurt (Main) instead of Frankfurt am Main.\n" +
-                                     "2. General Format for Cities with Multiple Sections or Districts:\n" +
-                                     "\tUse the full name of the city, including the section or district.\n" +
-                                     "\tExample Format: City Name Section\n" +
-                                     "\tSpecific Example: Keep Stuttgart-Bad Cannstatt and Stuttgart Stattmitte as " +
-                                     "they are.\n" +
-                                     "3. Abbreviation of \"Hauptbahnhof\":\n" +
-                                     "\tWhen referring to the main train station (Hauptbahnhof) within any city " +
-                                     "name, abbreviate \"Hauptbahnhof\" as \"Hbf\".\n" +
-                                     "\tFormat: Replace any instance of City Name Hauptbahnhof with City Name Hbf.\n" +
-                                     "\tExample: Use Berlin Hbf instead of Berlin Hauptbahnhof.";
-
-    private BahnPluginConfig _config = new();
 
     public JsonNode GetConfigiguration()
     {
@@ -192,6 +80,151 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
     }
 
     public event ConfigurationChangeEventHandler? OnConfigurationChange;
+
+    #endregion
+
+    #region Private
+
+    private readonly HttpClient _client = new();
+
+    private BahnPluginConfig _config = new();
+
+    private async Task<IList<string>> ProcessStations(JsonElement results, ParameterModel parameterModel)
+    {
+        var allConnections = new List<string>();
+        // Iterate through each result to process its evaNumbers
+        foreach (var evaNumber in
+                 from result in results.EnumerateArray()
+                 select result.GetProperty("evaNumbers").EnumerateArray()
+                 into evaNumbers
+                 from evaNumberElement in evaNumbers
+                 select evaNumberElement.GetProperty("number").GetInt32())
+        {
+            // Fetch the timetable XML for each evaNumber
+            var timetableXml =
+                await GetStationTimetableAsync(evaNumber, Convert.ToDateTime(parameterModel.DepartureTime));
+            // Parse the fetched timetable XML to get formatted connections
+            var formattedConnections =
+                ParseAndFormatXmlResponse(timetableXml, parameterModel.DestinationStation);
+
+            // If formattedConnections is not directly an array, ensure it's treated as one
+            var connections = formattedConnections as string[] ?? formattedConnections.ToArray();
+
+            // Add the fetched connections to the allConnections list
+            allConnections.AddRange(connections);
+        }
+
+        return allConnections;
+    }
+
+    private IEnumerable<string> ParseAndFormatXmlResponse(string xmlResponse, string destination)
+    {
+        ValidateXmlResponse(xmlResponse);
+
+        var doc = XDocument.Parse(xmlResponse);
+        ValidateDocumentRoot(doc);
+
+        destination = PreprocessDestination(destination);
+
+        var connections = ExtractConnections(doc, destination);
+
+        return FormatConnections(connections);
+    }
+
+    private void ValidateXmlResponse(string xmlResponse)
+    {
+        if (!string.IsNullOrEmpty(xmlResponse)) return;
+        Log.Error($"{nameof(xmlResponse)} - XML response is null or empty.");
+        throw new ArgumentException("The timetable data could not be parsed.");
+    }
+
+    private static void ValidateDocumentRoot(XDocument doc)
+    {
+        if (doc.Root != null) return;
+        Log.Error("XML document root is null.");
+        throw new ArgumentNullException(nameof(doc.Root), "The timetable data could not be parsed.");
+    }
+
+    private string PreprocessDestination(string destination)
+    {
+        var regex = new Regex(@"\s+\(", RegexOptions.Compiled);
+        return regex.Replace(destination, "(");
+    }
+
+    private IEnumerable<dynamic> ExtractConnections(XContainer docRoot, string destination)
+    {
+        return docRoot.Elements("s")
+            .Where(s => s.Element("dp")?.Attribute("ppth")?.Value.Contains(destination) == true)
+            .Select(s => ParseConnection(s, destination)).ToArray();
+    }
+
+    private dynamic ParseConnection(XElement s, string destination)
+    {
+        var trainNumber = ExtractTrainNumber(s);
+        var trainCategory = GetAttributeValueOrThrow(s.Element("tl"), new[] { "c" }, "Train category could not be parsed.");
+        var departureTimeString = GetAttributeValueOrThrow(s.Element("dp"), new[] { "pt" }, "Departure time could not be parsed.");
+        var departureTime = DateTime.ParseExact(departureTimeString, "yyMMddHHmm", CultureInfo.InvariantCulture);
+
+        var destinationStation = ProcessDestinationStation(s);
+
+        var viaStations = ProcessViaStations(s, destination);
+
+        return new
+        {
+            TrainCategory = trainCategory,
+            TrainNumber = trainNumber,
+            DepartureTime = departureTime,
+            DestinationStation = destinationStation,
+            ViaStations = viaStations
+        };
+    }
+
+    private string ExtractTrainNumber(XElement s)
+    {
+        // For IC, ICE, EC, TGV the train number is not in the "l" attribute
+        return s.Element("dp")?.Attribute("l")?.Value
+               ?? GetAttributeValueOrThrow(s.Element("tl"), new[] { "n" }, "Train number could not be parsed.");
+    }
+
+    private string ProcessDestinationStation(XElement s)
+    {
+        var destinationStationRaw = s.Element("dp")?.Attribute("ppth")?.Value ?? throw new ArgumentNullException(nameof(s), "Destination station could not be parsed.");
+        return destinationStationRaw.Split('|').LastOrDefault()?.Replace("Hbf", "Hauptbahnhof")
+               ?? throw new ArgumentNullException(nameof(s), "Destination station could not be parsed after processing.");
+    }
+
+    private IEnumerable<string> ProcessViaStations(XElement s, string destination)
+    {
+        const string patternForLocation = @"\(([^)]+)\)";
+        const string replacementForLocation = " $1";
+
+        var destinationStationRaw = s.Element("dp")?.Attribute("ppth")?.Value;
+        return destinationStationRaw?.Split('|').TakeWhile(v => v != destination).Select(v =>
+        {
+            v = v.Replace("Hbf", "Hauptbahnhof");
+            return Regex.Replace(v, patternForLocation, replacementForLocation, RegexOptions.Compiled);
+        }) ?? Enumerable.Empty<string>();
+    }
+
+    private string GetAttributeValueOrThrow(XElement? element, string[] attributeNames, string exceptionMessage)
+    {
+        foreach (var name in attributeNames)
+        {
+            var value = element?.Attribute(name)?.Value;
+            if (!string.IsNullOrEmpty(value)) return value;
+        }
+
+        Log.Error(exceptionMessage);
+        throw new ArgumentNullException(nameof(element), "The timetable data could not be parsed.");
+    }
+
+    private IEnumerable<string> FormatConnections(IEnumerable<dynamic> connections)
+    {
+        return connections.Select(c => $"{c.TrainCategory} {c.TrainNumber} to " +
+                                       $"{c.DestinationStation}, departure on {c.DepartureTime:yy-MM-dd} at " +
+                                       $"{c.DepartureTime:HH:mm}{(c.ViaStations.Any() ? $", via " + string.Join(", ", c.ViaStations) : " (no intermediate stop)")}")
+                          .ToArray();
+    }
 
     private async Task<string> GetStationsByNameAsync(string station)
     {
@@ -232,39 +265,40 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
     }
 
     private async Task<string> GetStationTimetableAsync(int stationNumber, DateTime departure)
+    {
+        var date = departure.ToString("yyMMdd"); // For the date in yyMMdd format
+        var hour = departure.ToString("HH"); // For the hour in HH format
+        var url = $"{_config.TimetableApiUrl}/{stationNumber}/{date}/{hour}";
+
+        var request = new HttpRequestMessage
         {
-            var date = departure.ToString("yyMMdd"); // For the date in yyMMdd format
-            var hour = departure.ToString("HH"); // For the hour in HH format
-            var url = $"{_config.TimetableApiUrl}/{stationNumber}/{date}/{hour}";
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(url),
+            Headers =
+            {
+                { "DB-Client-Id", _config.ClientId },
+                { "DB-Api-Key", _config.ApiKey },
+                { "accept", "application/xml" },
+            },
+        };
 
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri(url),
-                Headers =
-                {
-                    { "DB-Client-Id", _config.ClientId },
-                    { "DB-Api-Key", _config.ApiKey },
-                    { "accept", "application/xml" },
-                },
-            };
-
-            var response = await _client.SendAsync(request);
-            try
-            {
-                response.EnsureSuccessStatusCode();
-            }
-            catch (HttpRequestException e)
-            {
-                Log.Error(e.Message);
-                if (e.StatusCode == HttpStatusCode.Gone)
-                {
-                    throw new HttpRequestException("The timetable is no longer available.");
-                }
-                throw new HttpRequestException("The timetable for the station could not be found.");
-            }
-            return await response.Content.ReadAsStringAsync();
+        var response = await _client.SendAsync(request);
+        try
+        {
+            response.EnsureSuccessStatusCode();
         }
+        catch (HttpRequestException e)
+        {
+            Log.Error(e.Message);
+            if (e.StatusCode == HttpStatusCode.Gone)
+            {
+                throw new HttpRequestException("The timetable is no longer available.");
+            }
+            throw new HttpRequestException("The timetable for the station could not be found.");
+        }
+        return await response.Content.ReadAsStringAsync();
+    }
+    #endregion
 }
 
 [Serializable]
