@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Sequencer
 {
@@ -85,26 +86,57 @@ namespace Sequencer
         /// notification -> llm -> IExecutorPlugin's -> llm -> output to user
         /// </summary>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private void OnNotify(INotifierPlugin sender, string message) {
-            Log.Information("[Sequencer] Received message from {PluginName}: {Message}", sender.Name, message);
+        private void OnNotify(INotifierPlugin sender, string message)
+        {
+            Log.Debug("[Sequencer] Received message from {PluginName}: {Message}", sender.Name, message);
 
-            // llm
-            // executor plugins
             // llm
             var promt = GenerateInputPromt(sender, message);
             Log.Debug("Sending promt to LLM: {promt}", promt);
-            var response = _llm.Process(promt);
+            var llmInputResponse = _llm.Process(promt);
+            Log.Information("[Sequencer] [Parsing Stage] LLM response: {response}", llmInputResponse);
 
-            Log.Information("[Sequencer] final response: {response}", response);
+            // Parse response
+            var responseCommands = llmInputResponse.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
-            CancellationTokenSource cts = new CancellationTokenSource();
+            StringBuilder executorResults = new StringBuilder();
+            Parallel.ForEach(responseCommands, command =>
+            {
+                var parsedCommand = Regex.Match(command, @"(.+)\((.*)\)");
+                if (parsedCommand.Success)
+                {
+                    var requestedPluginName = parsedCommand.Groups[1].Value;
+                    var requestedPluginArguments = parsedCommand.Groups[2].Value;
+                    try
+                    {
+                        var plugin = _pluginLoader.GetPluginsByName<IExecutorPlugin>(requestedPluginName).First();
+                        var executorResult = plugin.ExecuteAsync(requestedPluginArguments).Result;
+                        Log.Debug("Plugin {plugin} responded: {executorResult}", plugin.Name, executorResult);
+                        if (executorResult != null)
+                        {
+                            lock (executorResults)
+                            {
+                                executorResults.AppendLine($"{command} result: {executorResult}{Environment.NewLine}");
+                            }
+                        }
+                    }
+                    catch (Exception) { }
+                }
+            });
+
+
+            // llm
+            var llmOutputResponse = _llm.Process(GenerateOutputPromt(sender, message, executorResults.ToString()));
+            Log.Debug("[Sequencer] [Parsing Stage] LLM response: {response}", llmOutputResponse);
+
 
             // output to user
+            CancellationTokenSource outputCancelationToken = new CancellationTokenSource();
             List<Task> outputTasks = new List<Task>();
             object lockOutputTasks = new object();
             foreach (var outputPlugin in _outputPlugins)
             {
-                var task = new Task(() => outputPlugin.PushMessage(response), cts.Token);
+                var task = new Task(() => outputPlugin.PushMessage(llmOutputResponse), outputCancelationToken.Token);
                 Log.Debug("Created task for {PluginName} with task ID {taskID}.", outputPlugin.Name, task.Id);
                 task.ContinueWith(t =>
                 {
@@ -121,10 +153,10 @@ namespace Sequencer
             var time = Stopwatch.StartNew();
             while (outputTasks.Count > 0)
             {
-                if (time.ElapsedMilliseconds > 30000)
+                if (time.ElapsedMilliseconds > 60000)
                 {
                     Log.Warning("Output Plugins are taking too long to respond. Cancelling tasks: {tasks}", outputTasks);
-                    cts.Cancel();
+                    outputCancelationToken.Cancel();
                     break;
                 }
             }
@@ -158,24 +190,50 @@ namespace Sequencer
         private string GenerateInputPromt(INotifierPlugin notifierPlugin, string message)
         {
             const string _llmPromtHeader = @"
-You are a personal digital assistant. You are designed to help people with their daily tasks. Your actions are split into plugins.
+You are a personal digital assistant. You have access to the following plugins:
 ";
             StringBuilder promt = new StringBuilder(_llmPromtHeader);
-            promt.AppendLine("You have the following features:");
             foreach (var plugin in _pluginLoader.GetPlugins<IExecutorPlugin>())
             {
-                promt.AppendLine($"- {plugin.Name} (): {plugin.Description}");
-                promt.AppendLine($"\tThe parameter format is {plugin.ParameterFormat}");
-                promt.AppendLine();
+                promt.AppendLine($"{plugin.Name}: {plugin.ParameterFormat}");
             }
 
-            promt.AppendLine($"You have received a message from {notifierPlugin.Name} ({notifierPlugin.Description})\"{message}\"");
-            promt.AppendLine("Choose which plugins and fill out corresponding parameters. If you cannot fill out parameters from the request, do not return the plugin. Return only necessary plugins and no others.");
-            promt.AppendLine("Return them in a machine readable format:");
-            promt.AppendLine("-PluginName(Patameters)");
-            promt.AppendLine("-SecondPluignName(OthersParameters)");
-            promt.AppendLine("If no plugin fits the request return an empty list.");
+            const string _llmPromtBody = @"
+
+- Remove plugins that are not relevant to the task.
+- Fill out all parameters sensibly (everything inside {}).
+  If not all parameters can be filled out, remove that plugin.
+  Plugins may have no parameters, in that case simply return the plugin name, as shown above.
+- If no plugin is relevant, return '-'.
+- You may only return the same plugin multiple times if each instance has different parameters.
+
+Do not, under any circumstances, in any way explain the result you give!
+The output will be parsed, so it has to adhere exactly to the format shown above and cannot contain anything extra!
+The user will not see the response you give, you are talking to a machine that only needs to know which plugins to execute!
+
+";
+            promt.AppendLine(_llmPromtBody);
+
+            promt.AppendLine($"Input was received from '{notifierPlugin.Name} ({notifierPlugin.Description})'");
+            promt.AppendLine($"```");
+            promt.AppendLine(message);
+            promt.AppendLine($"```");
+
             return promt.ToString();
+        }
+
+        private string GenerateOutputPromt(INotifierPlugin sender, string request, string results)
+        {
+            StringBuilder promt = new($"You are a personal digital assistant. The Plugin {sender.Name}({sender.Description}) made the \"{request}\". The request was processed by the application.");
+
+            promt.Append("```");
+            promt.Append(results);
+            promt.Append("```");
+
+            promt.Append("Your name is Conrad. Summarize the results for the User in a friendly way.");
+
+            return promt.ToString();
+
         }
 
         private readonly PluginLoader _pluginLoader;
