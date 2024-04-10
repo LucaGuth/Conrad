@@ -13,19 +13,21 @@ namespace CalendarPlugin;
 
 public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
 {
+    #region  Public
+
     public string Name => "Calendar Provider";
     public string Description => "This plugin returns the events of a day.";
-    public string ParameterFormat => "Day:'{YYYY-MM-DD}'\n\tThe parameter must be a string in the format 'YYYY-MM-DD'." +
-                                     " A valid example would be '2024-04-02' for the 2nd of April 2024. If the" +
-                                     " parameter is not provided or invalid, the plugin will return the events of the" +
-                                     " current day.";
+    public string ParameterFormat => "Day:'{YYYY-MM-DD}'\n" +
+                                     "\tA valid example would be '2024-04-02' for the 2nd of April 2024.";
+
+    public event ConfigurationChangeEventHandler? OnConfigurationChange;
 
     public async Task<string> ExecuteAsync(string parameter)
     {
         Log.Debug("Starting execution of Calendar Plugin.");
         try
         {
-            var date = ParseParameterToDate(parameter);
+            var date = ExtractDate(parameter);
 
             var options = new JsonSerializerOptions
             {
@@ -39,14 +41,14 @@ public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
                 .CreateScoped(CalendarService.Scope.Calendar);
 
             // Create Google Calendar API service
-            var service = new CalendarService(new BaseClientService.Initializer()
+            var service = new CalendarService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = credential,
-                ApplicationName = _config.ApplicationName,
+                ApplicationName = _config.ApplicationName
             });
 
             // Define the request
-            var request = GetConfiguredRequest(service, date, _config.CalendarId);
+            var request = GetConfiguredRequest(service, date);
 
             // Retrieve the events
             var events = await request.ExecuteAsync();
@@ -56,7 +58,7 @@ public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
         }
         catch (Exception e)
         {
-            Log.Error("An error occurred:\n{Source}\n{Error}", e.Source, e.Message);
+            Log.Error("An error occurred:\n{e}\n{Source}\n{Error}", e, e.Source, e.Message);
 
             return e is NotSupportedException ? "An error occurred probably due to an authentication issue. " +
                                                 "The event list could not be retrieved."
@@ -65,7 +67,27 @@ public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
 
     }
 
-    private static EventsResource.ListRequest GetConfiguredRequest(CalendarService service, DateTime date, string calendarId)
+    public JsonNode GetConfigiguration()
+    {
+        var localConfig = JsonSerializer.Serialize(_config);
+        var jsonNode = JsonNode.Parse(localConfig)!;
+
+        return jsonNode;
+    }
+
+    public void LoadConfiguration(JsonNode configuration)
+    {
+        _config = configuration.Deserialize<CalendarPluginConfig>() ?? throw new InvalidDataException("The " +
+            "config could not be loaded.");
+    }
+
+    #endregion
+
+    #region Private
+
+    private CalendarPluginConfig _config = new();
+
+    private EventsResource.ListRequest GetConfiguredRequest(CalendarService service, DateTime date)
     {
         // Define the start and end times as DateTimeOffset
         DateTimeOffset startTime;
@@ -84,7 +106,7 @@ public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
         var endTime = startTime.AddDays(1);
 
         // Configure the request
-        var request = service.Events.List(calendarId);
+        var request = service.Events.List(_config.CalendarId);
         request.TimeMinDateTimeOffset = startTime;
         request.TimeMaxDateTimeOffset = endTime;
         request.ShowDeleted = false;
@@ -94,7 +116,7 @@ public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
         return request;
     }
 
-    private static string ListUpcomingEvents(Events events)
+    private string ListUpcomingEvents(Events events)
     {
         var result = new List<string>();
         if (events.Items is { Count: > 0 })
@@ -102,7 +124,7 @@ public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
             for (var index = 0; index < events.Items.Count; index++)
             {
                 var eventItem = events.Items[index];
-                string start, duration;
+                string start;
                 TimeSpan? eventDuration = null;
 
                 if (!string.IsNullOrEmpty(eventItem.Start.DateTimeRaw) &&
@@ -125,21 +147,7 @@ public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
                     continue;
                 }
 
-                // Format duration as a string (e.g., "2 hours 30 minutes")
-                if (eventDuration.HasValue)
-                {
-                    var totalMinutes = (int)eventDuration.Value.TotalMinutes;
-                    var hours = totalMinutes / 60;
-                    var minutes = totalMinutes % 60;
-                    duration =
-                        $"{(hours > 0 ? $"{hours} hour{(hours > 1 ? "s" : "")}" : "")}" +
-                        $"{(minutes > 0 ? $" {minutes} minute{(minutes > 1 ? "s" : "")}" : "")}"
-                            .Trim();
-                }
-                else
-                {
-                    duration = "All day event";
-                }
+                var duration = FormatDuration(eventDuration);
 
                 // Retrieve the location
                 var location = !string.IsNullOrEmpty(eventItem.Location)
@@ -158,42 +166,45 @@ public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
         return string.Join("\n", result);
     }
 
-    private static DateTime ParseParameterToDate(string parameter)
+    private string FormatDuration(TimeSpan? eventDuration)
     {
-        // Attempt to extract the date part from the parameter string using regex
-        var match = Regex.Match(parameter, @"Day:'(\d{4}-\d{2}-\d{2})'");
-        if (match.Success)
+        // Format duration as a string (e.g., "2 hours 30 minutes")
+        if (!eventDuration.HasValue)
+            return "All day event";
+
+        var totalMinutes = (int)eventDuration.Value.TotalMinutes;
+        var hours = totalMinutes / 60;
+        var minutes = totalMinutes % 60;
+        return
+            $"{(hours > 0 ? $"{hours} hour{(hours > 1 ? "s" : "")}" : "")}" +
+            $"{(minutes > 0 ? $" {minutes} minute{(minutes > 1 ? "s" : "")}" : "")}"
+                .Trim();
+    }
+
+    private static DateTime ExtractDate(string parameter)
+    {
+        var date = DateTime.Today;
+        // This regex pattern looks for any substring that matches the YYYY-MM-DD date format
+        const string datePattern = @"\b(\d{4}-\d{2}-\d{2})\b";
+        var match = Regex.Match(parameter, datePattern);
+
+        if (match.Success && DateTime.TryParseExact(match.Groups[1].Value, "yyyy-MM-dd", CultureInfo.InvariantCulture,
+                                                 DateTimeStyles.None, out var parsedDate))
         {
-            // If a date is successfully extracted, try to parse it to DateTime
-            if (DateTime.TryParseExact(match.Groups[1].Value, "yyyy-MM-dd", CultureInfo.InvariantCulture,
-                    DateTimeStyles.None, out var parsedDate))
-            {
-                return parsedDate;
-            }
+            // If a matching date substring is found, attempt to parse it to a DateTime object
+            date = parsedDate;
+        }
+        else
+        {
+            // Log a warning if no valid date is found and return today's date as a fallback
+            Log.Warning("No valid date found in the provided parameter. Using today's date as a fallback.");
         }
 
-        // If the parameter is not provided or invalid log a warning and return the current day
-        Log.Warning("Invalid parameter provided. Using the current day.");
-        return DateTime.Today;
+        return date;
     }
 
-    private CalendarPluginConfig _config = new();
+    #endregion
 
-    public JsonNode GetConfigiguration()
-    {
-        var localConfig = JsonSerializer.Serialize(_config);
-        var jsonNode = JsonNode.Parse(localConfig)!;
-
-        return jsonNode;
-    }
-
-    public void LoadConfiguration(JsonNode configuration)
-    {
-        _config = configuration.Deserialize<CalendarPluginConfig>() ?? throw new InvalidDataException("The " +
-            "config could not be loaded.");
-    }
-
-    public event ConfigurationChangeEventHandler? OnConfigurationChange;
 }
 
 [Serializable]
