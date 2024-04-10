@@ -16,9 +16,10 @@ public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
     #region  Public
 
     public string Name => "Calendar Provider";
-    public string Description => "This plugin returns the events of a day.";
-    public string ParameterFormat => "Day:'{YYYY-MM-DD}'\n" +
-                                     "\tA valid example would be '2024-04-02' for the 2nd of April 2024.";
+    public string Description => "This plugin returns the events of a date.";
+    public string ParameterFormat => "Date:'{YYYY-MM-DD}'\n" +
+                                     "\tA valid example for the 2nd of April 2024 would be:\n" +
+                                     "\tDate:'2024-04-02'";
 
     public event ConfigurationChangeEventHandler? OnConfigurationChange;
 
@@ -160,7 +161,7 @@ public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
         }
         else
         {
-            result.Add("No events for the day.");
+            result.Add("No events for the date.");
         }
 
         return string.Join("\n", result);
@@ -200,6 +201,8 @@ public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
             Log.Warning("No valid date found in the provided parameter. Using today's date as a fallback.");
         }
 
+        Log.Debug("[{PluginName}] Parsed parameter: Date:'{date}'",
+            nameof(CalendarPlugin), date.ToString("yyyy-MM-dd"));
         return date;
     }
 
