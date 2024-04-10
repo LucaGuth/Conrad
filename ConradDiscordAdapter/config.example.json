@@ -9,5 +9,9 @@
   "conrad":{
     "ip": "127.0.0.1",
     "port": 4000
+  },
+  "inputRequests": {
+    "host": "0.0.0.0",
+    "port": 6000
   }
 }

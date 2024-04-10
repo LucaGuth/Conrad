@@ -32,6 +32,8 @@ services:
   discord_adapter:
     container_name: discord_adapter
     restart: unless-stopped
+    ports:
+      - "6000:6000"
     volumes:
       - ./ConradDiscordAdapter/config.json:/app/config.json:ro
       - ./ConradDiscordAdapter/index.js:/app/index.js:ro

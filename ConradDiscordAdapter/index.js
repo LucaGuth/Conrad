@@ -1,10 +1,8 @@
-const {EndBehaviorType} = require("@discordjs/voice");
-
 const Discord = require('discord.js');
 const { GatewayIntentBits } = require('discord-api-types/v10');
 const DiscordVoice = require('@discordjs/voice');
-const {entersState, VoiceConnectionStatus} = require("@discordjs/voice");
-const { discord, openAIKey, conrad } = require('./config.json')
+const {entersState, VoiceConnectionStatus, EndBehaviorType, createAudioPlayer, createAudioResource, StreamType} = require("@discordjs/voice");
+const { discord, openAIKey, conrad, inputRequests } = require('./config.json')
 const prism = require('prism-media');
 const {createWriteStream} = require("node:fs");
 const {pipeline} = require("node:stream");
@@ -12,8 +10,41 @@ const ffmpeg = require('fluent-ffmpeg');
 const OpenAI = require("openai");
 const fs = require('fs');
 const net = require('net');
+const http = require('http');
+const { createReadStream } = require('node:fs');
 
 const openai = new OpenAI({apiKey: openAIKey});
+
+const httpServer = http.createServer((req, res) => {
+    // check if the request is plain text
+    if (req.headers['content-type'] === 'text/plain') {
+        let body = '';
+        req.on('data', (chunk) => {
+            body += chunk.toString();
+        });
+        req.on('end', () => {
+            sendDiscordMessage(body);
+        });
+        res.end('Message received');
+    } else if (req.headers['content-type'] === 'audio/ogg' || req.headers['content-type'] === 'audio/mpeg') {
+        // get the file from the request
+        const fileStream = fs.createWriteStream('/tmp/uploaded_file.ogg');
+        req.pipe(fileStream);
+
+        fileStream.on('finish', () => {
+            playAudio('/tmp/uploaded_file.ogg');
+            res.writeHead(200, {'Content-Type': 'text/plain'});
+            res.end('File transfer successful');
+        });
+    } else {
+        res.writeHead(400, {'Content-Type': 'text/plain'});
+        res.end('Invalid request');
+    }
+});
+
+httpServer.listen(inputRequests.port, inputRequests.host, () => {
+    console.log(`Input-Server running at ${inputRequests.host}:${inputRequests.port}/`);
+});
 
 const client = new Discord.Client({
     intents: [GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMessages, GatewayIntentBits.Guilds],
@@ -32,8 +63,26 @@ client.on('messageCreate', async (message) => {
     sendToConrad(message.content);
 });
 
+function sendDiscordMessage(message) {
+    client.channels.cache.get(discord.textChannel).send(message);
+}
+
+function playAudio(file) {
+    const player = createAudioPlayer();
+
+    const resource = createAudioResource(createReadStream(file, {
+        inputType: StreamType.OggOpus,
+    }));
+
+    player.play(resource);
+
+    connection.subscribe(player);
+}
+
+let connection;
+
 async function createConnection(channel) {
-    const connection = DiscordVoice.joinVoiceChannel({
+    connection = DiscordVoice.joinVoiceChannel({
         channelId: channel.id,
         guildId: channel.guild.id,
         adapterCreator: channel.guild.voiceAdapterCreator,
