@@ -16,7 +16,7 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
 {
     #region Public
 
-    public string Name => "DB Train Information";
+    public string Name => "DB Train Information Provider";
 
     public string Description => "This plugin provides train connection information. Train " +
                                  "connections with intermediate stops for changing trains cannot be called up. Only " +
