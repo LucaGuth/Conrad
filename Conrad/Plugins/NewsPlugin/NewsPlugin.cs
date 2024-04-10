@@ -13,10 +13,11 @@ public class NewsPlugin : IExecutorPlugin, IConfigurablePlugin
     private readonly HttpClient _httpClient = new();
     private NewsPluginConfig _config = new();
 
-    public string Name => "Tagesschau News";
-    public string Description => "This plugin returns the three latest news from the Tagesschau.";
-    public string ParameterFormat => "This plugin does not require any parameters. The parameter string is necessary, " +
-                                     "but it is not used.";
+    public string Name => "News Provider";
+    public string Description => "This plugin returns the three latest news.";
+    public string ParameterFormat => "NewsParameter:'{parameter}'\n" +
+                                     "\tThe parameter must be any string. A valid parameter format would be:\n" +
+                                     "\tNewsParameter:'latest'";
 
     public async Task<string> ExecuteAsync(string parameter)
     {
@@ -26,7 +27,7 @@ public class NewsPlugin : IExecutorPlugin, IConfigurablePlugin
         {
             var newsXml = await GetNewsAsync();
             var news = ParseAndFormatXmlResponse(newsXml);
-            return string.Join("\n", news);
+            return $"News:\n{string.Join("\n", news)}";
         }
         catch (Exception e)
         {
@@ -48,7 +49,7 @@ public class NewsPlugin : IExecutorPlugin, IConfigurablePlugin
             var items = (from item in doc.Descendants("item")
                 let title = item.Element("title")?.Value
                 let description = item.Element("description")?.Value
-                select $"{title}: {description}")
+                select $"\t{title}: {description}")
                 .Take(3);
 
             return items.ToList();
