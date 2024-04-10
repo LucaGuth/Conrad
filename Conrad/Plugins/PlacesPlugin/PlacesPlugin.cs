@@ -2,32 +2,32 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.RegularExpressions;
 using PluginInterfaces;
 using Serilog;
+using static System.Text.RegularExpressions.Regex;
 
 namespace PlacesPlugin;
 
 public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
 {
-    private PlacesPluginConfig _config = new();
-    private readonly HttpClient _client = new();
+    #region Public
 
     public string Name => "Restaurants Provider";
     public string Description => $"This plugin returns the three nearest restaurants based on a location " +
                                  $"as parameter.";
-    public string ParameterFormat => "location:'{location}'\n\t" +
-                                     "The location parameter is required and must be a string. If the " +
-                                     "parameter is not provided or invalid, the plugin will use the default " +
-                                     "parameter.\n\tA valid parameter format would be:\n\t" +
-                                     "location:'Lerchenstraße 1, 70174 Stuttgart'";
+    public string ParameterFormat => "Location:'{location}'\n\t" +
+                                     "The location parameter is required and must be a string. A valid parameter " +
+                                     "format would be:\n" +
+                                     "\tLocation:'Lerchenstraße 1, 70174 Stuttgart'";
+
+    public event ConfigurationChangeEventHandler? OnConfigurationChange;
 
     public async Task<string> ExecuteAsync(string parameter)
     {
         Log.Debug("Start execution of the PlacesPlugin");
 
         try {
-            var address = ParseInput(parameter);
+            var address = ExtractLocation(parameter);
             var (lat, lng) = await GeocodeAddress(address);
             var responseJson = await FindNearbyRestaurants(lat, lng);
             // Parse the JSON response and extract the top 3 restaurants
@@ -51,7 +51,29 @@ public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
         }
     }
 
-    private static IEnumerable<Restaurant> ParseRestaurants(string jsonResponse)
+    public JsonNode GetConfigiguration()
+    {
+        var localConfig = JsonSerializer.Serialize(_config);
+        var jsonNode = JsonNode.Parse(localConfig)!;
+
+        return jsonNode;
+    }
+
+    public void LoadConfiguration(JsonNode configuration)
+    {
+        _config = configuration.Deserialize<PlacesPluginConfig>() ?? throw new InvalidDataException("The " +
+            "config could not be loaded.");
+    }
+
+    #endregion
+
+    #region Private
+
+        private PlacesPluginConfig _config = new();
+
+        private readonly HttpClient _client = new();
+
+        private static IEnumerable<Restaurant> ParseRestaurants(string jsonResponse)
     {
         using var doc = JsonDocument.Parse(jsonResponse);
         var results = doc.RootElement.GetProperty("results");
@@ -101,20 +123,27 @@ public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
         return formatted.ToString();
     }
 
-    private string ParseInput(string parameter)
+    private string ExtractLocation(string parameter)
     {
-        var match = Regex.Match(parameter, "location:'([^']*)'");
+        var address = _config.DefaultAddress;
+        const string pattern = @"(?:Location:)?['\{](?<location>[^'\}]+)['\}]";
+        char[] charsToTrim = ['{', '}', '*', ',', '.', ' ', '\''];
+        var match = Match(parameter, pattern);
 
         if (match.Success)
         {
-            char[] charsToTrim = ['{', '}', '(', ')', '*', ',', '.', ' '];
-            return match.Groups[1].Value.Trim(charsToTrim);
+            address =  match.Groups[1].Value.Trim(charsToTrim);
         }
-        // If the pattern is not matched, log the warning and return the default parameter
-        Log.Warning("The input parameter: {Parameter} does not match the required format for the" +
-                    " location. The default parameter of the plugin config will be used", parameter);
+        else
+        {
+            // If the pattern is not matched, log the warning and return the default parameter
+            Log.Warning("The input parameter: {Parameter} does not match the required format for the" +
+                        " location. The default parameter of the plugin config will be used", parameter);
+        }
 
-        return _config.DefaultAddress;
+        Log.Debug("[{PluginName}] Parsed parameter: Location:'{Address}'",
+            nameof(PlacesPlugin), address);
+        return address;
     }
 
     private async Task<(double, double)> GeocodeAddress(string address)
@@ -175,39 +204,29 @@ public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
                     throw new HttpRequestException("The restaurants information could not be retrieved.");
             }
         }
-        catch (HttpRequestException e)
+        catch (Exception e)
         {
-            // This catch block is for handling HTTP request errors which are not thrown by the default case of the
-            // switch statement
-            if (e.Source == nameof(PlacesPlugin)) throw;
-            Log.Error("Network error:\n{Source}\n{Message}", e.Source, e.Message);
-            throw new HttpRequestException(
-                "Failed to retrieve the restaurant information probably due to a network error.");
-
+            switch (e)
+            {
+                // This catch block is for handling HTTP request errors which are not thrown by the default case of the
+                // switch statement
+                case HttpRequestException when e.Source == nameof(PlacesPlugin):
+                    throw;
+                case HttpRequestException:
+                    Log.Error("Network error:\n{Source}\n{Message}", e.Source, e.Message);
+                    throw new HttpRequestException(
+                        "Failed to retrieve the restaurant information probably due to a network error.");
+                case JsonException:
+                    // This catch block is for handling JSON parsing errors
+                    Log.Error("JSON parsing error:\n{Source}\n{Message}", e.Source, e.Message);
+                    throw new HttpRequestException("Failed to process the restaurant data.");
+                default:
+                    throw;
+            }
         }
-        catch (JsonException e)
-        {
-            // This catch block is for handling JSON parsing errors
-            Log.Error("JSON parsing error:\n{Source}\n{Message}", e.Source, e.Message);
-            throw new HttpRequestException("Failed to process the restaurant data.");
-        }
     }
 
-    public JsonNode GetConfigiguration()
-    {
-        var localConfig = JsonSerializer.Serialize(_config);
-        var jsonNode = JsonNode.Parse(localConfig)!;
-
-        return jsonNode;
-    }
-
-    public void LoadConfiguration(JsonNode configuration)
-    {
-        _config = configuration.Deserialize<PlacesPluginConfig>() ?? throw new InvalidDataException("The " +
-            "config could not be loaded.");
-    }
-
-    public event ConfigurationChangeEventHandler? OnConfigurationChange;
+    #endregion
 
 }
 
