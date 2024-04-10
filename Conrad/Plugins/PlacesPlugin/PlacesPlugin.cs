@@ -139,6 +139,7 @@ public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
             // If the pattern is not matched, log the warning and return the default parameter
             Log.Warning("The input parameter: {Parameter} does not match the required format for the" +
                         " location. The whole parameter will be used as location", parameter);
+            address = address.Trim(charsToTrim);
         }
 
         Log.Debug("[{PluginName}] Parsed parameter: Location:'{Address}'",
