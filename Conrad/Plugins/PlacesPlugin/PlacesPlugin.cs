@@ -108,7 +108,7 @@ public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
         var count = 1;
         foreach (var restaurant in restaurants)
         {
-            formatted.AppendLine($"Restaurant {count}: {restaurant.Name}, " +
+            formatted.AppendLine($"\tRestaurant {count}: {restaurant.Name}, " +
                                  $"Address: {restaurant.Address.Replace(",", " in")}, " +
                                  $"Rating: {restaurant.Rating}/5");
             count++;
@@ -120,7 +120,7 @@ public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
             formatted.Length--;
         }
 
-        return formatted.ToString();
+        return $"Nearby Restaurant Information:\n{formatted}";
     }
 
     private string ExtractLocation(string parameter)
