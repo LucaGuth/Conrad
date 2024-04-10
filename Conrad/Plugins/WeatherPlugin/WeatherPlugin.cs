@@ -10,7 +10,7 @@ namespace WeatherPlugin;
 
 public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
 {
-    private readonly HttpClient _httpClient = new();
+    private HttpClient _httpClient = new();
 
     public string Name => "Weather Forecast Provider";
 
@@ -40,6 +40,11 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
                     return "An error occurred while processing the weather data.";
             }
         }
+    }
+
+    public void InjectHttpClient(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
     }
 
     private string ExtractCity(string parameter)
