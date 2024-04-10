@@ -125,7 +125,7 @@ public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
 
     private string ExtractLocation(string parameter)
     {
-        var address = _config.DefaultAddress;
+        var address = parameter;
         const string pattern = @"(?:Location:)?['\{](?<location>[^'\}]+)['\}]";
         char[] charsToTrim = ['{', '}', '*', ',', '.', ' ', '\''];
         var match = Match(parameter, pattern);
@@ -138,7 +138,7 @@ public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
         {
             // If the pattern is not matched, log the warning and return the default parameter
             Log.Warning("The input parameter: {Parameter} does not match the required format for the" +
-                        " location. The default parameter of the plugin config will be used", parameter);
+                        " location. The whole parameter will be used as location", parameter);
         }
 
         Log.Debug("[{PluginName}] Parsed parameter: Location:'{Address}'",
@@ -234,7 +234,6 @@ public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
 internal class PlacesPluginConfig
 {
     public string ApiKey { get; set; } = "";
-    public string DefaultAddress { get; set; } = "Lerchenstraße 1, 70174 Stuttgart";
     public string NearbySearchUrl { get; set; } = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
     public string GeoCodeUrl { get; set; } = "https://maps.googleapis.com/maps/api/geocode/json";
     public string Radius { get; set; } = "1500";
