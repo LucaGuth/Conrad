@@ -109,7 +109,7 @@ namespace Sequencer
                     var requestedPluginArguments = parsedCommand.Groups[2].Value.Trim();
                     try
                     {
-                        var plugin = _pluginLoader.GetPluginsByName<IExecutorPlugin>(requestedPluginName).First();
+                        var plugin = _pluginLoader.GetPlugins<IExecutorPlugin>().Where(plugin => requestedPluginName.Contains(plugin.Name)).First();
                         var executorResult = plugin.ExecuteAsync(requestedPluginArguments).Result;
                         Log.Debug("Plugin {plugin} responded: {executorResult}", plugin.Name, executorResult);
                         if (executorResult != null && executorResult != string.Empty)
