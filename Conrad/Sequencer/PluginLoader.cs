@@ -8,27 +8,40 @@ using Serilog;
 
 namespace Sequencer
 {
+    /// <summary>
+    /// The class that is responsible for loading and managing the plugins.
+    /// </summary>
     internal class PluginLoader
     {
         #region Public
+        /// <summary>
+        /// The name of the interface that all plugins must implement.
+        /// </summary>
         public static readonly Type PluginBaseInterfaceName = typeof(IPlugin);
 
-        public IEnumerable<IPlugin> GetPluginsOfType(Type type)
+        /// <summary>
+        /// Filters the plugins by the type of the plugin.
+        /// </summary>
+        /// <param name="type">The type to filter the plugins by.</param>
+        /// <returns>The list of plugins having the requested type.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">If the Requested type is not based on <see cref="ArgumentOutOfRangeException"/></exception>
+        public IEnumerable<T> GetPlugins<T>() where T : IPlugin
         {
-            if (!type.IsAssignableFrom(type))
-            {
-                throw new ArgumentOutOfRangeException(type.ToString(), $"The requested plugin must be based on {nameof(IPlugin)}");
-            }
+            Type type = typeof(T);
 
             var plugins = _plugins.Where(p => type.IsAssignableFrom(p.GetType()));
             Log.Verbose("Filtered Plugins of type {type}: {plugins}", type.Name, plugins);
-            return plugins;
+            return plugins.Cast<T>();
         }
 
+        /// <summary>
+        /// Creates a new PluginLoader instance.
+        /// </summary>
+        /// <param name="pluginFolder">The folder to load the plugins from.</param>
+        /// <param name="configFilePath">The location of the configuration file.</param>
         public PluginLoader(string pluginFolder, string configFilePath)
         {
             _configFilePath = configFilePath;
-            _pluginFolder = pluginFolder;
 
             Log.Information("Loading Plugins from {pluginFolder}", pluginFolder);
 
@@ -48,6 +61,9 @@ namespace Sequencer
             }
         }
 
+        /// <summary>
+        /// Updates the configuration file with the current configuration of the plugins.
+        /// </summary>
         public void UpdateConfiguration()
         {
             var updatedConfig = GenerateConfig(configWithoutPlugins);
@@ -103,7 +119,7 @@ namespace Sequencer
 
         private string GenerateConfig(IEnumerable<PluginConfig>? additionlConfigs = null)
         {
-            IEnumerable<IConfigurablePlugin> configurablePlugins = GetPluginsOfType(typeof(IConfigurablePlugin)).Cast<IConfigurablePlugin>();
+            IEnumerable<IConfigurablePlugin> configurablePlugins = GetPlugins<IConfigurablePlugin>();
             List<PluginConfig> pluginConfigs = [];
 
             foreach (var configurablePlugin in configurablePlugins)
@@ -119,7 +135,7 @@ namespace Sequencer
             return JsonSerializer.Serialize(pluginConfigs, jsonSerializerOptions);
         }
 
-        List<PluginConfig> configWithoutPlugins = [];
+        readonly List<PluginConfig> configWithoutPlugins = [];
 
         private void LoadConfig(string config)
         {
@@ -132,8 +148,16 @@ namespace Sequencer
                     if (type is not null)
                     {
                         var plugin = _plugins.First(p => type.IsAssignableFrom(p.GetType())) as IConfigurablePlugin;
-                        plugin?.LoadConfiguration(pluginConfig.Config);
-                        Log.Information("Loaded Configuration for {plugin}", plugin?.GetType().Name);
+                        try
+                        {
+                            plugin?.LoadConfiguration(pluginConfig.Config);
+                            Log.Information("Loaded Configuration for {plugin}", plugin?.GetType().Name);
+
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Error(e, "Error loading configuration for {plugin}. It will run with default settings.", plugin?.GetType().Name);
+                        }
                     }
                     else
                     {
@@ -143,7 +167,7 @@ namespace Sequencer
                     }
                 }
 
-                if (configWithoutPlugins.Count > 0 || GetPluginsOfType(typeof(IConfigurablePlugin)).Count() > loadedConfig.Length)
+                if (configWithoutPlugins.Count > 0 || GetPlugins<IConfigurablePlugin>().Count() > loadedConfig.Length)
                 {
                     Log.Warning("The configuration file contains entries for plugins that could not be found or new plugins were added. The configuration file will be updated.");
                     UpdateConfiguration();
@@ -161,12 +185,14 @@ namespace Sequencer
             LoadPluginsFromDirectory(pluginPath);
         }
 
+        internal void RemovePlugin(IPlugin plugin)
+        {
+            _plugins.Remove(plugin);
+        }
+
         private readonly JsonSerializerOptions jsonSerializerOptions = new() { WriteIndented = true };
 
         private readonly string _configFilePath;
-
-        private readonly string _pluginFolder;
-
         #endregion
     }
 
