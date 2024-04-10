@@ -91,10 +91,10 @@ namespace Sequencer
             Log.Debug("[Sequencer] Received message from {PluginName}: {Message}", sender.Name, message);
 
             // llm
-            var promt = GenerateInputPromt(sender, message);
-            Log.Debug("Sending promt to LLM: {promt}", promt);
-            var llmInputResponse = _llm.Process(promt);
-            Log.Information("[Sequencer] [Parsing Stage] LLM response: {response}", llmInputResponse);
+            var plugin_prompt = GenerateInputPrompt(sender, message);
+            Log.Debug("[Sequencer] [Plugin Stage] Sending prompt to LLM: {prompt}", plugin_prompt);
+            var llmInputResponse = _llm.Process(plugin_prompt);
+            Log.Information("[Sequencer] [Plugin Stage] LLM response: {response}", llmInputResponse);
 
             // Parse response
             var responseCommands = llmInputResponse.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
@@ -112,7 +112,7 @@ namespace Sequencer
                         var plugin = _pluginLoader.GetPluginsByName<IExecutorPlugin>(requestedPluginName).First();
                         var executorResult = plugin.ExecuteAsync(requestedPluginArguments).Result;
                         Log.Debug("Plugin {plugin} responded: {executorResult}", plugin.Name, executorResult);
-                        if (executorResult != null)
+                        if (executorResult != null && executorResult != string.Empty)
                         {
                             lock (executorResults)
                             {
@@ -132,8 +132,10 @@ namespace Sequencer
             Log.Debug("[Sequencer] Executor Results: {results}", executorResultsString);
 
             // llm
-            var llmOutputResponse = _llm.Process(GenerateOutputPromt(sender, message, executorResultsString == string.Empty ? "No plugin could give response" : executorResultsString));
-            Log.Debug("[Sequencer] [Parsing Stage] LLM response: {response}", llmOutputResponse);
+            var summary_prompt = GenerateOutputPrompt(sender, message, executorResultsString == string.Empty ? "There are no plugin responses" : executorResultsString);
+            Log.Debug("[Sequencer] [Summary Stage] Sending prompt to LLM: {prompt}", summary_prompt);
+            var llmOutputResponse = _llm.Process(summary_prompt);
+            Log.Debug("[Sequencer] [Summary Stage] LLM response: {response}", llmOutputResponse);
 
 
             // output to user
@@ -193,18 +195,15 @@ namespace Sequencer
             Thread.Sleep(Timeout.Infinite);
         }
 
-        private string GenerateInputPromt(INotifierPlugin notifierPlugin, string message)
+        private string GenerateInputPrompt(INotifierPlugin notifierPlugin, string message)
         {
-            const string _llmPromtHeader = @"
-You are a personal digital assistant. You have access to the following plugins:
-";
-            StringBuilder promt = new StringBuilder(_llmPromtHeader);
+            StringBuilder prompt = new StringBuilder("You are a personal digital assistant. You have access to the following plugins:\n");
             foreach (var plugin in _pluginLoader.GetPlugins<IExecutorPlugin>())
             {
-                promt.AppendLine($"{plugin.Name}: {plugin.ParameterFormat}");
+                prompt.AppendLine($"{plugin.Name}: {plugin.ParameterFormat}");
             }
 
-            const string _llmPromtBody = @"
+            const string _llmPromptBody = @"
 
 - Remove plugins that are not relevant to the task.
 - Fill out all parameters sensibly (everything inside {}).
@@ -218,27 +217,32 @@ The output will be parsed, so it has to adhere exactly to the format shown above
 The user will not see the response you give, you are talking to a machine that only needs to know which plugins to execute!
 
 ";
-            promt.AppendLine(_llmPromtBody);
+            prompt.AppendLine(_llmPromptBody);
 
-            promt.AppendLine($"Input was received from '{notifierPlugin.Name} ({notifierPlugin.Description})'");
-            promt.AppendLine($"```");
-            promt.AppendLine(message);
-            promt.AppendLine($"```");
+            prompt.AppendLine($"Input was received from '{notifierPlugin.Name} ({notifierPlugin.Description})'");
+            prompt.AppendLine($"```");
+            prompt.AppendLine(message);
+            prompt.AppendLine($"```");
 
-            return promt.ToString();
+            return prompt.ToString();
         }
 
-        private string GenerateOutputPromt(INotifierPlugin sender, string request, string results)
+        private string GenerateOutputPrompt(INotifierPlugin sender, string request, string results)
         {
-            StringBuilder promt = new($"You are a personal digital assistant. The Plugin {sender.Name}({sender.Description}) made the \"{request}\". The request was processed by the application.");
+            StringBuilder prompt = new($"You are a personal digital assistant.");
 
-            promt.Append("```");
-            promt.Append(results);
-            promt.Append("```");
+            prompt.AppendLine("Some plugins were executed to give you background information for answering the request.");
+            prompt.AppendLine("Here are the plugins with their arguments, followed by the results in backticks - please do not confuse them.");
+            prompt.AppendLine(results);
 
-            promt.Append("Your name is Conrad. Summarize the results for the User in a friendly way.");
+            prompt.AppendLine("Write an answer to the request. Do not provide all information from the plugins, just because you have it - only answer sensibly.");
+            prompt.AppendLine("Do not reiterate the data inside the plugin requests.");
+            prompt.AppendLine("Keep your answer as short as possible! Like, very very short okay? SUPER SHORT!");
+            prompt.AppendLine("Answer in full sentences, the output will be the input for a text to speech system.");
 
-            return promt.ToString();
+            prompt.AppendLine($"You received a request from {sender.Name} ({sender.Description}):\n```\"{request}\"```.\n");
+
+            return prompt.ToString();
 
         }
 
