@@ -99,14 +99,14 @@ namespace Sequencer
             // Parse response
             var responseCommands = llmInputResponse.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
-            StringBuilder executorResults = new StringBuilder();
+            StringBuilder executorResults = new();
             Parallel.ForEach(responseCommands, command =>
             {
-                var parsedCommand = Regex.Match(command, @"(.+)\((.*)\)");
+                var parsedCommand = Regex.Match(command, @"([^:]+):?(.*)");
                 if (parsedCommand.Success)
                 {
-                    var requestedPluginName = parsedCommand.Groups[1].Value;
-                    var requestedPluginArguments = parsedCommand.Groups[2].Value;
+                    var requestedPluginName = parsedCommand.Groups[1].Value.Trim();
+                    var requestedPluginArguments = parsedCommand.Groups[2].Value.Trim();
                     try
                     {
                         var plugin = _pluginLoader.GetPluginsByName<IExecutorPlugin>(requestedPluginName).First();
@@ -116,7 +116,10 @@ namespace Sequencer
                         {
                             lock (executorResults)
                             {
-                                executorResults.AppendLine($"{command} result: {executorResult}{Environment.NewLine}");
+                                executorResults.AppendLine($"{plugin.Name}: {requestedPluginArguments}");
+                                executorResults.AppendLine("```");
+                                executorResults.AppendLine(executorResult);
+                                executorResults.AppendLine("```");
                             }
                         }
                     }
@@ -124,9 +127,12 @@ namespace Sequencer
                 }
             });
 
+            var executorResultsString = executorResults.ToString();
+
+            Log.Debug("[Sequencer] Executor Results: {results}", executorResultsString);
 
             // llm
-            var llmOutputResponse = _llm.Process(GenerateOutputPromt(sender, message, executorResults.ToString()));
+            var llmOutputResponse = _llm.Process(GenerateOutputPromt(sender, message, executorResultsString == string.Empty ? "No plugin could give response" : executorResultsString));
             Log.Debug("[Sequencer] [Parsing Stage] LLM response: {response}", llmOutputResponse);
 
 
