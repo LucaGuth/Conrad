@@ -161,7 +161,7 @@ namespace Sequencer
             var time = Stopwatch.StartNew();
             while (outputTasks.Count > 0)
             {
-                if (time.ElapsedMilliseconds > 60000)
+                if (time.ElapsedMilliseconds > long.MaxValue)
                 {
                     Log.Warning("Output Plugins are taking too long to respond. Cancelling tasks: {tasks}", outputTasks);
                     outputCancelationToken.Cancel();
