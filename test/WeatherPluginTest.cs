@@ -14,7 +14,7 @@ using WeatherPlugin;
 public class WeatherPluginTest
 {
     [TestMethod]
-    public async Task ExecuteTest_ValidJsonFromFile()
+    public async Task ValidResponseShouldBeParsed()
     {
         // Arrange
         var city = "test_city";
@@ -40,7 +40,7 @@ public class WeatherPluginTest
     }
 
     [TestMethod]
-    public async Task InvalidApiKeyShouldThrowException()
+    public async Task InvalidApiKeyShouldBeHandled()
     {
         // Arrange
         var city = "test_city";
@@ -62,7 +62,7 @@ public class WeatherPluginTest
     }   
 
     [TestMethod]
-    public async Task NetworkErrorShouldThrowException()
+    public async Task NetworkErrorShouldBeHandled()
     {
         // Arrange
         var city = "test_city";
