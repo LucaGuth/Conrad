@@ -7,6 +7,8 @@ namespace PreferencesPlugin;
 
 public class PreferencesPlugin : IConfigurablePlugin, IPromptAdderPlugin, IExecutorPlugin
 {
+    #region Public
+
     public string Name => "PreferencesPlugin";
     public string Description => "This plugin returns the preferences of the user.";
     public JsonNode GetConfigiguration()
@@ -19,77 +21,146 @@ public class PreferencesPlugin : IConfigurablePlugin, IPromptAdderPlugin, IExecu
 
     public void LoadConfiguration(JsonNode configuration)
     {
-        _config = configuration.Deserialize<PreferencesPluginConfig>() ?? throw new InvalidDataException("The config could not be loaded.");
+        _config = configuration.Deserialize<PreferencesPluginConfig>()
+                  ?? throw new InvalidDataException("The config could not be loaded.");
     }
 
     public event ConfigurationChangeEventHandler? OnConfigurationChange;
 
-    private PreferencesPluginConfig _config = new();
+    public string PromptAddOn
+    {
+        get
+        {
+            // Convert both default and customized preferences to dictionaries.
+            var defaultPrefsDict = ConvertPreferencesToDictionary(_config.DefaultPreferences);
+            var customPrefsDict = ConvertPreferencesToDictionary(_config.CustomizedPreferences);
 
-    public string PromptAddOn => _config.Preferences;
+            // Merge the dictionaries, prioritizing customized preferences.
+            var mergedPrefsDict = new Dictionary<string, string>(defaultPrefsDict, StringComparer.OrdinalIgnoreCase);
+            foreach (var kvp in customPrefsDict)
+            {
+                // This will add the key-value pair if the key does not exist, or update the value if it does.
+                mergedPrefsDict[kvp.Key] = kvp.Value;
+            }
 
-    public string ParameterFormat => "Add:key_value;Add:key_value;Add:key_value;Remove:key_value;Remove:key_value;";
+            // Convert the merged dictionary back to a string.
+            return ConvertDictionaryToPreferences(mergedPrefsDict);
+        }
+    }
+
+    public string ParameterFormat => "Add:key_value;Add:key_value;...;Remove:key;Remove:key;...;";
 
     public Task<string> ExecuteAsync(string parameter)
     {
-        Log.Debug("Start execution of the PreferencesPlugin");
-        // Split the parameter string on ";" to separate Add and Remove commands.
-        var commands = parameter.Split(';', StringSplitOptions.RemoveEmptyEntries);
+        Log.Debug("Starting execution of PreferencesPlugin.");
 
-        // Assuming _config.Preferences is a string representing key-value pairs,
-        // e.g., "key1:value1,key2:value2", first convert it to a dictionary for easier manipulation.
-        var preferencesDict = _config.Preferences.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                    .Select(p => p.Split(':'))
-                                    .Where(parts => parts.Length == 2)
-                                    .ToDictionary(parts => parts[0].Trim(), parts => parts[1].Trim(), StringComparer.OrdinalIgnoreCase);
-
-        foreach (var command in commands)
+        try
         {
-            char[] charsToTrim = [ '-', ':', '{', '}', '*', ',', '.', ' ', '\'', '\"' ];
-            var parts = command.Split(':', StringSplitOptions.RemoveEmptyEntries);
+            var preferencesDict = ConvertPreferencesToDictionary(_config.CustomizedPreferences);
 
-            if (parts.Length != 2)
-                continue;
-
-            var action = parts[0].Trim(charsToTrim);
-            var keyValue = parts[1];
-
-            var items = keyValue.Split('_', StringSplitOptions.RemoveEmptyEntries);
-
-            if (items.Length != 2)
-                continue;
-            var key = items[0].Trim(charsToTrim);
-            var value = items[1].Trim(charsToTrim);
-
-            switch (action.ToLower())
+            foreach (var command in ParseCommands(parameter))
             {
-                case "add":
-                    // Add or update the key-value pair in the dictionary.
-                    preferencesDict[key] = value;
-                    break;
+                try
+                {
+                    ProcessCommand(command, preferencesDict);
+                }
+                catch (CommandParsingException e)
+                {
+                    Log.Warning(e.Message);
+                }
+            }
 
-                case "remove":
-                    // Remove the key from the dictionary if it exists.
-                    preferencesDict.Remove(key, out _);
-                    break;
+            _config.CustomizedPreferences = ConvertDictionaryToPreferences(preferencesDict);
+            OnConfigurationChange?.Invoke(this);
+
+            Log.Debug("[{PluginName}]: Customized preferences: {Preferences}",
+                nameof(PreferencesPlugin), _config.CustomizedPreferences);
+            return Task.FromResult(_config.CustomizedPreferences);
+        }
+        catch (Exception e)
+        {
+            Log.Error($"An error has occurred while updating the user preferences:\n" +
+                      $" {e.Source}: {e.Message}");
+            return Task.FromResult("An error has occurred while updating the user preferences.");
+        }
+    }
+
+    #endregion
+
+    #region Private
+
+    private PreferencesPluginConfig _config = new();
+
+    private IEnumerable<CommandModel> ParseCommands(string parameter)
+    {
+        char[] charsToTrim = [ '-', ':', '{', '}', '*', ',', '.', ' ', '\'', '\"' ];
+        var commands = parameter.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+        IList<CommandModel> preferenceOperations = new List<CommandModel>();
+        foreach (var cmd in commands)
+        {
+            try
+            {
+                var parts = cmd.Split([':']);
+                if (parts.Length != 2)
+                {
+                    throw new CommandParsingException(cmd);
+                }
+
+                var action = parts[0].Trim(charsToTrim).ToLower();
+                var rest = parts[1].Split(['_']);
+                if (rest.Length != 1 && rest.Length != 2)
+                {
+                    throw new CommandParsingException(cmd);
+                }
+
+                var key = rest[0].Trim(charsToTrim).ToLower();
+                var value = rest.Length > 1 ? rest[1].Trim(charsToTrim) : null; // Value might be null for "Remove" actions
+
+                preferenceOperations.Add(new CommandModel { Action = action, Key = key, Value = value });
+            }
+            catch (CommandParsingException e)
+            {
+                Log.Warning(e.Message);
             }
         }
-
-        // Convert the dictionary back to the string format and store it in _config.Preferences.
-        _config.Preferences = string.Join(",", preferencesDict.Select(kv => $"{kv.Key}:{kv.Value}"));
-
-        OnConfigurationChange?.Invoke(this);
-
-        Log.Debug("[{PluginName}]: Updated preferences: {Preferences}", nameof(PreferencesPlugin), _config.Preferences);
-
-        // Since this method doesn't need to be asynchronous, return a completed task.
-        // If your real scenario involves asynchronous operations, you can await them as needed.
-        return Task.FromResult(string.Empty);
+        return preferenceOperations;
     }
+
+    private void ProcessCommand(CommandModel command, IDictionary<string, string> preferencesDict)
+    {
+        switch (command.Action)
+        {
+            case "add":
+                preferencesDict[command.Key] = command.Value ?? throw new CommandParsingException(command.ToString());
+                break;
+            case "remove":
+                preferencesDict.Remove(command.Key);
+                break;
+            default:
+                throw new CommandParsingException(command.ToString());
+        }
+    }
+
+    private Dictionary<string, string> ConvertPreferencesToDictionary(string preferences)
+    {
+        return preferences.Split('|', StringSplitOptions.RemoveEmptyEntries)
+            .Select(part => part.Split(':', 2))
+            .Where(parts => parts.Length == 2)
+            .ToDictionary(parts => parts[0], parts => parts[1], StringComparer.OrdinalIgnoreCase);
+    }
+
+    private string ConvertDictionaryToPreferences(Dictionary<string, string> dict)
+    {
+        return string.Join("|", dict.Select(kv => $"{kv.Key}:{kv.Value}"));
+    }
+
+    #endregion
+
 }
 
 [Serializable]
 internal class PreferencesPluginConfig
 {
-    public string Preferences { get; set; } = "";
+    public string DefaultPreferences { get; set; } = "language:english|residence:Konrad-Adenauer-Straße 3, 70173 Stuttgart";
+    public string CustomizedPreferences { get; set; } = "";
 }
