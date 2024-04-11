@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 using PluginInterfaces;
 using Serilog;
 
@@ -11,6 +12,23 @@ public class PreferencesPlugin : IConfigurablePlugin, IPromptAdderPlugin, IExecu
 
     public string Name => "PreferencesPlugin";
     public string Description => "This plugin returns the preferences of the user.";
+
+    public string ParameterFormat => "Action: '{Add/Remove}', Key: '{key}', Value: '{value}'\n" +
+                                     "\tThe 'Action' parameter is required and can be either 'Add' or 'Remove'.\n" +
+                                     "\tThe 'Key' parameter is required and must be a string.\n" +
+                                     "\tThe 'Value' parameter is required for 'Add' actions and should specify the " +
+                                     "value associated with the key.\n" +
+                                     "\tFor an 'Add' action with an existing key, you can modify the current key-value settings.\n" +
+                                     "\tA valid parameter format to add or modify a preference:Action:\n" +
+                                     "\t\t'Add', Key: 'language', Value: 'english'\n" +
+                                     "\tA valid parameter format to remove a preference:\n" +
+                                     "\t\tAction: 'Remove', Key: 'language'\n" +
+                                     "\tIMPORTANT: Do NOT customize the preferences unless you are absolutely sure it " +
+                                     "is necessary. Avoid modifying preferences if a similar key already exists and " +
+                                     "can be adjusted instead.";
+
+    public event ConfigurationChangeEventHandler? OnConfigurationChange;
+
     public JsonNode GetConfigiguration()
     {
         var localConfig = JsonSerializer.Serialize(_config);
@@ -24,8 +42,6 @@ public class PreferencesPlugin : IConfigurablePlugin, IPromptAdderPlugin, IExecu
         _config = configuration.Deserialize<PreferencesPluginConfig>()
                   ?? throw new InvalidDataException("The config could not be loaded.");
     }
-
-    public event ConfigurationChangeEventHandler? OnConfigurationChange;
 
     public string PromptAddOn
     {
@@ -48,8 +64,6 @@ public class PreferencesPlugin : IConfigurablePlugin, IPromptAdderPlugin, IExecu
         }
     }
 
-    public string ParameterFormat => "Add:key_value;Add:key_value;...;Remove:key;Remove:key;...;";
-
     public Task<string> ExecuteAsync(string parameter)
     {
         Log.Debug("Starting execution of PreferencesPlugin.");
@@ -57,18 +71,7 @@ public class PreferencesPlugin : IConfigurablePlugin, IPromptAdderPlugin, IExecu
         try
         {
             var preferencesDict = ConvertPreferencesToDictionary(_config.CustomizedPreferences);
-
-            foreach (var command in ParseCommands(parameter))
-            {
-                try
-                {
-                    ProcessCommand(command, preferencesDict);
-                }
-                catch (CommandParsingException e)
-                {
-                    Log.Warning(e.Message);
-                }
-            }
+            ProcessCommand(ParseCommands(parameter), preferencesDict);
 
             _config.CustomizedPreferences = ConvertDictionaryToPreferences(preferencesDict);
             OnConfigurationChange?.Invoke(this);
@@ -79,6 +82,12 @@ public class PreferencesPlugin : IConfigurablePlugin, IPromptAdderPlugin, IExecu
         }
         catch (Exception e)
         {
+            if (e is CommandParsingException)
+            {
+                Log.Warning($"The preferences could not be updated due to an invalid command: {parameter}");
+                return Task.FromResult("The preferences could not be updated due to an invalid command.");
+            }
+
             Log.Error($"An error has occurred while updating the user preferences:\n" +
                       $" {e.Source}: {e.Message}");
             return Task.FromResult("An error has occurred while updating the user preferences.");
@@ -91,39 +100,56 @@ public class PreferencesPlugin : IConfigurablePlugin, IPromptAdderPlugin, IExecu
 
     private PreferencesPluginConfig _config = new();
 
-    private IEnumerable<CommandModel> ParseCommands(string parameter)
+    private CommandModel ParseCommands(string parameter)
     {
         char[] charsToTrim = [ '-', ':', '{', '}', '*', ',', '.', ' ', '\'', '\"' ];
-        var commands = parameter.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-        IList<CommandModel> preferenceOperations = new List<CommandModel>();
-        foreach (var cmd in commands)
+        // Regex pattern to match Action, Key, and optional Value
+        // Supports different types of brackets or quotes
+        const string pattern = """((?:ac).*?(('(?<action>[^']+))|({(?<action>[^}]+))|(\*(?<action>[^\*]+)\*))).*?|((?:key).*?(('(?<key>[^']+))|({(?<key>[^}]+))|(\*(?<key>[^\*]+)\*))).*?|((?:val).*?(('(?<val>[^']+))|({(?<value>[^}]+))|(\*(?<value>[^\*]+)\*))).*?""";
+
+        var matches = Regex.Matches(parameter, pattern, RegexOptions.IgnoreCase);
+
+        string? action = null, key = null, value = null;
+
+        foreach (Match match in matches)
         {
-            try
+            if (match.Groups["action"].Success)
             {
-                var parts = cmd.Split([':']);
-                if (parts.Length != 2)
-                {
-                    throw new CommandParsingException(cmd);
-                }
-
-                var action = parts[0].Trim(charsToTrim).ToLower();
-                var rest = parts[1].Split(['_']);
-                if (rest.Length != 1 && rest.Length != 2)
-                {
-                    throw new CommandParsingException(cmd);
-                }
-
-                var key = rest[0].Trim(charsToTrim).ToLower();
-                var value = rest.Length > 1 ? rest[1].Trim(charsToTrim) : null; // Value might be null for "Remove" actions
-
-                preferenceOperations.Add(new CommandModel { Action = action, Key = key, Value = value });
+                if (action != null)
+                    throw new CommandParsingException(parameter);
+                action = match.Groups["action"].Value.Trim(charsToTrim).ToLower();
             }
-            catch (CommandParsingException e)
+
+            if (match.Groups["key"].Success)
             {
-                Log.Warning(e.Message);
+                if (key != null)
+                    throw new CommandParsingException(parameter);
+                key = match.Groups["key"].Value.Trim(charsToTrim).ToLower();
+            }
+
+            if (match.Groups["value"].Success)
+            {
+                if (value != null)
+                    throw new CommandParsingException(parameter);
+                value = match.Groups["value"].Value.Trim(charsToTrim).ToLower();
             }
         }
-        return preferenceOperations;
+
+        if (action == null || key == null)
+            throw new CommandParsingException(parameter);
+        if (action == "add" && value == null)
+            throw new CommandParsingException(parameter);
+
+        var commandModel = new CommandModel
+        {
+            Action = action,
+            Key = key,
+            Value = value
+        };
+
+        Log.Debug("Parsed command: {Command}", commandModel);
+
+        return commandModel;
     }
 
     private void ProcessCommand(CommandModel command, IDictionary<string, string> preferencesDict)
