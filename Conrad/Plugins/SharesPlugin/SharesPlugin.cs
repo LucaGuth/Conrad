@@ -65,10 +65,14 @@ public class SharesPlugin : IExecutorPlugin, IConfigurablePlugin
 
     #region Private
 
-    private readonly HttpClient _client = new();
+    private HttpClient _client = new();
 
     private SharesPluginConfig _config = new();
 
+    public void InjectHttpClient(HttpClient httpClient)
+    {
+        _client = httpClient;
+    }
     private string ExtractSymbol(string parameter)
     {
         var symbol = parameter;
