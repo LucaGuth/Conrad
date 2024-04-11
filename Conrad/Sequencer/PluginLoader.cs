@@ -34,6 +34,12 @@ namespace Sequencer
             return plugins.Cast<T>();
         }
 
+
+        public IEnumerable<T> GetPluginsByName<T>(string name) where T : IPlugin
+        {
+            return GetPlugins<T>().Where(plugin => plugin.Name == name);
+        }
+
         /// <summary>
         /// Creates a new PluginLoader instance.
         /// </summary>
