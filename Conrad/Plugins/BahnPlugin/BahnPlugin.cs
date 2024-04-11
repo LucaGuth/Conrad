@@ -24,8 +24,9 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
     public string ParameterFormat =>
         "DepartureStation:'{trainStation}', DestinationStation:'{trainStation}', " +
         "DepartureTime:'{yyyy-MM-dd HH:mm}'\n" +
-        $"\tThe departure time must be between {DateTime.Now:yyyy-MM-dd HH:mm} and {DateTime.Now.AddHours(18):yyyy-MM-dd HH:mm}" +
-        $"\tA valid example would be: DepartureStation:'Stuttgart', DestinationStation:'München', DepartureTime:'{DateTime.Now.AddHours(5):yyyy-MM-dd HH:mm}'";
+        "\tThe departure time must not be more than 18 hours in the future. Please use the German names of the railway " +
+        "stations. An example with valid parameter syntax would be:" +
+        "\tDepartureStation:'Frankfurt am Main', DestinationStation:'München', DepartureTime:'1952-09-27 13:21'";
 
     public async Task<string> ExecuteAsync(string parameter)
     {
@@ -122,11 +123,10 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
         ValidateXmlResponse(xmlResponse);
 
         var doc = XDocument.Parse(xmlResponse);
-        ValidateDocumentRoot(doc);
-
+        var root = ValidateDocumentRoot(doc);
         destination = PreprocessDestination(destination);
 
-        var connections = ExtractConnections(doc, destination);
+        var connections = ExtractConnections(root, destination);
 
         return FormatConnections(connections);
     }
@@ -138,9 +138,10 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
         throw new ArgumentException("The timetable data could not be parsed.");
     }
 
-    private static void ValidateDocumentRoot(XDocument doc)
+    private XElement ValidateDocumentRoot(XDocument doc)
     {
-        if (doc.Root != null) return;
+        if (doc.Root != null)
+            return doc.Root;
         Log.Error("XML document root is null.");
         throw new ArgumentNullException(nameof(doc.Root), "The timetable data could not be parsed.");
     }
@@ -148,27 +149,29 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
     private string PreprocessDestination(string destination)
     {
         var regex = new Regex(@"\s+\(", RegexOptions.Compiled);
-        return regex.Replace(destination, "(");
+        var response = regex.Replace(destination, "(");
+
+        return response;
     }
 
-    private IEnumerable<dynamic> ExtractConnections(XContainer docRoot, string destination)
+    private IEnumerable<dynamic> ExtractConnections(XElement docRoot, string destination)
     {
-        return docRoot.Elements("s")
-            .Where(s => s.Element("dp")?.Attribute("ppth")?.Value.Contains(destination) == true)
-            .Select(s => ParseConnection(s, destination)).ToArray();
+        var temp = docRoot.Elements("s")
+            .Where(s => s.Element("dp")?.Attribute("ppth")?.Value.Contains(destination) == true);
+        var xElements = temp as XElement[] ?? temp.ToArray();
+        return xElements.Select(connection => ParseConnection(connection, destination)).ToList();
     }
 
     private dynamic ParseConnection(XElement s, string destination)
     {
         var trainNumber = ExtractTrainNumber(s);
-        var trainCategory = GetAttributeValueOrThrow(s.Element("tl"), new[] { "c" }, "Train category could not be parsed.");
-        var departureTimeString = GetAttributeValueOrThrow(s.Element("dp"), new[] { "pt" }, "Departure time could not be parsed.");
+        var trainCategory = GetAttributeValueOrThrow(s.Element("tl"), ["c"], "Train category could not be parsed.");
+        var departureTimeString = GetAttributeValueOrThrow(s.Element("dp"), ["pt"], "Departure time could not be parsed.");
         var departureTime = DateTime.ParseExact(departureTimeString, "yyMMddHHmm", CultureInfo.InvariantCulture);
 
         var destinationStation = ProcessDestinationStation(s);
 
         var viaStations = ProcessViaStations(s, destination);
-
         return new
         {
             TrainCategory = trainCategory,
@@ -179,11 +182,11 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
         };
     }
 
-    private string ExtractTrainNumber(XElement s)
+    private string ExtractTrainNumber(XContainer s)
     {
         // For IC, ICE, EC, TGV the train number is not in the "l" attribute
         return s.Element("dp")?.Attribute("l")?.Value
-               ?? GetAttributeValueOrThrow(s.Element("tl"), new[] { "n" }, "Train number could not be parsed.");
+               ?? GetAttributeValueOrThrow(s.Element("tl"), ["n"], "Train number could not be parsed.");
     }
 
     private string ProcessDestinationStation(XElement s)
@@ -193,7 +196,7 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
                ?? throw new ArgumentNullException(nameof(s), "Destination station could not be parsed after processing.");
     }
 
-    private IEnumerable<string> ProcessViaStations(XElement s, string destination)
+    private IEnumerable<string> ProcessViaStations(XContainer s, string destination)
     {
         const string patternForLocation = @"\(([^)]+)\)";
         const string replacementForLocation = " $1";
@@ -206,7 +209,7 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
         }) ?? Enumerable.Empty<string>();
     }
 
-    private string GetAttributeValueOrThrow(XElement? element, string[] attributeNames, string exceptionMessage)
+    private string GetAttributeValueOrThrow(XElement? element, IEnumerable<string> attributeNames, string exceptionMessage)
     {
         foreach (var name in attributeNames)
         {
@@ -220,10 +223,12 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
 
     private IEnumerable<string> FormatConnections(IEnumerable<dynamic> connections)
     {
-        return connections.Select(c => $"{c.TrainCategory} {c.TrainNumber} to " +
-                                       $"{c.DestinationStation}, departure on {c.DepartureTime:yy-MM-dd} at " +
-                                       $"{c.DepartureTime:HH:mm}{(c.ViaStations.Any() ? $", via " + string.Join(", ", c.ViaStations) : " (no intermediate stop)")}")
-                          .ToArray();
+        var temp = connections.Select(c => $"{c.TrainCategory} {c.TrainNumber} to " +
+                                                          $"{c.DestinationStation}, departure on {c.DepartureTime:yy-MM-dd} at " +
+                                                          $"{c.DepartureTime:HH:mm}{(c.ViaStations != null && ((IEnumerable<dynamic>)c.ViaStations).Any()
+                                                              ? $", via {string.Join(", ", c.ViaStations)}" : " (no intermediate stop)")}")
+                                             .ToArray();
+        return temp;
     }
 
     private async Task<string> GetStationsByNameAsync(string station)
@@ -260,7 +265,6 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
 
         var response = await _client.SendAsync(request);
         response.EnsureSuccessStatusCode();
-
         return await response.Content.ReadAsStringAsync();
     }
 
@@ -269,7 +273,6 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
         var date = departure.ToString("yyMMdd"); // For the date in yyMMdd format
         var hour = departure.ToString("HH"); // For the hour in HH format
         var url = $"{_config.TimetableApiUrl}/{stationNumber}/{date}/{hour}";
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
