@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Sequencer": {
+      "commandName": "Project",
+      "commandLineArgs": "--log-level Verbose --plugins C:\\Users\\markz\\repos\\Conrad\\Conrad\\out\\Debug\\plugins"
+    }
+  }
+}
