@@ -64,11 +64,18 @@ namespace DiscordOutputPlugin
             audioRequest.Content = new ByteArrayContent(audioFile);
             audioRequest.Content.Headers.ContentType = new MediaTypeHeaderValue("audio/ogg");
 
-            var textTask = _httpClient.SendAsync(textRequest);
-            var audioTask = _httpClient.SendAsync(audioRequest);
+            try
+            {
+                var textTask = _httpClient.SendAsync(textRequest);
+                var audioTask = _httpClient.SendAsync(audioRequest);
 
-            textTask.Wait();
-            audioTask.Wait();
+                textTask.Wait();
+                audioTask.Wait();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "[Discord]: Error while sending data to the Discord Bridge.");
+            }
         }
 
         public void Initialize()
