@@ -27,14 +27,41 @@ const httpServer = http.createServer((req, res) => {
         });
         res.end('Message received');
     } else if (req.headers['content-type'] === 'audio/ogg' || req.headers['content-type'] === 'audio/mpeg') {
-        // get the file from the request
         const fileStream = fs.createWriteStream('/tmp/uploaded_file.ogg');
         req.pipe(fileStream);
-
+        
         fileStream.on('finish', () => {
             playAudio('/tmp/uploaded_file.ogg');
             res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end('File transfer successful');
+            res.end('File uploaded successfully');
+        });
+    } else if (req.headers['content-type'] === 'application/octet-stream') {
+        const fileStream = fs.createWriteStream('/tmp/uploaded_file.pcm');
+        req.pipe(fileStream);
+        fileStream.on('finish', () => {
+            res.writeHead(200, {'Content-Type': 'text/plain'});
+            res.end('File uploaded successfully');
+            
+            const command = ffmpeg()
+                .input(fileStream.path)
+                .inputFormat('s16le')
+                .audioChannels(1)
+                .inputOptions('-sample_rate 22050')
+                .inputOptions('-channel_layout mono')
+                .audioCodec('libvorbis') 
+                .audioQuality(4)
+                .outputOptions('-f ogg')
+                .output("/tmp/output.ogg")
+                .on('end', () => {
+                    console.log('Conversion complete');
+                    playAudio('/tmp/output.ogg');
+                })
+                .on('error', (err) => {
+                    console.error('Error during conversion:', err);
+                });
+
+            command.run();
+
         });
     } else {
         res.writeHead(400, {'Content-Type': 'text/plain'});
@@ -64,7 +91,11 @@ client.on('messageCreate', async (message) => {
 });
 
 function sendDiscordMessage(message) {
-    client.channels.cache.get(discord.textChannel).send(message);
+    if (message.length > 2000) {
+        for (let i = 0; i < message.length; i += 2000) {
+            client.channels.cache.get(discord.textChannel).send(message.substring(i, i + 2000));
+        }
+    }
 }
 
 function playAudio(file) {
@@ -174,7 +205,6 @@ function convertOggToMp3(oggFilePath, mp3FilePath) {
 }
 
 async function sendToConrad(text, count = 0) {
-    // send text over tcp to 127.0.0.1:4000
     const networkClient = new net.Socket();
 
     networkClient.connect(conrad.port, conrad.ip, () => {
