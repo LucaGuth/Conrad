@@ -61,6 +61,11 @@ public class SharesPlugin : IExecutorPlugin, IConfigurablePlugin
             "config could not be loaded.");
     }
 
+    public void InjectHttpClient(HttpClient httpClient)
+    {
+        _client = httpClient;
+    }
+
     #endregion
 
     #region Private
@@ -69,10 +74,6 @@ public class SharesPlugin : IExecutorPlugin, IConfigurablePlugin
 
     private SharesPluginConfig _config = new();
 
-    public void InjectHttpClient(HttpClient httpClient)
-    {
-        _client = httpClient;
-    }
     private string ExtractSymbol(string parameter)
     {
         var symbol = parameter;

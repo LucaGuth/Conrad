@@ -82,18 +82,18 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
 
     public event ConfigurationChangeEventHandler? OnConfigurationChange;
 
+    public void InjectHttpClient(HttpClient client)
+    {
+        _client = client;
+    }
+     
     #endregion
 
     #region Private
 
     private HttpClient _client = new();
 
-    private BahnPluginConfig _config = new();
-
-    public void InjectHttpClient(HttpClient client)
-    {
-        _client = client;
-    }  
+    private BahnPluginConfig _config = new(); 
 
     private async Task<IList<string>> ProcessStations(JsonElement results, ParameterModel parameterModel)
     {
