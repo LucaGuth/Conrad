@@ -65,11 +65,16 @@ public class DishPlugin : IExecutorPlugin, IConfigurablePlugin
             "config could not be loaded.");
     }
 
+    public void InjectHttpClient(HttpClient client)
+    {
+        _client = client;
+    }
+
     #endregion
 
     #region Private
 
-    private readonly HttpClient _client = new();
+    private HttpClient _client = new();
 
     private FoodPluginConfig _config = new();
 
