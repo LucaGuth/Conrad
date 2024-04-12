@@ -17,7 +17,7 @@ public class WikipediaPlugin : IExecutorPlugin, IConfigurablePlugin
     public string Description => "This plugin returns knowledge for a given keyword from a wikipedia entry.";
     public string ParameterFormat => "KeywordToSearch:'{keyword}'\n" +
                                      "\tA valid parameter format would be:\n" +
-                                     "\tKeywordToSearch:'Google'";
+                                     "\tKeywordToSearch:'Silicon Valley'";
 
     public event ConfigurationChangeEventHandler? OnConfigurationChange;
 
@@ -41,7 +41,7 @@ public class WikipediaPlugin : IExecutorPlugin, IConfigurablePlugin
             }
 
             var paragraph = ExtractParagraph(responseHtml);
-            return paragraph;
+            return Regex.Replace(paragraph, "&#91;\\d+&#93;", "");;
         }
         catch (Exception e)
         {
@@ -135,7 +135,7 @@ public class WikipediaPlugin : IExecutorPlugin, IConfigurablePlugin
     {
         try
         {
-            var url = $"{_config.BaseUrl}?url={_config.KnowledgeUrl}{WebUtility.UrlEncode(keyword)}";
+            var url = $"{_config.BaseUrl}?url={_config.ExtensionUrl}{WebUtility.UrlEncode(keyword)}";
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
             // Set headers for this specific request
             request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
@@ -177,7 +177,7 @@ public class WikipediaPlugin : IExecutorPlugin, IConfigurablePlugin
     {
         string keyword;
         const string pattern = @"['\{*](?<keyword>[^'\}]+)['\}*]";
-        char[] charsToTrim = [ '-', ':', '{', '}', '*', ',', '.', ' ', '\'', '\"' ];
+        char[] charsToTrim = [ '-', ':', '{', '}', '*', ',', ' ', '\'', '\"' ];
 
         var regex = new Regex(pattern);
         var match = regex.Match(parameter);
@@ -193,7 +193,7 @@ public class WikipediaPlugin : IExecutorPlugin, IConfigurablePlugin
         }
         Log.Debug("[{PluginName}] Parsed parameter: KeywordToSearch:'{Keyword}'",
             nameof(WikipediaPlugin), keyword);
-        return keyword;
+        return keyword.Replace(' ', '_');
     }
 
     #endregion
@@ -205,6 +205,6 @@ internal class WikipediaPluginConfig
 {
     public string ApiKey { get; set; } = "";
     public string BaseUrl { get; set; } = "https://api.api-ninjas.com/v1/webscraper";
-    public string KnowledgeUrl { get; set; } = "https://en.wikipedia.org/wiki/";
+    public string ExtensionUrl { get; set; } = "https://en.wikipedia.org/wiki/";
     public string DefaultKeyword { get; set; } = "Observer pattern";
 }
