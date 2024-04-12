@@ -86,9 +86,14 @@ public class BahnPlugin : IExecutorPlugin, IConfigurablePlugin
 
     #region Private
 
-    private readonly HttpClient _client = new();
+    private HttpClient _client = new();
 
     private BahnPluginConfig _config = new();
+
+    public void InjectHttpClient(HttpClient client)
+    {
+        _client = client;
+    }  
 
     private async Task<IList<string>> ProcessStations(JsonElement results, ParameterModel parameterModel)
     {

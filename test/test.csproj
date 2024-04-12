@@ -20,6 +20,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Conrad\Plugins\WeatherPlugin\WeatherPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\SharesPlugin\SharesPlugin.csproj"/>
-    <ProjectReference Include="..\Conrad\Sequencer\Sequencer.csproj"/>
+    <ProjectReference Include="..\Conrad\Plugins\BahnPlugin\BahnPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Plugins\DishPlugin\DishPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Sequencer\Sequencer.csproj"/>  
   </ItemGroup>
 </Project>
