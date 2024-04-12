@@ -18,11 +18,18 @@
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Conrad\Plugins\WeatherPlugin\WeatherPlugin.csproj"/>
-    <ProjectReference Include="..\Conrad\Plugins\SharesPlugin\SharesPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\BahnPlugin\BahnPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Plugins\CalendarPlugin\CalendarPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\DishPlugin\DishPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Plugins\DiscordPlugin\DiscordPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\NewsPlugin\NewsPlugin.csproj"/>
-    <ProjectReference Include="..\Conrad\Sequencer\Sequencer.csproj"/>  
+    <ProjectReference Include="..\Conrad\Plugins\OllamaPlugin\OllamaPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Plugins\PiperOutputPlugin\PiperOutputPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Plugins\PlacesPlugin\PlacesPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Plugins\PreferencesPlugin\PreferencesPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Plugins\SharesPlugin\SharesPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Plugins\UserInputPlugin\UserInputPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Plugins\WeatherPlugin\WeatherPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Sequencer\Sequencer.csproj"/>
   </ItemGroup>
 </Project>
