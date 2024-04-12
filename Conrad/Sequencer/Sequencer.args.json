@@ -1,0 +1,18 @@
+{
+  "FileVersion": 2,
+  "Id": "01d49960-5bd9-484d-bf84-97da918c9a95",
+  "Items": [
+    {
+      "Id": "27693ef3-737c-419e-8d28-de2eeed85961",
+      "Command": "--generate-config"
+    },
+    {
+      "Id": "5ccb6d35-dc0d-4233-80ac-ee492bb70a03",
+      "Command": "--log-level Verbose"
+    },
+    {
+      "Id": "ba4c5fba-930d-4375-b813-c2123a9ef787",
+      "Command": "--plugins C:\\Users\\markz\\repos\\Conrad\\Conrad\\out\\Debug\\plugins"
+    }
+  ]
+}
