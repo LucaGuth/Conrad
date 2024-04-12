@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PluginInterfaces;
 using Serilog;
-using PreferencePlugin;
+using PreferencesPlugin;
 
 [TestClass]
-public class PreferencePluginTest
+public class PreferencesPluginTest
 {
     [TestMethod]
     public async Task ValidResponseShouldBeParsed()

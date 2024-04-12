@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PluginInterfaces;
 using Serilog;
-using UserInputPlugin;
+using UserInputNotifierPackage;
 
 [TestClass]
 public class UserInputPluginTest
