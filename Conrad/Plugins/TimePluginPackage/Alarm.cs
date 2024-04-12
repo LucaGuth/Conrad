@@ -20,10 +20,10 @@ namespace TimePluginPackage
         public string Description => "Sets and removes alarms.";
 
         public string ParameterFormat => @"Possible commands are
-    setAlarm:alarmName,yyyy-MM-dd HH:mm
-    setTimer:alarmName,mm:ss
-    removeAlarm:alarmName
-        yyyy is the year, MM is the month, dd is the day, HH is the hour, mm is the minute and ss is the second.
+    setAlarm:'{alarmName}','{yyyy-MM-dd HH:mm}'
+    setTimer:'{alarmName}','{mm:ss}'
+    removeAlarm:'{alarmName}'
+        'yyyy' is the year, 'MM' is the month, 'dd' is the day, 'HH' is the hour, 'mm' is the minute and 'ss' is the second. 'alarmName' is an identifier for the alarm.
 ";
 
         public string PromptAddOn
@@ -55,18 +55,14 @@ namespace TimePluginPackage
         public Task<string> ExecuteAsync(string parameter)
         {
             parameter = parameter.ToLower();
-            var newAlarmRegex = new Regex(@"setalarm:(.*),(.*)");
-            var newTimerRegex = new Regex(@"settimer:(.*),(.*)");
-            var removeAlarmRegex = new Regex(@"removealarm:(.*)");
-
-            var newAlarmMatch = newAlarmRegex.Match(parameter);
-            var newTimerMatch = newTimerRegex.Match(parameter);
-            var removeAlarmMatch = removeAlarmRegex.Match(parameter);
+            var newAlarmRegex = new Regex(@"setalarm:'(.*)','(.*)'");
+            var newTimerRegex = new Regex(@"settimer:'(.*)','(.*)'");
+            var removeAlarmRegex = new Regex(@"removealarm:'(.*)'");
 
             bool configAltered = false;
             StringBuilder actions = new StringBuilder();
 
-            if (newAlarmMatch.Success)
+            if (newAlarmRegex.Match(parameter) is var newAlarmMatch && newAlarmMatch.Success)
             {
                 var alarmName = newAlarmMatch.Groups[1].Value.Trim();
                 var time = DateTime.Parse(newAlarmMatch.Groups[2].Value.Trim());
@@ -75,7 +71,7 @@ namespace TimePluginPackage
                 configAltered = true;
             }
 
-            else if (newTimerMatch.Success)
+            else if (newTimerRegex.Match(parameter) is var newTimerMatch && newTimerMatch.Success)
             {
                 var time = DateTime.Now.Add(TimeSpan.ParseExact(newTimerMatch.Groups[2].Value.Trim(), "mm:ss", CultureInfo.InvariantCulture));
                 _config.Alarms[newTimerMatch.Groups[1].Value.Trim()] = time;
@@ -83,7 +79,7 @@ namespace TimePluginPackage
                 configAltered = true;
             }
 
-            else if (removeAlarmMatch.Success)
+            else if (removeAlarmRegex.Match(parameter) is var removeAlarmMatch && removeAlarmMatch.Success)
             {
                 _config.Alarms.Remove(removeAlarmMatch.Groups[1].Value.Trim());
                 configAltered = true;
