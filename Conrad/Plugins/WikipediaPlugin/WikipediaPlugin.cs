@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using PluginInterfaces;
 using Serilog;
 using Exception = System.Exception;
-using HtmlAgilityPack;
 
 namespace WikipediaPlugin;
 
@@ -14,7 +13,7 @@ public class WikipediaPlugin : IExecutorPlugin, IConfigurablePlugin
     #region Public
 
     public string Name => "WikipediaParagraphProvider";
-    public string Description => "This plugin returns knowledge for a given keyword from a wikipedia entry.";
+    public string Description => "This plugin returns the first paragraph of a Wikipedia entry for a given keyword.";
     public string ParameterFormat => "KeywordToSearch:'{keyword}'\n" +
                                      "\tA valid parameter format would be:\n" +
                                      "\tKeywordToSearch:'Silicon Valley'";
@@ -26,28 +25,21 @@ public class WikipediaPlugin : IExecutorPlugin, IConfigurablePlugin
         try
         {
             var keyword = ExtractKeyword(parameter);
-            var responseJson =  await GetWikipediaResponse(keyword);
-            string? responseHtml;
-            using (JsonDocument doc = JsonDocument.Parse(responseJson))
-            {
-                var root = doc.RootElement;
-                responseHtml = root.GetProperty("data").GetString();
-            }
+            var pageId = await GetPageId(keyword);
 
-            if (responseHtml == null)
-            {
-                Log.Error("The wikipedia content could not pe parsed.");
-                throw new ArgumentNullException(responseJson, "The wikipedia content could not pe parsed.");
-            }
+            var extract =  await GetWikipediaExtract(pageId);
+            var paragraphs = extract.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
 
-            var paragraph = ExtractParagraph(responseHtml);
-            return Regex.Replace(paragraph, "&#91;\\d+&#93;", "");;
+            if (paragraphs.Length != 0)
+                return paragraphs[0];
+
+            throw new ArgumentException("The paragraphs could not be extracted from the wikipedia content.");
         }
         catch (Exception e)
         {
             switch (e)
             {
-                case HttpRequestException or ArgumentNullException:
+                case HttpRequestException or ArgumentNullException or InvalidOperationException:
                     return e.Message;
                 default:
                     Log.Error($"An error has occurred while retrieving the wikipedia information:\n" +
@@ -77,69 +69,80 @@ public class WikipediaPlugin : IExecutorPlugin, IConfigurablePlugin
     private WikipediaPluginConfig _config = new();
 
     private readonly HttpClient _httpClient = new();
+    private static readonly char[] Separator = ['\n'];
 
-    private string ExtractParagraph(string htmlContent)
+    private async Task<int> GetPageId(string keyword)
     {
-        var htmlDoc = new HtmlDocument();
-        htmlDoc.LoadHtml(htmlContent);
-        const string paragraphPattern = """(?<paragraph><p>(.|\s+)*?<\/p>)""";
-        var matches = Regex.Matches(htmlContent, paragraphPattern, RegexOptions.IgnoreCase);
-        if (!matches.First().Groups["paragraph"].Success)
-            throw new ArgumentException("No paragraph could not be extracted from the wikipedia content.");
-        // Select the first <p>...</p> paragraph in the response
-        htmlDoc.LoadHtml(matches.First().Groups["paragraph"].Value);
-        var paragraph = htmlDoc.DocumentNode.InnerText;
-        // If a <p> tag is found, return its inner text; otherwise, throw an exception
-        if (paragraph != null)
-            return paragraph;
+        var response = await PerformRequest($"{_config.BaseUrl}?action=query&list=search&utf8=&format=json&srsearch={WebUtility.UrlEncode(keyword)}");
+        var pageId = ExtractFirstPageId(response);
 
-        throw new ArgumentException("No paragraph could not be extracted from the wikipedia content.");
+        if(pageId == null )
+        {
+            Log.Warning("The wikipedia page for the keyword '{Keyword}' could not be retrieved. The " +
+                      "default keyword '{Fallback}' will be used for the second request.", keyword,
+                _config.DefaultKeyword);
+            response = await PerformRequest($"{_config.BaseUrl}?action=query&list=search&utf8=&format=json&srsearch={WebUtility.UrlEncode(_config.DefaultKeyword)}");
+            pageId = ExtractFirstPageId(response);
+        }
+
+        if (pageId != null)
+            return (int)pageId;
+
+        Log.Error("No wikipedia page found for the keyword '{Keyword}' and the fallback keyword '{Fallback}'.",
+            keyword, _config.DefaultKeyword);
+        throw new ArgumentException($"No wikipedia entry found for the keyword '{keyword}' and " +
+                                    $"{_config.DefaultKeyword}.");
 
     }
 
-    private async Task<string> GetWikipediaResponse(string keyword)
+    private int? ExtractFirstPageId(string responseJson)
     {
-        var response = string.Empty;
-        try
+        int? pageId = null;
+        using var document = JsonDocument.Parse(responseJson);
+        var root = document.RootElement;
+        var queryElement = root.GetProperty("query");
+        var searchElement = queryElement.GetProperty("search");
+
+        if (searchElement.GetArrayLength() > 0)
         {
-            response = await PerformRequest(keyword);
-            if (response.Contains("Other reasons this message may be displayed:"))
-            {
-                Log.Error("The requested resource for the keyword '{Keyword}' was not found.",
-                    keyword);
-                throw new HttpRequestException("The requested resource was not found.", null,
-                    HttpStatusCode.BadRequest);
-            }
-        }
-        catch (HttpRequestException e)
-        {
-            if (e.StatusCode == HttpStatusCode.BadRequest)
-            {
-                Log.Warning("The default keyword '{Keyword}' will be used for the " +
-                            "second request.", _config.DefaultKeyword);
-                response = await PerformRequest(_config.DefaultKeyword);
-            }
+            var firstResult = searchElement[0];
+            pageId = firstResult.GetProperty("pageid").GetInt32();
         }
 
-        if (!response.Contains("Other reasons this message may be displayed:"))
-            return response;
-
-        Log.Error("The requested resource for the keyword '{Keyword}' was not found.",
-            keyword);
-        throw new HttpRequestException("The requested resource was not found.", null,
-            HttpStatusCode.BadRequest);
-
+        return pageId;
     }
 
-    private async Task<string> PerformRequest(string keyword)
+    private async Task<string> GetWikipediaExtract(int pageId)
+    {
+        var url = $"{_config.BaseUrl}?action=query&format=json&prop=extracts&exlimit=1&explaintext=1&pageids=";
+
+        var response = await PerformRequest(url + pageId);
+        var extract = ExtractExtract(response);
+
+        if (!string.IsNullOrEmpty(extract))
+            return extract;
+
+        throw new ArgumentException($"The wikipedia content for the page '{pageId}' could not be retrieved.");
+    }
+
+    private string? ExtractExtract(string responseJson)
+    {
+        using var document = JsonDocument.Parse(responseJson);
+        var root = document.RootElement;
+        var queryElement = root.GetProperty("query");
+        var pagesElement = queryElement.GetProperty("pages");
+
+        // Iterate over the properties in "pages" object since page ID is dynamic
+        var page = pagesElement.EnumerateObject().FirstOrDefault();
+        // We assume there's only one page object here, but you could handle multiple pages differently
+        return page.Value.GetProperty("extract").GetString();
+    }
+
+    private async Task<string> PerformRequest(string url)
     {
         try
         {
-            var url = $"{_config.BaseUrl}?url={_config.ExtensionUrl}{WebUtility.UrlEncode(keyword)}";
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
-            // Set headers for this specific request
-            request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-            request.Headers.Add("X-Api-Key", _config.ApiKey);
 
             // Send the request
             var response = await _httpClient.SendAsync(request);
@@ -148,8 +151,7 @@ public class WikipediaPlugin : IExecutorPlugin, IConfigurablePlugin
             response.EnsureSuccessStatusCode();
 
             // Read and return the response content as a string
-            var responseString = await response.Content.ReadAsStringAsync();
-            return responseString;
+            return await response.Content.ReadAsStringAsync();
         }
         catch (HttpRequestException e)
         {
@@ -159,18 +161,9 @@ public class WikipediaPlugin : IExecutorPlugin, IConfigurablePlugin
             {
                 HttpStatusCode.NotFound => new HttpRequestException("No wikipedia entry found."),
                 HttpStatusCode.Unauthorized => new HttpRequestException("The API key is invalid."),
-                HttpStatusCode.BadRequest => HandleBadRequest(keyword, e),
                 _ => new HttpRequestException("The wikipedia information could not be retrieved.")
             };
         }
-    }
-
-    // Define this method somewhere accessible in your class
-    private static HttpRequestException HandleBadRequest(string keyword, Exception innerException)
-    {
-        Log.Error("The article for the specified keyword '{Keyword}' could not be retrieved. " +
-                  "This is probably because it is over 2 MB in size.", keyword);
-        return new HttpRequestException("The article for the specified keyword could not be retrieved.", innerException, HttpStatusCode.BadRequest);
     }
 
     private string ExtractKeyword(string parameter)
@@ -193,7 +186,7 @@ public class WikipediaPlugin : IExecutorPlugin, IConfigurablePlugin
         }
         Log.Debug("[{PluginName}] Parsed parameter: KeywordToSearch:'{Keyword}'",
             nameof(WikipediaPlugin), keyword);
-        return keyword.Replace(' ', '_');
+        return keyword;
     }
 
     #endregion
@@ -203,8 +196,6 @@ public class WikipediaPlugin : IExecutorPlugin, IConfigurablePlugin
 [Serializable]
 internal class WikipediaPluginConfig
 {
-    public string ApiKey { get; set; } = "";
-    public string BaseUrl { get; set; } = "https://api.api-ninjas.com/v1/webscraper";
-    public string ExtensionUrl { get; set; } = "https://en.wikipedia.org/wiki/";
+    public string BaseUrl { get; set; } = "https://en.wikipedia.org/w/api.php";
     public string DefaultKeyword { get; set; } = "Observer pattern";
 }
