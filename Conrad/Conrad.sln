@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluginBase", "PluginBase\Pl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{B69C7331-2E2E-431B-A742-F58E00C1C431}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamplePluginPackage", "Plugins\ExamplePlugin\ExamplePluginPackage.csproj", "{216D7024-3678-485F-8347-1666222FB390}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherPlugin", "Plugins\WeatherPlugin\WeatherPlugin.csproj", "{9B8127B1-A3C9-46B8-9A63-4F087B330DA0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamplePluginPackage", "Plugins\ExamplePlugin\ExamplePluginPackage.csproj", "{216D7024-3678-485F-8347-1666222FB390}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserInputPlugin", "Plugins\UserInputPlugin\UserInputPlugin.csproj", "{6ECA0378-1AB9-4898-98A2-B00B607F9CB4}"
 EndProject
@@ -33,11 +33,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlacesPlugin", "Plugins\Pla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscordPlugin", "Plugins\DiscordPlugin\DiscordPlugin.csproj", "{D2FE7914-382C-4646-8E2B-2DF1DFC8D5C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PreferencesPlugin", "Plugins\PreferencesPlugin\PreferencesPlugin.csproj", "{7315EA7C-E953-4D2F-9050-4CA83E1326AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PreferencesPlugin", "Plugins\PreferencesPlugin\PreferencesPlugin.csproj", "{7315EA7C-E953-4D2F-9050-4CA83E1326AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WikipediaPlugin", "Plugins\WikipediaPlugin\WikipediaPlugin.csproj", "{B85A63B2-C19D-4B6A-AC7E-05F68909803F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WikipediaPlugin", "Plugins\WikipediaPlugin\WikipediaPlugin.csproj", "{B85A63B2-C19D-4B6A-AC7E-05F68909803F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimePluginPackage", "Plugins\TimePluginPackage\TimePluginPackage.csproj", "{FB7ADFA9-7A36-4924-B711-0613485E55D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimePluginPackage", "Plugins\TimePluginPackage\TimePluginPackage.csproj", "{FB7ADFA9-7A36-4924-B711-0613485E55D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,22 +105,14 @@ Global
 		{7315EA7C-E953-4D2F-9050-4CA83E1326AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7315EA7C-E953-4D2F-9050-4CA83E1326AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7315EA7C-E953-4D2F-9050-4CA83E1326AE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB7ADFA9-7A36-4924-B711-0613485E55D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB7ADFA9-7A36-4924-B711-0613485E55D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB7ADFA9-7A36-4924-B711-0613485E55D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB7ADFA9-7A36-4924-B711-0613485E55D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB7ADFA9-7A36-4924-B711-0613485E55D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB7ADFA9-7A36-4924-B711-0613485E55D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB7ADFA9-7A36-4924-B711-0613485E55D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB7ADFA9-7A36-4924-B711-0613485E55D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D2FE7914-382C-4646-8E2B-2DF1DFC8D5C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D2FE7914-382C-4646-8E2B-2DF1DFC8D5C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D2FE7914-382C-4646-8E2B-2DF1DFC8D5C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D2FE7914-382C-4646-8E2B-2DF1DFC8D5C7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B85A63B2-C19D-4B6A-AC7E-05F68909803F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B85A63B2-C19D-4B6A-AC7E-05F68909803F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B85A63B2-C19D-4B6A-AC7E-05F68909803F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B85A63B2-C19D-4B6A-AC7E-05F68909803F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB7ADFA9-7A36-4924-B711-0613485E55D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB7ADFA9-7A36-4924-B711-0613485E55D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB7ADFA9-7A36-4924-B711-0613485E55D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB7ADFA9-7A36-4924-B711-0613485E55D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -139,7 +131,6 @@ Global
 		{560C55C9-CEFD-4793-8DB6-5FC0C3EF237C} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 		{D2FE7914-382C-4646-8E2B-2DF1DFC8D5C7} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 		{7315EA7C-E953-4D2F-9050-4CA83E1326AE} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
-		{D2FE7914-382C-4646-8E2B-2DF1DFC8D5C7} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 		{B85A63B2-C19D-4B6A-AC7E-05F68909803F} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 		{FB7ADFA9-7A36-4924-B711-0613485E55D8} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 	EndGlobalSection

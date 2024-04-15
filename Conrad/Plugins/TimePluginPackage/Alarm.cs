@@ -1,4 +1,5 @@
 ﻿using PluginInterfaces;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,13 +18,12 @@ namespace TimePluginPackage
     {
         public string Name => "AlarmClock";
 
-        public string Description => "Sets and removes alarms.";
+        public string Description => "Sets and removes and raises alarms.";
 
-        public string ParameterFormat => @"Possible commands are
-    setAlarm:'{alarmName}','{yyyy-MM-dd HH:mm}'
-    setTimer:'{alarmName}','{mm:ss}'
-    removeAlarm:'{alarmName}'
-        'yyyy' is the year, 'MM' is the month, 'dd' is the day, 'HH' is the hour, 'mm' is the minute and 'ss' is the second. 'alarmName' is an identifier for the alarm.
+        public string ParameterFormat => @"
+Action:'{setAlarm/removeAlarm}', AlarmName:'{name}', Time:'{time}'
+The action 'setAlarm' has the Time-Format 'yyyy-MM-dd HH:mm:ss'
+
 ";
 
         public string PromptAddOn
@@ -48,6 +48,8 @@ namespace TimePluginPackage
             }
         }
 
+        private static readonly char[] TRIM_CHARS = { '\'', '\"', '{', '}', ',', '.', ' ' };
+
         public event ConfigurationChangeEventHandler OnConfigurationChange;
 
         public event NotifyEventHandler OnNotify;
@@ -55,43 +57,50 @@ namespace TimePluginPackage
         public Task<string> ExecuteAsync(string parameter)
         {
             parameter = parameter.ToLower();
-            var newAlarmRegex = new Regex(@"setalarm:'(.*)','(.*)'");
-            var newTimerRegex = new Regex(@"settimer:'(.*)','(.*)'");
-            var removeAlarmRegex = new Regex(@"removealarm:'(.*)'");
+            Log.Debug("[AlarmClock]: Recieved Parameter {parameter}", parameter);
+            var actionRegex = new Regex(@"((?:setalarm)|(?:removealarm))");
+            var nameRegex = new Regex(@".*alarmname:([^,]*),?");
+            var timeRegex = new Regex(@".*time:([^,]*),?");
 
-            bool configAltered = false;
+            var action = actionRegex.Match(parameter).Groups[1].Value.Trim(TRIM_CHARS);
+            var alarmName = nameRegex.Match(parameter).Groups[1].Value.Trim(TRIM_CHARS);
+
             StringBuilder actions = new StringBuilder();
 
-            if (newAlarmRegex.Match(parameter) is var newAlarmMatch && newAlarmMatch.Success)
+            try
             {
-                var alarmName = newAlarmMatch.Groups[1].Value.Trim();
-                var time = DateTime.Parse(newAlarmMatch.Groups[2].Value.Trim());
-                _config.Alarms[alarmName] = time;
-                actions.AppendLine($"New Alarm \"{alarmName}\" was set to {DateTime.Parse(newAlarmMatch.Groups[2].Value.Trim()).ToString("HH:mm, d. of MMMM yyyy")}");
-                configAltered = true;
+                switch (action.Trim())
+                {
+                    case "setalarm":
+                        var alarmTime = DateTime.Parse(timeRegex.Match(parameter).Groups[1].Value.Trim(TRIM_CHARS));
+                        _config.Alarms[alarmName] = alarmTime;
+                        var alarmAction = $"New Alarm \"{alarmName}\" was set to {alarmTime.ToString("HH:mm, d.")} {alarmTime.ToString("MMMM yyyy")}";
+                        actions.AppendLine(alarmAction);
+                        Log.Information("[AlarmClock]: Set Alarm {AlarmName} to {Time}", alarmName, alarmTime.ToString());
+                        OnConfigurationChange?.Invoke(this); break;
+                    case "removealarm":
+                        if (_config.Alarms.Remove(alarmName))
+                        {
+                            Log.Information("[AlarmClock]: Removed Alarm {AlarmName}", alarmName);
+                            actions.AppendLine($"Removed Alarm \"{alarmName}\" from the list. Tell the user that the alarm was sucessfully removed.");
+                            OnConfigurationChange?.Invoke(this);
+                        }
+                        else
+                        {
+                            Log.Information("[AlarmClock]: Tried to remove non-existing Alarm {AlarmName}", alarmName);
+                            actions.AppendLine($"Tried to remove non-existing Alarm \"{alarmName}\"");
+                        }
+                        break;
+                    default:
+                        actions.AppendLine($"Couldn't run action: {action} because it does not exist!");
+                        Log.Information("[AlarmClock]: Tried to run non-existing action {Action}", action);
+                        break;
+                }
             }
-
-            else if (newTimerRegex.Match(parameter) is var newTimerMatch && newTimerMatch.Success)
+            catch (Exception e)
             {
-                var time = DateTime.Now.Add(TimeSpan.ParseExact(newTimerMatch.Groups[2].Value.Trim(), "mm:ss", CultureInfo.InvariantCulture));
-                _config.Alarms[newTimerMatch.Groups[1].Value.Trim()] = time;
-                actions.AppendLine($"New Timer \"{newTimerMatch.Groups[1].Value.Trim()}\" will raise at {time.ToString("HH:mm")}");
-                configAltered = true;
-            }
-
-            else if (removeAlarmRegex.Match(parameter) is var removeAlarmMatch && removeAlarmMatch.Success)
-            {
-                _config.Alarms.Remove(removeAlarmMatch.Groups[1].Value.Trim());
-                configAltered = true;
-            }
-
-            if (configAltered)
-            {
-                OnConfigurationChange?.Invoke(this);
-            }
-            else
-            {
-                actions.AppendLine("Couldn't parse date, no alarm was set!");
+                Log.Error(e, "[AlarmClock]: Error while executing action {Action}", action);
+                actions.AppendLine($"Error while executing action {action}");
             }
 
             return Task.FromResult(actions.ToString());
