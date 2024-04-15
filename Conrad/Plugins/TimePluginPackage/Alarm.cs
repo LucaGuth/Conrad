@@ -20,11 +20,7 @@ namespace TimePluginPackage
 
         public string Description => "Sets and removes and raises alarms.";
 
-        public string ParameterFormat => @"
-Action:'{setAlarm/removeAlarm}', AlarmName:'{name}', Time:'{time}'
-The action 'setAlarm' has the Time-Format 'yyyy-MM-dd HH:mm:ss'
-
-";
+        public string ParameterFormat => @"Action:'{setAlarm/removeAlarm}', AlarmName:'{name}', Time:'{yyyy-MM-dd HH:mm:ss}'";
 
         public string PromptAddOn
         {

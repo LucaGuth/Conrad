@@ -197,7 +197,17 @@ namespace Sequencer
 
         private string GenerateInputPrompt(INotifierPlugin notifierPlugin, string message)
         {
-            StringBuilder prompt = new StringBuilder("You are a personal digital assistant. You have access to the following plugins:\n");
+            StringBuilder prompt = new StringBuilder("You are a personal digital assistant.");
+            prompt.AppendLine("Here is some background information:");
+
+            foreach (var plugin in _pluginLoader.GetPlugins<IPromptAdderPlugin>())
+            {
+                prompt.AppendLine($" - {plugin.Name}:");
+                prompt.AppendLine(plugin.PromptAddOn);
+            }
+
+            prompt.AppendLine("You have access to the following plugins:\n");
+
             foreach (var plugin in _pluginLoader.GetPlugins<IExecutorPlugin>())
             {
                 prompt.AppendLine($"{plugin.Name}: {plugin.ParameterFormat}");
@@ -218,13 +228,7 @@ The user will not see the response you give, you are talking to a machine that o
 
 ");
 
-            prompt.AppendLine("Here is some background information:");
 
-            foreach (var plugin in _pluginLoader.GetPlugins<IPromptAdderPlugin>())
-            {
-                prompt.AppendLine($" - {plugin.Name}:");
-                prompt.AppendLine(plugin.PromptAddOn);
-            }
 
             prompt.AppendLine();
 
@@ -239,10 +243,6 @@ The user will not see the response you give, you are talking to a machine that o
         private string GenerateOutputPrompt(INotifierPlugin sender, string request, string results)
         {
             StringBuilder prompt = new($"You are a personal digital assistant.");
-
-            prompt.AppendLine("Some plugins were executed to give you background information for answering the request.");
-            prompt.AppendLine("Here are the plugins with their arguments, followed by the results in backticks - please do not confuse them.");
-            prompt.AppendLine(results);
 
             prompt.AppendLine("Write an answer to the request. Do not provide all information from the plugins, just because you have it - only answer sensibly.");
             prompt.AppendLine("Do not reiterate the data inside the plugin requests.");
@@ -259,7 +259,10 @@ The user will not see the response you give, you are talking to a machine that o
             }
 
             prompt.AppendLine();
-            prompt.AppendLine($"You received a request from {sender.Name} ({sender.Description}):\n```\n{request}\n```.\n");
+            prompt.AppendLine("Some plugins were executed to give you background information for answering the request.");
+            prompt.AppendLine("Here are the plugins with their arguments, followed by the results in backticks - please do not confuse them.");
+            prompt.AppendLine(results);
+            prompt.AppendLine($"You received a request from {sender.Name} ({sender.Description}):\n```\n{request}\n```\n");
 
             return prompt.ToString();
 
