@@ -203,7 +203,7 @@ namespace Sequencer
                 prompt.AppendLine($"{plugin.Name}: {plugin.ParameterFormat}");
             }
 
-            const string _llmPromptBody = @"
+            prompt.AppendLine(@"
 
 - Remove plugins that are not relevant to the task.
 - Fill out all parameters sensibly (everything inside {}).
@@ -216,8 +216,17 @@ Do not, under any circumstances, in any way explain the result you give!
 The output will be parsed, so it has to adhere exactly to the format shown above and cannot contain anything extra!
 The user will not see the response you give, you are talking to a machine that only needs to know which plugins to execute!
 
-";
-            prompt.AppendLine(_llmPromptBody);
+");
+
+            prompt.AppendLine("Here is some background information:");
+
+            foreach (var plugin in _pluginLoader.GetPlugins<IPromptAdderPlugin>())
+            {
+                prompt.AppendLine($" - {plugin.Name}:");
+                prompt.AppendLine(plugin.PromptAddOn);
+            }
+
+            prompt.AppendLine();
 
             prompt.AppendLine($"Input was received from '{notifierPlugin.Name} ({notifierPlugin.Description})'");
             prompt.AppendLine($"```");
@@ -240,7 +249,17 @@ The user will not see the response you give, you are talking to a machine that o
             prompt.AppendLine("Keep your answer as short as possible! Like, very very short okay? SUPER SHORT!");
             prompt.AppendLine("Answer in full sentences, the output will be the input for a text to speech system.");
 
-            prompt.AppendLine($"You received a request from {sender.Name} ({sender.Description}):\n```\"{request}\"```.\n");
+            prompt.AppendLine();
+            prompt.AppendLine("Here is some background information:");
+
+            foreach (var plugin in _pluginLoader.GetPlugins<IPromptAdderPlugin>())
+            {
+                prompt.AppendLine($" - {plugin.Name}:");
+                prompt.AppendLine(plugin.PromptAddOn);
+            }
+
+            prompt.AppendLine();
+            prompt.AppendLine($"You received a request from {sender.Name} ({sender.Description}):\n```\n{request}\n```.\n");
 
             return prompt.ToString();
 
