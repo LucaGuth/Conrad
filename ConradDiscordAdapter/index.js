@@ -7,13 +7,10 @@ const prism = require('prism-media');
 const {createWriteStream} = require("node:fs");
 const {pipeline} = require("node:stream");
 const ffmpeg = require('fluent-ffmpeg');
-const OpenAI = require("openai");
 const fs = require('fs');
 const net = require('net');
 const http = require('http');
 const { createReadStream } = require('node:fs');
-
-const openai = new OpenAI({apiKey: openAIKey});
 
 const httpServer = http.createServer((req, res) => {
     // check if the request is plain text
@@ -95,6 +92,8 @@ function sendDiscordMessage(message) {
         for (let i = 0; i < message.length; i += 2000) {
             client.channels.cache.get(discord.textChannel).send(message.substring(i, i + 2000));
         }
+    } else {
+	client.channels.cache.get(discord.textChannel).send(message);
     }
 }
 
@@ -191,15 +190,22 @@ function convertOggToMp3(oggFilePath, mp3FilePath) {
         .on('exit', () => console.log('Audio recorder exited'))
         .on('close', () => console.log('Audio recorder closed'))
         .on('end', async () => {
-            console.log('Audio Transcoding succeeded !');
-            const transcription = await openai.audio.transcriptions.create({
-                file: fs.createReadStream(mp3FilePath),
-                model: "whisper-1",
-                language: "de"
-            });
+		console.log('Audio Transcoding succeeded !');
+		const { exec } = require('child_process');
 
-            console.log(transcription.text);
-            sendToConrad(transcription.text)
+		exec(`. /python_venv/bin/activate && whisper --model small.en --language en --output_format txt ${mp3FilePath}`, (err, stdout, stderr) => {
+			if (err) {
+				console.log(err);
+				return;
+			}
+
+			const pattern = /\[\d{2}:\d{2}.\d{3} --> \d{2}:\d{2}.\d{3}\] /g;
+
+			// Replace the matched pattern with an empty string
+			const result = stdout.replace(pattern, '');
+			sendToConrad(result);
+		});
+
         })
         .pipe(outStream, { end: true });
 }
