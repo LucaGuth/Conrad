@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Conrad\Plugins\BahnPlugin\BahnPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\CalendarPlugin\CalendarPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Plugins\CoffeePlugin\CoffeePlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\DishPlugin\DishPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\DiscordPlugin\DiscordPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\NewsPlugin\NewsPlugin.csproj"/>
