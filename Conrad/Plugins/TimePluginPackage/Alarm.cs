@@ -52,6 +52,8 @@ namespace TimePluginPackage
 
         public Task<string> ExecuteAsync(string parameter)
         {
+            Log.Debug("Start execution of the TimerPlugin");
+
             parameter = parameter.ToLower();
             Log.Debug("[AlarmClock]: Recieved Parameter {parameter}", parameter);
             var actionRegex = new Regex(@"((?:setalarm)|(?:removealarm))");

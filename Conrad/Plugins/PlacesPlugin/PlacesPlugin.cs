@@ -13,7 +13,7 @@ public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
 {
     #region Public
 
-    public string Name => "Restaurants Provider";
+    public string Name => "RestaurantsProvider";
     public string Description => $"This plugin returns the three nearest restaurants based on a location " +
                                  $"as parameter.";
     public string ParameterFormat => "Location:'{location}'\n\t" +

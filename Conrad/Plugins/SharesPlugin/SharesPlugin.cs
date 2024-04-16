@@ -12,7 +12,7 @@ public class SharesPlugin : IExecutorPlugin, IConfigurablePlugin
 {
     #region Public
 
-    public string Name => "Shares Information Provider";
+    public string Name => "SharesInformationProvider";
 
     public string Description => "Plugin to retrieve the last five quotes from the web for a given stock symbol.";
 

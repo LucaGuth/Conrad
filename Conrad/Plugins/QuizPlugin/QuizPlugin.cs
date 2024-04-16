@@ -21,6 +21,7 @@ public class QuizPlugin : IExecutorPlugin, IConfigurablePlugin
 
     public async Task<string> ExecuteAsync(string parameter)
     {
+        Log.Debug("Start execution of the QuizPlugin");
         try
         {
             var responseJson = await GetQuizAsync();
