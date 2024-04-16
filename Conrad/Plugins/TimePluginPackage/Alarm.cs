@@ -1,16 +1,9 @@
-﻿using PluginInterfaces;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using Serilog;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using PluginInterfaces;
 
 namespace TimePluginPackage
 {
