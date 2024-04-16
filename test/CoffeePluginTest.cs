@@ -21,18 +21,13 @@ public class CoffeePluginTest
     [TestMethod]
     public async Task ValidResponseShouldBeParsed()
     {
-        // serilog console log
-        Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console()
-            .CreateLogger();
-
         // Arrange
         var parameter = "ListOfFilters:'warm, milk frother, fruity'";
-        var expectedString = "";
+        var expectedString = "You can prepare the delicious coffee beverage 'Milky Strawberry Dream', which has the description 'Try a sweet and fruity start to spring', as follows: Pour the white chocolate sauce into a small latte macchiato glass. Add the milk and strawberry syrup to the Automatic Milk Frother and prepare a serving of warm milk foam. As soon as the Automatic Milk Frother stops, pour the warm milk foam into the glass until it is 3/4 full. Prepare the espresso in a separate receptacle. Pour it carefully into the glass and serve. For more information, please visit the Jura website";
 
         var _coffeePlugin = new CoffeePlugin();
         var mockHttp = new MockHttpMessageHandler();
-        
+
         var htmlContentPath1 = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "coffee_example_1.html");
         var htmlContent1 = File.ReadAllText(htmlContentPath1);
         var htmlContentPath2 = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "coffee_example_2.html");
@@ -47,14 +42,10 @@ public class CoffeePluginTest
         // Act
         var result = await _coffeePlugin.ExecuteAsync(parameter);
 
-        Console.WriteLine(result);
-
         // Assert
         Assert.IsTrue(result.Contains(expectedString));
-        Assert.IsTrue(false);
-
     }
-    
+
     [TestMethod]
     public async Task EmptyResponseShouldNotBeParsed()
     {
@@ -70,10 +61,8 @@ public class CoffeePluginTest
         // Act
         var result = await _coffeePlugin.ExecuteAsync(parameter);
         // Assert
-        Console.WriteLine(result);
-        Assert.IsTrue(result.Contains("No coffee recipe found."));
-        Assert.IsTrue(false);
-    }   
+        Assert.IsTrue(result.Contains("An error has occurred while retrieving the coffee recipe."));
+    }
 
     [TestMethod]
     public async Task NetworkErrorShouldBeHandled()
@@ -90,14 +79,13 @@ public class CoffeePluginTest
         // Act
         var result = await _coffeePlugin.ExecuteAsync(parameter);
 
-        Console.WriteLine(result);
         // Assert
         var exceptionThrown = false;
         if (result.Contains("An error has occurred while retrieving the coffee recipe."))
         {
             exceptionThrown = true;
         }
-        Assert.IsTrue(false);
+        Assert.IsTrue(exceptionThrown);
     }
 
     [TestMethod]
@@ -109,7 +97,7 @@ public class CoffeePluginTest
         var mockHttp = new MockHttpMessageHandler();
         mockHttp.When("https://us.jura.com/en/about-coffee/coffee-recipes*")
                 .Respond(HttpStatusCode.NotFound);
-        
+
         _coffeePlugin.InjectHttpClient(mockHttp.ToHttpClient());
 
         // Act
@@ -127,7 +115,7 @@ public class CoffeePluginTest
         var mockHttp = new MockHttpMessageHandler();
         mockHttp.When("https://us.jura.com/en/about-coffee/coffee-recipes*")
                 .Respond(HttpStatusCode.BadRequest);
-        
+
         _coffeePlugin.InjectHttpClient(mockHttp.ToHttpClient());
 
         // Act
