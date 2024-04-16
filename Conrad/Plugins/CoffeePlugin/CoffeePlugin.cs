@@ -44,9 +44,9 @@ public class CoffeePlugin : IExecutorPlugin, IConfigurablePlugin
                 case HttpRequestException:
                     return e.Message;
                 default:
-                    Log.Error($"An error has occurred while retrieving the wikipedia information:\n" +
+                    Log.Error($"An error has occurred while retrieving the coffee recipe:\n" +
                               $" {e.Source}: {e.Message}");
-                    return "An error has occurred while retrieving the wikipedia information.";
+                    return "An error has occurred while retrieving the coffee recipe.";
             }
         }
 

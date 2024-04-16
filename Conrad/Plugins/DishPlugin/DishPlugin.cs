@@ -198,7 +198,7 @@ public class DishPlugin : IExecutorPlugin, IConfigurablePlugin
 internal class FoodPluginConfig
 {
     public string ApiKey { get; set; } = "";
-    public string BaseUrl { get; set; } = "https://api.spoonacular.com/recipes/";
+    public string BaseUrl { get; set; } = "https://api.spoonacular.com/recipes";
     public string Cuisine { get; set; } = "italian";
     public string Dish { get; set; } = "pasta";
 }
