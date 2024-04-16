@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
@@ -33,6 +34,7 @@ namespace PreferencesPlugin
 
         public event ConfigurationChangeEventHandler OnConfigurationChange;
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public Task<string> ExecuteAsync(string parameter)
         {
             Log.Debug("Start execution of the PreferencesPlugin");

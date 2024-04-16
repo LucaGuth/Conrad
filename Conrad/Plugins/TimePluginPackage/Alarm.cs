@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using PluginInterfaces;
+using System.Runtime.CompilerServices;
 
 namespace TimePluginPackage
 {
@@ -43,6 +44,7 @@ namespace TimePluginPackage
 
         public event NotifyEventHandler OnNotify;
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public Task<string> ExecuteAsync(string parameter)
         {
             Log.Debug("Start execution of the TimerPlugin");
