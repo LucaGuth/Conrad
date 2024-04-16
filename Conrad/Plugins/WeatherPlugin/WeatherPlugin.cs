@@ -10,7 +10,6 @@ namespace WeatherPlugin;
 
 public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
 {
-    private HttpClient _httpClient = new();
     #region Public
 
     public string Name => "WeatherForecastProvider";
@@ -68,7 +67,7 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
 
     private WeatherPluginConfig _config = new();
 
-    private readonly HttpClient _httpClient = new();
+    private HttpClient _httpClient = new();
 
     public void InjectHttpClient(HttpClient httpClient)
     {
