@@ -24,7 +24,6 @@
     <ProjectReference Include="..\Conrad\Plugins\DiscordPlugin\DiscordPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\NewsPlugin\NewsPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\OllamaPlugin\OllamaPlugin.csproj"/>
-    <ProjectReference Include="..\Conrad\Plugins\PiperOutputPlugin\PiperOutputPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\PlacesPlugin\PlacesPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\PreferencesPlugin\PreferencesPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\SharesPlugin\SharesPlugin.csproj"/>
