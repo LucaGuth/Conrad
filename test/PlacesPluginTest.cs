@@ -74,7 +74,7 @@ public class PlacesPluginTest
         // Act
         var exceptionThrown = false;       
         var result = await _placesPlugin.ExecuteAsync(parameter);
-        if(result.Contains("The request for the restaurants was denied. Check the credentials in the config.")){
+        if(result.Contains("Unauthorized access to the API. Check the API key in the configuration.")){
             exceptionThrown = true;
         }
         Console.WriteLine(result);
@@ -126,7 +126,7 @@ public class PlacesPluginTest
         // Act
         var exceptionThrown = false;       
         var result = await _placesPlugin.ExecuteAsync(parameter);
-        if(result.Contains("The shares information could not be retrieved.")){
+        if(result.Contains("Unauthorized access to the API. Check the API key in the configuration.")){
             exceptionThrown = true;
         }
         Console.WriteLine(result);
