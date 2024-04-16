@@ -12,16 +12,16 @@ namespace FoodPlugin;
 public class DishPlugin : IExecutorPlugin, IConfigurablePlugin
 {
     #region Public
-    public string Name => "Dish Suggestion Provider";
+    public string Name => "DishRecipeProvider";
 
     public string Description => "Plugin to suggest a dish recipe based on the given dish and cuisine.";
 
-    public string ParameterFormat => "dish:'{dish}', cuisine:'{cuisine}'\n" +
+    public string ParameterFormat => "Dish:'{dish}', Cuisine:'{cuisine}'\n" +
                                      "\tThe two parameters dish and cuisine are required and must be strings. If the " +
                                      "two parameters are not provided or invalid, the plugin will use the default " +
                                      "parameters.\n" +
                                      "\tA valid parameter format would be:\n" +
-                                     "\tdish:'pasta', cuisine:'italian'";
+                                     "\tDish:'pasta', Cuisine:'italian'";
 
     public event ConfigurationChangeEventHandler? OnConfigurationChange;
 

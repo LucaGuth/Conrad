@@ -197,13 +197,23 @@ namespace Sequencer
 
         private string GenerateInputPrompt(INotifierPlugin notifierPlugin, string message)
         {
-            StringBuilder prompt = new StringBuilder("You are a personal digital assistant. You have access to the following plugins:\n");
+            StringBuilder prompt = new StringBuilder("You are a personal digital assistant.");
+            prompt.AppendLine("Here is some background information:");
+
+            foreach (var plugin in _pluginLoader.GetPlugins<IPromptAdderPlugin>())
+            {
+                prompt.AppendLine($" - {plugin.Name}:");
+                prompt.AppendLine(plugin.PromptAddOn);
+            }
+
+            prompt.AppendLine("You have access to the following plugins:\n");
+
             foreach (var plugin in _pluginLoader.GetPlugins<IExecutorPlugin>())
             {
                 prompt.AppendLine($"{plugin.Name}: {plugin.ParameterFormat}");
             }
 
-            const string _llmPromptBody = @"
+            prompt.AppendLine(@"
 
 - Remove plugins that are not relevant to the task.
 - Fill out all parameters sensibly (everything inside {}).
@@ -216,8 +226,11 @@ Do not, under any circumstances, in any way explain the result you give!
 The output will be parsed, so it has to adhere exactly to the format shown above and cannot contain anything extra!
 The user will not see the response you give, you are talking to a machine that only needs to know which plugins to execute!
 
-";
-            prompt.AppendLine(_llmPromptBody);
+");
+
+
+
+            prompt.AppendLine();
 
             prompt.AppendLine($"Input was received from '{notifierPlugin.Name} ({notifierPlugin.Description})'");
             prompt.AppendLine($"```");
@@ -231,16 +244,25 @@ The user will not see the response you give, you are talking to a machine that o
         {
             StringBuilder prompt = new($"You are a personal digital assistant.");
 
-            prompt.AppendLine("Some plugins were executed to give you background information for answering the request.");
-            prompt.AppendLine("Here are the plugins with their arguments, followed by the results in backticks - please do not confuse them.");
-            prompt.AppendLine(results);
-
             prompt.AppendLine("Write an answer to the request. Do not provide all information from the plugins, just because you have it - only answer sensibly.");
             prompt.AppendLine("Do not reiterate the data inside the plugin requests.");
             prompt.AppendLine("Keep your answer as short as possible! Like, very very short okay? SUPER SHORT!");
             prompt.AppendLine("Answer in full sentences, the output will be the input for a text to speech system.");
 
-            prompt.AppendLine($"You received a request from {sender.Name} ({sender.Description}):\n```\"{request}\"```.\n");
+            prompt.AppendLine();
+            prompt.AppendLine("Here is some background information:");
+
+            foreach (var plugin in _pluginLoader.GetPlugins<IPromptAdderPlugin>())
+            {
+                prompt.AppendLine($" - {plugin.Name}:");
+                prompt.AppendLine(plugin.PromptAddOn);
+            }
+
+            prompt.AppendLine();
+            prompt.AppendLine("Some plugins were executed to give you background information for answering the request.");
+            prompt.AppendLine("Here are the plugins with their arguments, followed by the results in backticks - please do not confuse them.");
+            prompt.AppendLine(results);
+            prompt.AppendLine($"You received a request from {sender.Name} ({sender.Description}):\n```\n{request}\n```\n");
 
             return prompt.ToString();
 

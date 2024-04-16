@@ -15,7 +15,7 @@ public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
 {
     #region  Public
 
-    public string Name => "Calendar Provider";
+    public string Name => "CalendarProvider";
     public string Description => "This plugin returns the events of a date.";
     public string ParameterFormat => "Date:'{YYYY-MM-DD}'\n" +
                                      "\tA valid example for the 2nd of April 2024 would be:\n" +
@@ -25,7 +25,7 @@ public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
 
     public async Task<string> ExecuteAsync(string parameter)
     {
-        Log.Debug("Starting execution of Calendar Plugin.");
+        Log.Debug("Starting execution of CalendarPlugin.");
         try
         {
             var date = ExtractDate(parameter);

@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -12,7 +13,7 @@ public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
 {
     #region Public
 
-    public string Name => "Restaurants Provider";
+    public string Name => "RestaurantsProvider";
     public string Description => $"This plugin returns the three nearest restaurants based on a location " +
                                  $"as parameter.";
     public string ParameterFormat => "Location:'{location}'\n\t" +
@@ -181,12 +182,7 @@ public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
             var response = await _client.GetAsync(url);
             var responseString = await response.Content.ReadAsStringAsync();
 
-            if (!response.IsSuccessStatusCode)
-            {
-                Log.Error($"{response.StatusCode}: {response.ReasonPhrase}");
-                throw new HttpRequestException($"Request failed with status code {response.StatusCode}.");
-            }
-
+            response.EnsureSuccessStatusCode();
             // Parse the JSON response to check the "status" field
             var jsonResponse = JsonDocument.Parse(responseString);
             var status = jsonResponse.RootElement.GetProperty("status").GetString();
@@ -215,11 +211,17 @@ public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
             switch (e)
             {
                 // This catch block is for handling HTTP request errors which are not thrown by the default case of the
-                // switch statement
-                case HttpRequestException when e.Source == nameof(PlacesPlugin):
-                    throw;
-                case HttpRequestException:
-                    Log.Error("Network error:\n{Source}\n{Message}", e.Source, e.Message);
+                case HttpRequestException exception:
+                    if (exception.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        Log.Error("Unauthorized access to the API. Check the API key in the configuration.");
+                        throw new HttpRequestException("Unauthorized access to the API. Check the API key in the configuration.");
+                    }
+                    if (exception.Source == nameof(PlacesPlugin))
+                    {
+                        throw;
+                    }
+                    Log.Error("Network error:\n{Source}\n{Message}", exception.Source, exception.Message);
                     throw new HttpRequestException(
                         "Failed to retrieve the restaurant information probably due to a network error.");
                 case JsonException:

@@ -11,11 +11,14 @@ namespace WeatherPlugin;
 public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
 {
     private HttpClient _httpClient = new();
+    #region Public
 
-    public string Name => "Weather Forecast Provider";
+    public string Name => "WeatherForecastProvider";
 
     public string Description =>
         "This plugin returns a weather forecast for a location, e.g. a city.";
+
+    public event ConfigurationChangeEventHandler? OnConfigurationChange;
 
     public async Task<string> ExecuteAsync(string parameter)
     {
@@ -41,6 +44,31 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
             }
         }
     }
+
+    public string ParameterFormat => "ForecastCity:'{city}'";
+
+    public JsonNode GetConfigiguration()
+    {
+        var localConfig = JsonSerializer.Serialize(_config);
+        var jsonNode = JsonNode.Parse(localConfig)!;
+
+        return jsonNode;
+    }
+
+    public void LoadConfiguration(JsonNode configuration)
+    {
+        _config = configuration.Deserialize<WeatherPluginConfig>() ?? throw new InvalidDataException("The config could not be loaded.");
+    }
+
+
+
+    #endregion
+
+    #region Private
+
+    private WeatherPluginConfig _config = new();
+
+    private readonly HttpClient _httpClient = new();
 
     public void InjectHttpClient(HttpClient httpClient)
     {
@@ -92,24 +120,6 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
         return forecast;
     }
 
-    public string ParameterFormat => "ForecastCity:'{city}'";
-
-    private WeatherPluginConfig _config = new();
-    public JsonNode GetConfigiguration()
-    {
-        var localConfig = JsonSerializer.Serialize(_config);
-        var jsonNode = JsonNode.Parse(localConfig)!;
-
-        return jsonNode;
-    }
-
-    public void LoadConfiguration(JsonNode configuration)
-    {
-        _config = configuration.Deserialize<WeatherPluginConfig>() ?? throw new InvalidDataException("The config could not be loaded.");
-    }
-
-    public event ConfigurationChangeEventHandler? OnConfigurationChange;
-
     private async Task<string> GetWeatherForecastAsync(string city)
     {
         var url = $"{_config.BaseUrl}?q={WebUtility.UrlEncode(city)}&appid={_config.ApiKey}&units={_config.Units}&cnt=20";
@@ -132,6 +142,9 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
 
         return await response.Content.ReadAsStringAsync();
     }
+
+    #endregion
+
 }
 
 [Serializable]

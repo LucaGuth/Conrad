@@ -11,6 +11,10 @@
       "Command": "--log-level Verbose"
     },
     {
+      "Id": "8218b389-586a-4659-917c-0150a6670582",
+      "Command": "--log-level Debug"
+    },
+    {
       "Id": "ba4c5fba-930d-4375-b813-c2123a9ef787",
       "Command": "--plugins C:\\Users\\markz\\repos\\Conrad\\Conrad\\out\\Debug\\plugins"
     }

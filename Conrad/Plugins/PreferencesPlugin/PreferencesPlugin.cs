@@ -10,22 +10,23 @@ public class PreferencesPlugin : IConfigurablePlugin, IPromptAdderPlugin, IExecu
 {
     #region Public
 
-    public string Name => "PreferencesPlugin";
+    public string Name => "UserPreferencesPlugin";
     public string Description => "This plugin returns the preferences of the user.";
 
-    public string ParameterFormat => "Action:'{Add/Remove}', Key:'{key}', Value:'{value}'\n" +
-                                     "\tThe 'Action' parameter is required and can be either 'Add' or 'Remove'.\n" +
-                                     "\tThe 'Key' parameter is required and must be a string.\n" +
-                                     "\tThe 'Value' parameter is required for 'Add' actions and should specify the " +
-                                     "value associated with the key.\n" +
-                                     "\tFor an 'Add' action with an existing key, you can modify the current key-value settings.\n" +
-                                     "\tA valid parameter format to add or modify a preference:\n" +
-                                     "\t\tAction:'Add', Key:'language', Value:'english'\n" +
-                                     "\tA valid parameter format to remove a preference:\n" +
-                                     "\t\tAction:'Remove', Key:'language'\n" +
-                                     "\tIMPORTANT: Do NOT customize the preferences unless you are absolutely sure it " +
-                                     "is necessary. Avoid modifying preferences if a similar key already exists and " +
-                                     "can be adjusted instead.";
+    public string ParameterFormat => @"Action:'{Add/Remove}', Key:'{key}', Value:'{value}'";
+        //"Action:'{Add/Remove}', Key:'{key}', Value:'{value}'\n" +
+        //                             "\tThe 'Action' parameter is required and can be either 'Add' or 'Remove'.\n" +
+        //                             "\tThe 'Key' parameter is required and must be a string.\n" +
+        //                             "\tThe 'Value' parameter is required for 'Add' actions and should specify the " +
+        //                             "value associated with the key.\n" +
+        //                             "\tFor an 'Add' action with an existing key, you can modify the current key-value settings.\n" +
+        //                             "\tA valid parameter format to add or modify a preference:\n" +
+        //                             "\t\tAction:'Add', Key:'language', Value:'english'\n" +
+        //                             "\tA valid parameter format to remove a preference:\n" +
+        //                             "\t\tAction:'Remove', Key:'language'\n" +
+        //                             "\tIMPORTANT: Do NOT customize the preferences unless you are absolutely sure it " +
+        //                             "is necessary. Avoid modifying preferences if a similar key already exists and " +
+        //                             "can be adjusted instead.";
 
     public event ConfigurationChangeEventHandler? OnConfigurationChange;
 
