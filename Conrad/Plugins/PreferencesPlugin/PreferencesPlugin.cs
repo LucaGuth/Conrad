@@ -10,7 +10,7 @@ public class PreferencesPlugin : IConfigurablePlugin, IPromptAdderPlugin, IExecu
 {
     #region Public
 
-    public string Name => "PreferencesPlugin";
+    public string Name => "UserPreferencesPlugin";
     public string Description => "This plugin returns the preferences of the user.";
 
     public string ParameterFormat => "Action:'{Add/Remove}', Key:'{key}', Value:'{value}'\n" +

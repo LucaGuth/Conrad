@@ -12,7 +12,7 @@ namespace FoodPlugin;
 public class DishPlugin : IExecutorPlugin, IConfigurablePlugin
 {
     #region Public
-    public string Name => "Dish Suggestion Provider";
+    public string Name => "DishRecipeProvider";
 
     public string Description => "Plugin to suggest a dish recipe based on the given dish and cuisine.";
 

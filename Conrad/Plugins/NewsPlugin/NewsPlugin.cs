@@ -13,7 +13,7 @@ public class NewsPlugin : IExecutorPlugin, IConfigurablePlugin
     private readonly HttpClient _httpClient = new();
     private NewsPluginConfig _config = new();
 
-    public string Name => "News Provider";
+    public string Name => "NewsProvider";
     public string Description => "This plugin returns the three latest news.";
     public string ParameterFormat => "NewsParameter:'{parameter}'\n" +
                                      "\tThe parameter must be any string. A valid parameter format would be:\n" +
