@@ -20,7 +20,7 @@ namespace TimePluginPackage
         {
             get
             {
-                StringBuilder promptAdder = new($"The current time is: {DateTime.Now.ToString("HH:mm")} on {DateTime.Now.ToString("dddd, dd of MMMM yyyy")}.\n");
+                StringBuilder promptAdder = new();
 
                 if (_config.Alarms.Any())
                 {
@@ -67,7 +67,7 @@ namespace TimePluginPackage
                     case "setalarm":
                         var alarmTime = DateTime.Parse(timeRegex.Match(parameter).Groups[1].Value.Trim(TRIM_CHARS));
                         _config.Alarms[alarmName] = alarmTime;
-                        var alarmAction = $"New Alarm \"{alarmName}\" was set to {alarmTime.ToString("HH:mm, d.")} {alarmTime.ToString("MMMM yyyy")}";
+                        var alarmAction = $"New Alarm \"{alarmName}\" was set to {alarmTime.ToString("yyyy-MM-dd HH:mm")}.";
                         actions.AppendLine(alarmAction);
                         Log.Information("[AlarmClock]: Set Alarm {AlarmName} to {Time}", alarmName, alarmTime.ToString());
                         OnConfigurationChange?.Invoke(this); break;

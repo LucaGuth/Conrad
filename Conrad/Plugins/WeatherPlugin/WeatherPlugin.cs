@@ -107,7 +107,7 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
                 let windSpeed = item.GetProperty("wind").GetProperty("speed").GetDecimal()
                 where time == new TimeSpan(9, 0, 0) || time == new TimeSpan(18, 0, 0)
                 select $"Weather forecast for the {dateTimeText} - A temperature of {temperature}°C with " +
-                       $"{weatherDescription} and a wind speed of {windSpeed} m/s.")
+                       $"{weatherDescription}{(windSpeed > 12.5m ? $" and a wind speed of {windSpeed} m/s" : "")}.")
             .Take(4)
             .ToList();
 
