@@ -20,7 +20,7 @@ namespace TimePluginPackage
         {
             get
             {
-                StringBuilder promptAdder = new($"The current time is: {DateTime.Now.ToString("HH:mm")} on {DateTime.Now.ToString("dddd, dd of MMMM yyyy")}.\n");
+                StringBuilder promptAdder = new();
 
                 if (_config.Alarms.Any())
                 {
@@ -134,7 +134,7 @@ namespace TimePluginPackage
         {
             foreach (var alarm in _config.Alarms)
             {
-                if (DateTime.Now + TimeSpan.FromSeconds(_config.AlarmOffsetInSeconds) >= alarm.Value)
+                if (DateTime.Now + TimeSpan.FromSeconds(-_config.AlarmOffsetInSeconds) >= alarm.Value)
                 {
                     return alarm;
                 }
