@@ -12,12 +12,28 @@ using System.Net;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 
 
 [TestClass]
 public class CoffeePluginTest
 {
+    [TestInitialize]
+    public void TestInit()
+    {
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
+    }
+    
+    [TestCleanup]
+    public void TestDispose()
+    {
+        Log.CloseAndFlush();
+    }
+
     [TestMethod]
     public async Task ValidResponseShouldBeParsed()
     {
@@ -123,4 +139,62 @@ public class CoffeePluginTest
         // Assert
         Assert.IsTrue(result.Contains("The coffee recipe could not be retrieved."));
     }
+
+    [TestMethod]
+    public async Task GetConfigurationShouldReturnConfiguration()
+    {
+        // Arrange
+        var _coffeePlugin = new CoffeePlugin();
+        
+        // Act
+        var result = _coffeePlugin.GetConfigiguration().ToString();
+        Console.WriteLine(result);
+        // Assert
+        Assert.IsTrue(result.Contains("BaseUrl"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldLoadConfiguration()
+    {
+        // Arrange
+        var _coffeePlugin = new CoffeePlugin();
+        var config = new CoffeePluginTestConfig();
+        // configString to json
+        var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(config));
+
+        // Act
+        _coffeePlugin.LoadConfiguration(jsonNode);
+
+        var result = _coffeePlugin.GetConfigiguration().ToString();
+        // Assert
+        Assert.IsTrue(result.Contains("TestUrl"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldThrowException()
+    {
+        // Arrange
+        var _coffeePlugin = new CoffeePlugin();
+
+        // Act
+        var exceptionThrown = false;
+        try{
+        _coffeePlugin.LoadConfiguration(null);
+
+        Console.WriteLine(_coffeePlugin.GetConfigiguration());
+        }
+        catch (Exception e)
+        {
+            exceptionThrown = true;
+        }
+        // Assert
+        Assert.IsTrue(exceptionThrown);
+    }
+    
+}
+
+[Serializable]
+internal class CoffeePluginTestConfig
+{
+    public string BaseUrl { get; set; } = "TestUrl";
 }
