@@ -25,7 +25,7 @@ public class UseCaseManagerPlugin : INotifierPlugin, IExecutorPlugin, IConfigura
             var temp = "null";
             if (useCase != null)
                 temp = useCase.Name;
-            Log.Information("UseCase ready: {name}", temp);
+
             if (useCase is not null)
             {
 
@@ -41,7 +41,6 @@ public class UseCaseManagerPlugin : INotifierPlugin, IExecutorPlugin, IConfigura
     private UseCaseModel? CheckForNotification()
     {
         var nowDateTimeOffset = DateTime.Now.AddSeconds(_config.InvocationOffsetInSeconds).TimeOfDay;
-        Log.Debug("time with offset: {time}",nowDateTimeOffset.ToString());
         return _config.UseCases.FirstOrDefault(c =>
             c.InvocedLastTime.Date != DateTime.Now.Date && c.InvocationTime.TimeOfDay <= nowDateTimeOffset);
     }
