@@ -10,9 +10,6 @@ namespace SmallTalkPlugin
 
         public string Description => "Responds to Smalltalk like Greetings, Thank you and How are you.";
 
-        public Task<string> ExecuteAsync(string parameter)
-        {
-            return Task.FromResult<string>("Respond polite and short to the origial user request.");
-        }
+        public Task<string> ExecuteAsync(string parameter) => Task.FromResult<string>("Respond polite and short to the origial user request.");
     }
 }
