@@ -69,6 +69,7 @@ namespace PreferencesPlugin
                         {
                             message = $"Removed '{key}' from the preferences list";
                             messages.Append(message);
+                            OnConfigurationChange(this);
                             Log.Information("[Preferences Pluign]: {message}", message);
                         }
                         else
@@ -76,7 +77,6 @@ namespace PreferencesPlugin
                             message = $"Tried to remove nonexisting Key '{key}.";
                             messages.Append(message);
                             Log.Information("[Preferences Pluign]: {message}", message);
-
                         }
                         break;
                     default:
