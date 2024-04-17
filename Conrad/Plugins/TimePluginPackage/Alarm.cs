@@ -15,7 +15,7 @@ namespace TimePluginPackage
 
         public string Description => "Sets and removes and raises alarms.";
 
-        public string ParameterFormat => @"Action:'{setAlarm/removeAlarm}', AlarmName:'{name}', AlarmDescription:'{description}', Time:'{yyyy-MM-dd HH:mm:ss}', Daily:'{true/false}'";
+        public string ParameterFormat => @"Action:'{setAlarm/updateAlarm/removeAlarm}', AlarmName:'{name}', AlarmDescription:'{description}', Time:'{yyyy-MM-dd HH:mm:ss}', Daily:'{true/false}'";
 
         public string PromptAddOn
         {
@@ -27,7 +27,7 @@ namespace TimePluginPackage
                 {
                     foreach ((var alarmName, var alarmTime) in _config.Alarms)
                     {
-                        promptAdder.AppendLine($"Alarm \"{alarmName}\" is set to {alarmTime.RaiseTime.ToString("HH:mm")} on {alarmTime.RaiseTime.ToString("yyyy-MM-dd")}");
+                        promptAdder.AppendLine($"Alarm \"{alarmName}\" is set to {alarmTime.RaiseTime.ToString("HH:mm")} on {alarmTime.RaiseTime.ToString("yyyy-MM-dd")}{(alarmTime.Daily ? " and will raise daily" : "")}.");
                     }
                 }
                 else
@@ -52,7 +52,7 @@ namespace TimePluginPackage
 
             parameter = parameter.ToLower();
             Log.Debug("[AlarmClock]: Recieved Parameter {parameter}", parameter);
-            var actionRegex = new Regex(@"((?:setalarm)|(?:removealarm))");
+            var actionRegex = new Regex(@"((?:setalarm)|(?:updatealarm)|(?:removealarm))");
             var nameRegex = new Regex(@".*alarmname:('.*?'),?");
             var timeRegex = new Regex(@".*time:('.*?'),?");
             var descriptionRegex = new Regex(@".*alarmdescription:('.*?'),?");
@@ -61,18 +61,24 @@ namespace TimePluginPackage
             var action = actionRegex.Match(parameter).Groups[1].Value.Trim(TRIM_CHARS);
             var alarmName = nameRegex.Match(parameter).Groups[1].Value.Trim(TRIM_CHARS);
 
-            StringBuilder messages = new StringBuilder();
+            StringBuilder messages = new();
 
             try
             {
                 switch (action.Trim())
                 {
+                    case "updatealarm":
                     case "setalarm":
-                        var alarm = new AlarmEntry();
-                        alarm.RaiseTime = DateTime.Parse(timeRegex.Match(parameter).Groups[1].Value.Trim(TRIM_CHARS));
+                        var alarm = _config.Alarms.TryGetValue(alarmName, out var existingAlarm) ? existingAlarm : new AlarmEntry();
 
+                        var raiseTimeMatch = timeRegex.Match(parameter);
                         var descriptionMatch = descriptionRegex.Match(parameter);
                         var repeatMatch = repeatRegex.Match(parameter);
+
+                        if (raiseTimeMatch.Success)
+                        {
+                            alarm.RaiseTime = DateTime.Parse(raiseTimeMatch.Groups[1].Value.Trim(TRIM_CHARS));
+                        }
 
                         if (descriptionMatch.Success)
                         {
@@ -81,7 +87,7 @@ namespace TimePluginPackage
 
                         if (repeatMatch.Success)
                         {
-                            alarm.Daily = descriptionMatch.Groups[1].Value.Trim(TRIM_CHARS) == "true";
+                            alarm.Daily = repeatMatch.Groups[1].Value == "true";
                         }
 
                         _config.Alarms[alarmName] = alarm;
@@ -89,7 +95,8 @@ namespace TimePluginPackage
                         var message = $"New Alarm \"{alarmName}\" was set to {alarm.RaiseTime.ToString("HH:mm, d.")} {alarm.RaiseTime.ToString("MMMM yyyy")}";
                         messages.AppendLine(message);
                         Log.Information("[AlarmClock]: Set Alarm {AlarmName} to {Time}", alarmName, alarm.RaiseTime.ToString());
-                        OnConfigurationChange?.Invoke(this); break;
+                        OnConfigurationChange?.Invoke(this);
+                        break;
                     case "removealarm":
                         if (_config.Alarms.Remove(alarmName))
                         {
@@ -161,14 +168,13 @@ namespace TimePluginPackage
         {
             try
             {
-                 return _config.Alarms.Where(a => DateTime.Now.AddSeconds(-_config.AlarmOffsetInSeconds) >= a.Value.RaiseTime).First();
+                return _config.Alarms.Where(a => DateTime.Now.AddSeconds(-_config.AlarmOffsetInSeconds) >= a.Value.RaiseTime).First();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
         }
-
 
         private AlarmPluginConfig _config = new();
     }
@@ -179,7 +185,7 @@ namespace TimePluginPackage
         public Dictionary<string, AlarmEntry> Alarms { get; set; } = new()
         {
             {
-                "InformationUseCase",
+                "informationusecase",
                 new AlarmEntry()
                 {
                     Daily = true,
@@ -189,7 +195,7 @@ namespace TimePluginPackage
                 }
             },
             {
-                "EntertainmentUseCase",
+                "entertainmentusecase",
                 new AlarmEntry()
                 {
                     Daily = true,
@@ -200,7 +206,7 @@ namespace TimePluginPackage
                 }
             },
             {
-                "CulinaryDelightsUseCase",
+                "culinarydelightsusecase",
                 new AlarmEntry()
                 {
                     Daily = true,
@@ -211,7 +217,7 @@ namespace TimePluginPackage
                 }
             },
             {
-                "MorningUseCase",
+                "morningusecase",
                 new AlarmEntry()
                 {
                     Daily = true,
@@ -228,7 +234,7 @@ namespace TimePluginPackage
 
     public class AlarmEntry
     {
-        public DateTime RaiseTime { get; set; } = DateTime.MinValue;
+        public DateTime RaiseTime { get; set; } = DateTime.Now.AddHours(1);
         public string Description { get; set; } = string.Empty;
         public bool Daily { get; set; } = false;
     }
