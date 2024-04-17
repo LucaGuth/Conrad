@@ -75,9 +75,9 @@ namespace Sequencer
             {
                 _pluginLoader.RemovePlugin(plugin);
             }
-            _executorPlugins = _pluginLoader.GetPlugins<IExecutorPlugin>();
+
             _outputPlugins = _pluginLoader.GetPlugins<IOutputPlugin>();
-            //_llm = _pluginLoader.GetPlugins<ILangaugeModel>().First();
+            _llm = _pluginLoader.GetPlugins<ILangaugeModel>().First();
         }
 
         /// <summary>
@@ -90,20 +90,8 @@ namespace Sequencer
         {
             Log.Debug("[Sequencer] Received message from {PluginName}: {Message}", sender.Name, message);
 
-            if (sender.Name == "ExampleNotifier")
-            {
-                foreach (var executor in _executorPlugins)
-                {
-                    if (executor.Name == "DB Train Information Provider")
-                    {
-                        var temp = executor.ExecuteAsync("DepartureStation:'Frankfurt am Main', DestinationStation:'München', DepartureTime:'{current-time}'").Result;
-                        Log.Debug("Plugin {plugin} responded: {executorResult}", executor.Name, temp);
-                    }
-                }
-            }
-
             // llm
-            /*var plugin_prompt = GenerateInputPrompt(sender, message);
+            var plugin_prompt = GenerateInputPrompt(sender, message);
             Log.Debug("[Sequencer] [Plugin Stage] Sending prompt to LLM: {prompt}", plugin_prompt);
             var llmInputResponse = _llm.Process(plugin_prompt);
             Log.Information("[Sequencer] [Plugin Stage] LLM response: {response}", llmInputResponse);
@@ -179,7 +167,7 @@ namespace Sequencer
                     outputCancelationToken.Cancel();
                     break;
                 }
-            }*/
+            }
         }
 
         /// <summary>
@@ -209,40 +197,32 @@ namespace Sequencer
 
         private string GenerateInputPrompt(INotifierPlugin notifierPlugin, string message)
         {
-            StringBuilder prompt = new StringBuilder("You are a personal digital assistant.");
-            prompt.AppendLine("Here is some background information:");
+            StringBuilder prompt = new StringBuilder("You are a personal digital assistant called Conrad.\n");
 
-            foreach (var plugin in _pluginLoader.GetPlugins<IPromptAdderPlugin>())
-            {
-                prompt.AppendLine($" - {plugin.Name}:");
-                prompt.AppendLine(plugin.PromptAddOn);
-            }
 
-            prompt.AppendLine("You have access to the following plugins:\n");
+            prompt.AppendLine("You have access to plugins that you can use to fulfill specific tasks. Plugins can have parameters that are needed to fulfill the request. You should only return the plugins with names and their parameters if they are necessary. The result will be machine parsed and is not allowed to have an explaination.");
+            prompt.AppendLine("Here is a list of plugins you can use:");
+            prompt.AppendLine();
 
             foreach (var plugin in _pluginLoader.GetPlugins<IExecutorPlugin>())
             {
                 prompt.AppendLine($"{plugin.Name}: {plugin.ParameterFormat}");
+                prompt.AppendLine($"\tDescription: {plugin.Description}");
+                prompt.AppendLine();
             }
 
-            prompt.AppendLine(@"
-
-- Remove plugins that are not relevant to the task.
-- Fill out all parameters sensibly (everything inside {}).
-  If not all parameters can be filled out, remove that plugin.
-  Plugins may have no parameters, in that case simply return the plugin name, as shown above.
-- If no plugin is relevant, return '-'.
-- You may only return the same plugin multiple times if each instance has different parameters.
-
-Do not, under any circumstances, in any way explain the result you give!
-The output will be parsed, so it has to adhere exactly to the format shown above and cannot contain anything extra!
-The user will not see the response you give, you are talking to a machine that only needs to know which plugins to execute!
-
-");
+            prompt.AppendLine("--------------------------------------------------------");
 
 
+            prompt.AppendLine("To fulfill the request the following background information might be helpful:");
+            foreach (var plugin in _pluginLoader.GetPlugins<IPromptAdderPlugin>())
+            {
+                prompt.AppendLine($" - {plugin.Name}:");
+                prompt.AppendLine($"\t{plugin.PromptAddOn.Trim()}");
+            }
 
-            prompt.AppendLine();
+
+            prompt.AppendLine("--------------------------------------------------------");
 
             prompt.AppendLine($"Input was received from '{notifierPlugin.Name} ({notifierPlugin.Description})'");
             prompt.AppendLine($"```");
@@ -254,28 +234,28 @@ The user will not see the response you give, you are talking to a machine that o
 
         private string GenerateOutputPrompt(INotifierPlugin sender, string request, string results)
         {
-            StringBuilder prompt = new($"You are a personal digital assistant.");
+            StringBuilder prompt = new($"You are a personal digital assistant called Conrad.\n");
 
-            prompt.AppendLine("Write an answer to the request. Do not provide all information from the plugins, just because you have it - only answer sensibly.");
-            prompt.AppendLine("Do not reiterate the data inside the plugin requests.");
-            prompt.AppendLine("Keep your answer as short as possible! Like, very very short okay? SUPER SHORT!");
-            prompt.AppendLine("Answer in full sentences, the output will be the input for a text to speech system.");
+            prompt.AppendLine("In a previous stage you gathered information. Now you get the information that was collected and should summarize them.");
+            prompt.AppendLine("Answer in full sentences, the output will be the input for a text to speech system. Therfore do not use abbreviations and write units in full words like degrees Celsius and Fahrenheit.");
+            prompt.AppendLine("Only answer with the absolute nessesary information. Keep the answer short and to the point.");
 
             prompt.AppendLine();
-            prompt.AppendLine("Here is some background information:");
+            prompt.AppendLine("Here is some background information. Use it only if you need it for the request.");
 
             foreach (var plugin in _pluginLoader.GetPlugins<IPromptAdderPlugin>())
             {
                 prompt.AppendLine($" - {plugin.Name}:");
-                prompt.AppendLine(plugin.PromptAddOn);
+                prompt.AppendLine(plugin.PromptAddOn.Trim());
             }
 
             prompt.AppendLine();
-            prompt.AppendLine("Some plugins were executed to give you background information for answering the request.");
-            prompt.AppendLine("Here are the plugins with their arguments, followed by the results in backticks - please do not confuse them.");
+            prompt.AppendLine("Here are the results from the previous request.");
             prompt.AppendLine(results);
-            prompt.AppendLine($"You received a request from {sender.Name} ({sender.Description}):\n```\n{request}\n```\n");
 
+            prompt.Append("Answer to the previous request from");
+            prompt.AppendLine($" {sender.Name} ({sender.Description}):\n```\n{request}\n```\n");
+            prompt.AppendLine("Only use information you need to fulfill the request. Keep the answer short!");
             return prompt.ToString();
 
         }
@@ -286,8 +266,6 @@ The user will not see the response you give, you are talking to a machine that o
 
         private readonly IEnumerable<IOutputPlugin> _outputPlugins;
 
-        //private readonly ILangaugeModel _llm;
-
-        private readonly IEnumerable<IExecutorPlugin> _executorPlugins;
+        private readonly ILangaugeModel _llm;
     }
 }
