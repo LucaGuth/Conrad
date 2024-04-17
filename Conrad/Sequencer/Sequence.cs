@@ -6,6 +6,8 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Sequencer
 {
@@ -14,6 +16,7 @@ namespace Sequencer
     /// </summary>
     internal class Sequence
     {
+
         /// <summary>
         /// The constructor of the sequence that initializes the plugins.
         /// </summary>
@@ -72,9 +75,9 @@ namespace Sequencer
             {
                 _pluginLoader.RemovePlugin(plugin);
             }
-
+            _executorPlugins = _pluginLoader.GetPlugins<IExecutorPlugin>();
             _outputPlugins = _pluginLoader.GetPlugins<IOutputPlugin>();
-            _llm = _pluginLoader.GetPlugins<ILangaugeModel>().First();
+            //_llm = _pluginLoader.GetPlugins<ILangaugeModel>().First();
         }
 
         /// <summary>
@@ -83,24 +86,77 @@ namespace Sequencer
         /// notification -> llm -> IExecutorPlugin's -> llm -> output to user
         /// </summary>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private void OnNotify(INotifierPlugin sender, string message) {
-            Log.Information("[Sequencer] Received message from {PluginName}: {Message}", sender.Name, message);
+        private void OnNotify(INotifierPlugin sender, string message)
+        {
+            Log.Debug("[Sequencer] Received message from {PluginName}: {Message}", sender.Name, message);
+
+            if (sender.Name == "ExampleNotifier")
+            {
+                foreach (var executor in _executorPlugins)
+                {
+                    if (executor.Name == "DB Train Information Provider")
+                    {
+                        var temp = executor.ExecuteAsync("DepartureStation:'Frankfurt am Main', DestinationStation:'München', DepartureTime:'{current-time}'").Result;
+                        Log.Debug("Plugin {plugin} responded: {executorResult}", executor.Name, temp);
+                    }
+                }
+            }
 
             // llm
-            // executor plugins
+            /*var plugin_prompt = GenerateInputPrompt(sender, message);
+            Log.Debug("[Sequencer] [Plugin Stage] Sending prompt to LLM: {prompt}", plugin_prompt);
+            var llmInputResponse = _llm.Process(plugin_prompt);
+            Log.Information("[Sequencer] [Plugin Stage] LLM response: {response}", llmInputResponse);
+
+            // Parse response
+            var responseCommands = llmInputResponse.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+
+            StringBuilder executorResults = new();
+            Parallel.ForEach(responseCommands, command =>
+            {
+                var parsedCommand = Regex.Match(command, @"([^:]+):?(.*)");
+                if (parsedCommand.Success)
+                {
+                    var requestedPluginName = parsedCommand.Groups[1].Value.Trim();
+                    var requestedPluginArguments = parsedCommand.Groups[2].Value.Trim();
+                    try
+                    {
+                        var plugin = _pluginLoader.GetPlugins<IExecutorPlugin>().Where(plugin => requestedPluginName.Contains(plugin.Name)).First();
+                        var executorResult = plugin.ExecuteAsync(requestedPluginArguments).Result;
+                        Log.Debug("Plugin {plugin} responded: {executorResult}", plugin.Name, executorResult);
+                        if (executorResult != null && executorResult != string.Empty)
+                        {
+                            lock (executorResults)
+                            {
+                                executorResults.AppendLine($"{plugin.Name}: {requestedPluginArguments}");
+                                executorResults.AppendLine("```");
+                                executorResults.AppendLine(executorResult);
+                                executorResults.AppendLine("```");
+                            }
+                        }
+                    }
+                    catch (Exception) { }
+                }
+            });
+
+            var executorResultsString = executorResults.ToString();
+
+            Log.Debug("[Sequencer] Executor Results: {results}", executorResultsString);
+
             // llm
-            var response = _llm.Process(message);
+            var summary_prompt = GenerateOutputPrompt(sender, message, executorResultsString == string.Empty ? "There are no plugin responses" : executorResultsString);
+            Log.Debug("[Sequencer] [Summary Stage] Sending prompt to LLM: {prompt}", summary_prompt);
+            var llmOutputResponse = _llm.Process(summary_prompt);
+            Log.Debug("[Sequencer] [Summary Stage] LLM response: {response}", llmOutputResponse);
 
-            Log.Information("[Sequencer] final response: {response}", response);
-
-            CancellationTokenSource cts = new CancellationTokenSource();
 
             // output to user
+            CancellationTokenSource outputCancelationToken = new CancellationTokenSource();
             List<Task> outputTasks = new List<Task>();
             object lockOutputTasks = new object();
             foreach (var outputPlugin in _outputPlugins)
             {
-                var task = new Task(() => outputPlugin.PushMessage(response), cts.Token);
+                var task = new Task(() => outputPlugin.PushMessage(llmOutputResponse), outputCancelationToken.Token);
                 Log.Debug("Created task for {PluginName} with task ID {taskID}.", outputPlugin.Name, task.Id);
                 task.ContinueWith(t =>
                 {
@@ -117,13 +173,13 @@ namespace Sequencer
             var time = Stopwatch.StartNew();
             while (outputTasks.Count > 0)
             {
-                if (time.ElapsedMilliseconds > 30000)
+                if (time.ElapsedMilliseconds > long.MaxValue)
                 {
                     Log.Warning("Output Plugins are taking too long to respond. Cancelling tasks: {tasks}", outputTasks);
-                    cts.Cancel();
+                    outputCancelationToken.Cancel();
                     break;
                 }
-            }
+            }*/
         }
 
         /// <summary>
@@ -151,12 +207,87 @@ namespace Sequencer
             Thread.Sleep(Timeout.Infinite);
         }
 
+        private string GenerateInputPrompt(INotifierPlugin notifierPlugin, string message)
+        {
+            StringBuilder prompt = new StringBuilder("You are a personal digital assistant.");
+            prompt.AppendLine("Here is some background information:");
+
+            foreach (var plugin in _pluginLoader.GetPlugins<IPromptAdderPlugin>())
+            {
+                prompt.AppendLine($" - {plugin.Name}:");
+                prompt.AppendLine(plugin.PromptAddOn);
+            }
+
+            prompt.AppendLine("You have access to the following plugins:\n");
+
+            foreach (var plugin in _pluginLoader.GetPlugins<IExecutorPlugin>())
+            {
+                prompt.AppendLine($"{plugin.Name}: {plugin.ParameterFormat}");
+            }
+
+            prompt.AppendLine(@"
+
+- Remove plugins that are not relevant to the task.
+- Fill out all parameters sensibly (everything inside {}).
+  If not all parameters can be filled out, remove that plugin.
+  Plugins may have no parameters, in that case simply return the plugin name, as shown above.
+- If no plugin is relevant, return '-'.
+- You may only return the same plugin multiple times if each instance has different parameters.
+
+Do not, under any circumstances, in any way explain the result you give!
+The output will be parsed, so it has to adhere exactly to the format shown above and cannot contain anything extra!
+The user will not see the response you give, you are talking to a machine that only needs to know which plugins to execute!
+
+");
+
+
+
+            prompt.AppendLine();
+
+            prompt.AppendLine($"Input was received from '{notifierPlugin.Name} ({notifierPlugin.Description})'");
+            prompt.AppendLine($"```");
+            prompt.AppendLine(message);
+            prompt.AppendLine($"```");
+
+            return prompt.ToString();
+        }
+
+        private string GenerateOutputPrompt(INotifierPlugin sender, string request, string results)
+        {
+            StringBuilder prompt = new($"You are a personal digital assistant.");
+
+            prompt.AppendLine("Write an answer to the request. Do not provide all information from the plugins, just because you have it - only answer sensibly.");
+            prompt.AppendLine("Do not reiterate the data inside the plugin requests.");
+            prompt.AppendLine("Keep your answer as short as possible! Like, very very short okay? SUPER SHORT!");
+            prompt.AppendLine("Answer in full sentences, the output will be the input for a text to speech system.");
+
+            prompt.AppendLine();
+            prompt.AppendLine("Here is some background information:");
+
+            foreach (var plugin in _pluginLoader.GetPlugins<IPromptAdderPlugin>())
+            {
+                prompt.AppendLine($" - {plugin.Name}:");
+                prompt.AppendLine(plugin.PromptAddOn);
+            }
+
+            prompt.AppendLine();
+            prompt.AppendLine("Some plugins were executed to give you background information for answering the request.");
+            prompt.AppendLine("Here are the plugins with their arguments, followed by the results in backticks - please do not confuse them.");
+            prompt.AppendLine(results);
+            prompt.AppendLine($"You received a request from {sender.Name} ({sender.Description}):\n```\n{request}\n```\n");
+
+            return prompt.ToString();
+
+        }
+
         private readonly PluginLoader _pluginLoader;
 
         private readonly IEnumerable<INotifierPlugin> _notifierPlugins;
 
         private readonly IEnumerable<IOutputPlugin> _outputPlugins;
 
-        private readonly ILangaugeModel _llm;
+        //private readonly ILangaugeModel _llm;
+
+        private readonly IEnumerable<IExecutorPlugin> _executorPlugins;
     }
 }

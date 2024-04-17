@@ -4,3 +4,6 @@ obj/
 /conrad/out/
 .idea/
 /Conrad/config/config.json
+/ConradDiscordAdapter/config.json
+/ConradDiscordAdapter/node_modules
+/ConradDiscordAdapter/recordings

@@ -1,73 +1,51 @@
 ﻿using System.Globalization;
+using System.Net;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Microsoft.CSharp.RuntimeBinder;
+using System.Text.RegularExpressions;
 using PluginInterfaces;
 using Serilog;
-using WeatherPlugin.PluginModels;
 
 namespace WeatherPlugin;
 
 public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
 {
-    public string Name { get; } = "Weather Forecast";
-    private readonly HttpClient _client = new();
-    private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
+    #region Public
 
-    public string Description { get; } =
-        "This plugin returns a weather forecast for a period of time. The time span ranges from the current date to" +
-        "a maximum of five days in the future. A city must be specified as the location for the weather forecast.";
+    public string Name => "WeatherForecastProvider";
+
+    public string Description =>
+        "This plugin returns a weather forecast for a location, e.g. a city.";
+
+    public event ConfigurationChangeEventHandler? OnConfigurationChange;
 
     public async Task<string> ExecuteAsync(string parameter)
     {
         Log.Debug("Start execution of the WeatherPlugin");
         try
         {
-            var parameterModel = new ParameterModel(parameter);
-            var forecastString =  await GetWeatherForecastAsync(parameterModel.City);
-            var forecastResponse = JsonSerializer.Deserialize<WeatherForecast>(forecastString, _options) ?? throw new ArgumentException("The weather data could not be parsed.");
-            var forecast = new WeatherForecast();
-            const string format = "yyyy-MM-dd HH:mm:ss";
-            foreach (var forecastListItem in forecastResponse.List)
-            {
-                if (DateTime.TryParseExact(forecastListItem.Dt_Txt, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime))
-                {
-                    if (parameterModel.ForecastFromDate <= dateTime && dateTime <= parameterModel.ForecastUntilDate)
-                    {
-                        forecast.List.Add(forecastListItem);
-                    }
-                }
-                else
-                {
-                    throw new ArgumentException("The weather data could not be parsed.");
-                }
-            }
-
-            forecast.City = forecastResponse.City;
-
-            return JsonSerializer.Serialize(forecast);
+            var city = ExtractCity(parameter);
+            var forecastString =  await GetWeatherForecastAsync(city);
+            var forecast = ParseAndFormatResponse(forecastString);
+            return string.Join("\n", forecast);
         }
         catch (Exception e)
         {
             switch (e)
             {
-                case ArgumentException or HttpRequestException:
+                case HttpRequestException:
                     Log.Error(e.Message);
                     return e.Message;
-                case RuntimeBinderException:
-                    const string errorMsg = "The weather data could not be parsed.";
-                    Log.Error(errorMsg);
-                    return errorMsg;
                 default:
-                    Log.Error(e.Message);
-                    return string.Empty;
+                    Log.Error("An error occured while processing the weather data:\n{Source}\n{Message}",
+                        e.Source, e.Message);
+                    return "An error occurred while processing the weather data.";
             }
         }
     }
 
-    public string ParameterFormat { get; } = "ForecastFromDate:'{YYYY-MM-DD}', ForecastUntilDate:'{YYYY-MM-DD}', " +
-                                             "ForecastCity:'{city}'";
-    private WeatherPluginConfig _config = new();
+    public string ParameterFormat => "ForecastCity:'{city}'";
+
     public JsonNode GetConfigiguration()
     {
         var localConfig = JsonSerializer.Serialize(_config);
@@ -81,16 +59,87 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
         _config = configuration.Deserialize<WeatherPluginConfig>() ?? throw new InvalidDataException("The config could not be loaded.");
     }
 
-    public event ConfigurationChangeEventHandler? OnConfigurationChange;
+
+
+    #endregion
+
+    #region Private
+
+    private WeatherPluginConfig _config = new();
+
+    private readonly HttpClient _httpClient = new();
+
+    private string ExtractCity(string parameter)
+    {
+        string city;
+        const string pattern = @"(?:ForecastCity:)?['\{](?<city>[^'\}]+)['\}]";
+        char[] charsToTrim = ['{', '}', '*', ',', '.', ' ', '\''];
+
+        var regex = new Regex(pattern);
+        var match = regex.Match(parameter);
+
+        if (match.Success)
+        {
+            city = match.Groups["city"].Value.Trim(charsToTrim);
+        }
+        else
+        {
+            Log.Warning("The city could not be extracted from the input parameter. The whole parameter will be used as the city.");
+            city = parameter.Trim(charsToTrim);
+        }
+        Log.Debug("[{PluginName}] Parsed parameter: ForecastCity: {City}",
+            nameof(WeatherPlugin), city);
+        return city;
+    }
+
+    private IEnumerable<string> ParseAndFormatResponse(string forecastString)
+    {
+        using var doc = JsonDocument.Parse(forecastString);
+        var list = doc.RootElement.GetProperty("list").EnumerateArray();
+
+        var forecast = (from item in list
+                let fullDateTimeText = item.GetProperty("dt_txt").GetString()
+                let dateTime = DateTime.ParseExact(fullDateTimeText, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)
+                let dateTimeText = dateTime.ToString("yyyy-MM-dd HH:mm")
+                let time = dateTime.TimeOfDay
+                let temperature = item.GetProperty("main").GetProperty("temp").GetDecimal()
+                let weatherDescription = item.GetProperty("weather")[0].GetProperty("description").GetString()
+                let windSpeed = item.GetProperty("wind").GetProperty("speed").GetDecimal()
+                where time == new TimeSpan(9, 0, 0) || time == new TimeSpan(18, 0, 0)
+                select $"Weather forecast for the {dateTimeText} - A temperature of {(int)Math.Round(temperature)} " +
+                       $"degrees celsius with {weatherDescription}" +
+                       $"{(windSpeed > _config.WindThresholdInMS ? $" and a wind speed of {(int)Math.Round(windSpeed)} m/s." : ".")}")
+            .Take(4)
+            .ToList();
+
+        return forecast;
+    }
 
     private async Task<string> GetWeatherForecastAsync(string city)
     {
-        var url = $"{_config.BaseUrl}?q={city}&appid={_config.ApiKey}&units={_config.Units}";
+        var url = $"{_config.BaseUrl}?q={WebUtility.UrlEncode(city)}&appid={_config.ApiKey}&units={_config.Units}&cnt=20";
 
-        var response = await _client.GetAsync(url);
-        response.EnsureSuccessStatusCode();
+        var response = await _httpClient.GetAsync(url);
+        try
+        {
+            response.EnsureSuccessStatusCode();
+        }
+        catch (HttpRequestException e)
+        {
+            Log.Error("Error while fetching weather data:\n{Source}\n{Message}",
+                e.Source, e.Message);
+            if (e.StatusCode == HttpStatusCode.NotFound)
+            {
+                throw new HttpRequestException("The input location could not be found.");
+            }
+            throw new HttpRequestException("Weather data could not be fetched.");
+        }
+
         return await response.Content.ReadAsStringAsync();
     }
+
+    #endregion
+
 }
 
 [Serializable]
@@ -99,4 +148,5 @@ internal class WeatherPluginConfig
     public string ApiKey { get; set; } = "";
     public string BaseUrl { get; set; } = "https://api.openweathermap.org/data/2.5/forecast";
     public string Units { get; set; } = "metric";
+    public decimal WindThresholdInMS { get; set; } = 8.5m;
 }

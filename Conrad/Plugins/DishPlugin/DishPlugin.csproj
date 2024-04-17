@@ -7,6 +7,7 @@
         <OutputPath>../../out/$(Configuration)/plugins</OutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        <RootNamespace>FoodPlugin</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\PluginBase\PluginBase.csproj">

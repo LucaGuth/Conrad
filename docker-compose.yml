@@ -1,5 +1,3 @@
-version: '3.0'
-
 services:
   conrad:
     container_name: conrad
@@ -8,6 +6,8 @@ services:
       - ./Conrad/config/:/app/config/:delegated
     ports:
       - 127.0.0.1:4000:4000
+    networks:
+      - conrad
     depends_on:
       ollama:
         condition: service_healthy
@@ -22,9 +22,30 @@ services:
     volumes:
       - ./ollama_models:/root/.ollama
     ports:
-      - 11434:11434
+      - 11435:11434
+    networks:
+      - conrad
     healthcheck:
       test: curl -f localhost:11434 || exit 1
       interval: 5s
       timeout: 10s
       retries: 10
+      
+  discord_adapter:
+    container_name: discord_adapter
+    restart: unless-stopped
+    ports:
+      - "6000:6000"
+    volumes:
+      - ./ConradDiscordAdapter/config.json:/app/config.json:ro
+      - ./ConradDiscordAdapter/index.js:/app/index.js:ro
+      - ./ConradDiscordAdapter/recordings:/app/recordings:delegated
+    networks:
+      - conrad
+    build:
+      context: ConradDiscordAdapter
+      dockerfile: Dockerfile
+    
+networks:
+  conrad:
+    driver: bridge
