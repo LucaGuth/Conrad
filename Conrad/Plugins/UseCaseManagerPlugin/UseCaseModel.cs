@@ -1,4 +1,4 @@
-namespace InformationNotifierPlugin;
+namespace UseCaseManagerPlugin;
 
 public class UseCaseModel(string name)
 {

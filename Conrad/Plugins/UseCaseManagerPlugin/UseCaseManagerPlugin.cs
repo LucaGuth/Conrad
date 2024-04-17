@@ -6,7 +6,7 @@ using PluginInterfaces;
 using Serilog;
 using Exception = System.Exception;
 
-namespace InformationNotifierPlugin;
+namespace UseCaseManagerPlugin;
 
 public class UseCaseManagerPlugin : INotifierPlugin, IExecutorPlugin, IConfigurablePlugin
 {
@@ -21,11 +21,16 @@ public class UseCaseManagerPlugin : INotifierPlugin, IExecutorPlugin, IConfigura
         while (true)
         {
             var useCase = CheckForNotification();
+
+            var temp = "null";
+            if (useCase != null)
+                temp = useCase.Name;
+            Log.Information("UseCase ready: {name}", temp);
             if (useCase is not null)
             {
 
                 _config.UseCases.First(c => c.Name == useCase.Name).InvocedLastTime = DateTime.Now;
-                OnNotify?.Invoke(this, $"Please greet the user by name. {useCase.Description}'.");
+                OnNotify?.Invoke(this, $"Please greet the user by name. {useCase.Description}");
                 OnConfigurationChange?.Invoke(this);
             }
 
@@ -36,6 +41,7 @@ public class UseCaseManagerPlugin : INotifierPlugin, IExecutorPlugin, IConfigura
     private UseCaseModel? CheckForNotification()
     {
         var nowDateTimeOffset = DateTime.Now.AddSeconds(_config.InvocationOffsetInSeconds).TimeOfDay;
+        Log.Debug("time with offset: {time}",nowDateTimeOffset.ToString());
         return _config.UseCases.FirstOrDefault(c =>
             c.InvocedLastTime.Date != DateTime.Now.Date && c.InvocationTime.TimeOfDay <= nowDateTimeOffset);
     }
@@ -184,9 +190,14 @@ public class InformationNotifierPluginConfig
                           "to tell me about my appointments. Please use the DB Train Information to tell me how I get " +
                           "to work when I am at the railway station in one hour.",
             InvocationTime = DateTime.Parse("07:00:00")
+        },
+        new UseCaseModel("TestUseCase")
+        {
+            Description = "Please list all your functions.",
+            InvocationTime = DateTime.Parse("12:10:00")
         }
     ];
 
-    public int InvocationOffsetInSeconds { get; set; } = -30;
+    public int InvocationOffsetInSeconds { get; set; } = 30;
 
 }
