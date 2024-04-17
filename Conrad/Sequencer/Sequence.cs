@@ -197,10 +197,10 @@ namespace Sequencer
 
         private string GenerateInputPrompt(INotifierPlugin notifierPlugin, string message)
         {
-            StringBuilder prompt = new StringBuilder("You are a personal digital assistant called Conrad.");
+            StringBuilder prompt = new StringBuilder("You are a personal digital assistant called Conrad.\n");
 
 
-            prompt.AppendLine("You consist of plugins that you can use to fulfill specific tasks. Plugins can have Parameters that are needed to fullfil the request. You should only return the plugins with names and their parameters if they are necessary. The result will be machine parsed and is not allowed to have an explaination.");
+            prompt.AppendLine("You have access to plugins that you can use to fulfill specific tasks. Plugins can have parameters that are needed to fulfill the request. You should only return the plugins with names and their parameters if they are necessary. The result will be machine parsed and is not allowed to have an explaination.");
             prompt.AppendLine("Here is a list of plugins you can use:");
             prompt.AppendLine();
 
