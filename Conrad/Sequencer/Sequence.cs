@@ -126,7 +126,7 @@ namespace Sequencer
                         {
                             lock (executorResults)
                             {
-                                executorResults.AppendLine($"Plugin '{plugin.Name}' was called with parameters: {requestedPluginArguments}");
+                                executorResults.AppendLine($"Plugin '{plugin.Name}' ({plugin.Description})");
                                 executorResults.AppendLine("```");
                                 executorResults.AppendLine(executorResult);
                                 executorResults.AppendLine("```");
@@ -185,7 +185,7 @@ namespace Sequencer
                 if (_promptHistory.Count == _promptHistory.Capacity) {
                     _promptHistory.RemoveAt(0);
                 }
-                _promptHistory.Add((DateTime.Now, $"your response: {llmOutputResponse}"));
+                _promptHistory.Add((DateTime.Now, $"Conrad: {llmOutputResponse}"));
             }
 
         }
@@ -299,6 +299,13 @@ When responding, follow these rulse:
             prompt.AppendLine("--------------------------------------------------------");
             prompt.AppendLine();
 
+            prompt.AppendLine("Here is your conversation history, take it into account if appropriate - there may be followup questions to this:");
+            prompt.AppendLine(promptHistory);
+
+            prompt.AppendLine();
+            prompt.AppendLine("--------------------------------------------------------");
+            prompt.AppendLine();
+
             prompt.AppendLine("In a previous stage you executed plugins to address a request. Write an answer to that request.");
             prompt.AppendLine("Answer in full sentences, the output will be the input for a text to speech system. Therefore do not use abbreviations and write units in full words like degrees Celsius and Fahrenheit.");
             prompt.AppendLine("Only answer with the absolute nessesary information. Keep the answer short and to the point.");
@@ -308,10 +315,6 @@ When responding, follow these rulse:
             prompt.AppendLine();
             prompt.AppendLine("--------------------------------------------------------");
             prompt.AppendLine();
-
-            prompt.AppendLine("Here is your conversation history, take it into account if appropriate:");
-            prompt.AppendLine(promptHistory);
-            prompt.AppendLine("--------------------------------------------------------");
 
             prompt.Append("Generate an answer to the request. Consider the plugin results above that were executed to address this request. The request was received from ");
             prompt.AppendLine($" {sender.Name} ({sender.Description}):\n```\n{request}\n```\n");
