@@ -106,8 +106,9 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
                 let weatherDescription = item.GetProperty("weather")[0].GetProperty("description").GetString()
                 let windSpeed = item.GetProperty("wind").GetProperty("speed").GetDecimal()
                 where time == new TimeSpan(9, 0, 0) || time == new TimeSpan(18, 0, 0)
-                select $"Weather forecast for the {dateTimeText} - A temperature of {temperature}°C with " +
-                       $"{weatherDescription} and a wind speed of {windSpeed} m/s.")
+                select $"Weather forecast for the {dateTimeText} - A temperature of {(int)Math.Round(temperature)} " +
+                       $"degrees celsius with {weatherDescription}" +
+                       $"{(windSpeed > _config.WindThresholdInMS ? $" and a wind speed of {(int)Math.Round(windSpeed)} m/s." : ".")}")
             .Take(4)
             .ToList();
 
@@ -147,4 +148,5 @@ internal class WeatherPluginConfig
     public string ApiKey { get; set; } = "";
     public string BaseUrl { get; set; } = "https://api.openweathermap.org/data/2.5/forecast";
     public string Units { get; set; } = "metric";
+    public decimal WindThresholdInMS { get; set; } = 8.5m;
 }
