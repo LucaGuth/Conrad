@@ -96,7 +96,7 @@ public class TechnologyRadarPlugin : IExecutorPlugin, IConfigurablePlugin
             var response = await _httpClient.GetAsync($"{_config.BaseUrl}{randomUrlExtension}");
             response.EnsureSuccessStatusCode();
 
-            return (randomUrlExtension, await response.Content.ReadAsStringAsync());
+            return (randomUrlExtension.Trim('/'), await response.Content.ReadAsStringAsync());
         }
         catch (HttpRequestException e)
         {
