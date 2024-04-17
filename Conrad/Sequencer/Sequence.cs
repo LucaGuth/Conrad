@@ -126,10 +126,11 @@ namespace Sequencer
                         {
                             lock (executorResults)
                             {
-                                executorResults.AppendLine($"{plugin.Name}: {requestedPluginArguments}");
+                                executorResults.AppendLine($"Plugin '{plugin.Name}' was called with parameters: {requestedPluginArguments}");
                                 executorResults.AppendLine("```");
                                 executorResults.AppendLine(executorResult);
                                 executorResults.AppendLine("```");
+                                executorResults.AppendLine();
                             }
                         }
                     }
@@ -217,13 +218,10 @@ namespace Sequencer
         private string GeneratePromptHistory() {
             StringBuilder history = new StringBuilder();
             DateTime currentTime = DateTime.Now;
-            Log.Error("a");
             foreach (var entry in _promptHistory) {
                 var timeSince = currentTime - entry.Item1;
-                Log.Error("b");
                 history.AppendLine($"[{timeSince.ToString()} ago] {entry.Item2}".Trim('\n'));
             }
-            Log.Error("c");
             return history.ToString();
         }
 
@@ -294,14 +292,6 @@ When responding, follow these rulse:
             prompt.AppendLine("--------------------------------------------------------");
             prompt.AppendLine();
 
-            prompt.AppendLine("In a previous stage you executed plugins to address a request. Write an answer to that request.");
-            prompt.AppendLine("Answer in full sentences, the output will be the input for a text to speech system. Therefore do not use abbreviations and write units in full words like degrees Celsius and Fahrenheit.");
-            prompt.AppendLine("Only answer with the absolute nessesary information. Keep the answer short and to the point.");
-
-            prompt.AppendLine();
-            prompt.AppendLine("--------------------------------------------------------");
-            prompt.AppendLine();
-
             prompt.AppendLine("Here is some background information. Use it only if you need it for the request.");
             foreach (var plugin in _pluginLoader.GetPlugins<IPromptAdderPlugin>())
             {
@@ -313,6 +303,9 @@ When responding, follow these rulse:
             prompt.AppendLine("--------------------------------------------------------");
             prompt.AppendLine();
 
+            prompt.AppendLine("In a previous stage you executed plugins to address a request. Write an answer to that request.");
+            prompt.AppendLine("Answer in full sentences, the output will be the input for a text to speech system. Therefore do not use abbreviations and write units in full words like degrees Celsius and Fahrenheit.");
+            prompt.AppendLine("Only answer with the absolute nessesary information. Keep the answer short and to the point.");
             prompt.AppendLine("These are the results of the plugins that were executed to address the request:");
             prompt.AppendLine(pluginResults);
 
