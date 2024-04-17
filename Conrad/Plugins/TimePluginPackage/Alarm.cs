@@ -157,7 +157,8 @@ namespace TimePluginPackage
                         _config.Alarms.Remove(finishedAlarm.Value.Key);
                     }
                     OnConfigurationChange?.Invoke(this);
-                    OnNotify?.Invoke(this, $"The Alarm \"{finishedAlarmName}\" was raised. The time {finishedAlarmEntry.RaiseTime.ToString("HH:mm")} is over.\n{finishedAlarmEntry.Description}");
+                    OnNotify?.Invoke(this, $"The Alarm \"{finishedAlarmName}\" was raised. The time {finishedAlarmEntry.RaiseTime.ToString("HH:mm")} is over.\n{finishedAlarmEntry.Description}" +
+                        $"{(finishedAlarmEntry.Daily ? ".\nThis is a daily alarm. DO NOT REMOVE IT!" : "")}");
                 }
 
                 Task.Delay(1000).Wait();
