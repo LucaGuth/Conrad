@@ -148,7 +148,11 @@ namespace TimePluginPackage
     [Serializable]
     public class AlarmPluginConfig
     {
-        public Dictionary<string, DateTime> Alarms { get; set; } = [];
-        public int AlarmOffsetInSeconds { get; set; } = -30;
+        public Dictionary<string, DateTime> Alarms { get; set; } = new()
+        {
+            { "alarm1", DateTime.Parse("2024-04-17 07:11:00") },
+            { "alarm2", DateTime.Parse("2024-04-17 12:11:00") }
+        };
+        public int AlarmOffsetInSeconds { get; set; } = 30;
     }
 }
