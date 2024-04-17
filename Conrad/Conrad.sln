@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechnologyRadarPlugin", "Pl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeePlugin", "Plugins\CoffeePlugin\CoffeePlugin.csproj", "{56EAD256-EB54-41E8-9EB3-6950E5C4783E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmallTalkPlugin", "Plugins\SmallTalkPlugin\SmallTalkPlugin.csproj", "{32E72249-5620-4A33-95EB-F5C67BF1A370}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +133,10 @@ Global
 		{56EAD256-EB54-41E8-9EB3-6950E5C4783E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56EAD256-EB54-41E8-9EB3-6950E5C4783E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56EAD256-EB54-41E8-9EB3-6950E5C4783E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32E72249-5620-4A33-95EB-F5C67BF1A370}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32E72249-5620-4A33-95EB-F5C67BF1A370}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32E72249-5620-4A33-95EB-F5C67BF1A370}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32E72249-5620-4A33-95EB-F5C67BF1A370}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -154,6 +160,7 @@ Global
 		{5A801DE4-7751-4EE3-AD3C-C1D295541E19} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 		{5E58D553-CF0F-4D91-8287-152B35277D41} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 		{56EAD256-EB54-41E8-9EB3-6950E5C4783E} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
+		{32E72249-5620-4A33-95EB-F5C67BF1A370} = {B69C7331-2E2E-431B-A742-F58E00C1C431}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9EB62EB3-515E-42FC-A67F-8AD9472C5E80}
