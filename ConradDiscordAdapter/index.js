@@ -159,6 +159,7 @@ function recordUser(connection) {
         },
     });
 
+    if (!fs.existsSync('recordings')) fs.mkdirSync('recordings');
     const filename = `./recordings/${Date.now()}-289046908809510912.ogg`;
     const out = createWriteStream(filename);
     console.log(`👂 Started recording ${filename}`);
@@ -194,7 +195,7 @@ function convertOggToMp3(oggFilePath, mp3FilePath) {
 		console.log('Audio Transcoding succeeded !');
 		const { exec } = require('child_process');
 
-		exec(`. /python_venv/bin/activate && whisper --model small.en --language en --output_format txt ${mp3FilePath}`, (err, stdout, stderr) => {
+		exec(`. /python_venv/bin/activate && whisper --model small.en --model_dir models --language en --output_format txt ${mp3FilePath}`, (err, stdout, stderr) => {
 			if (err) {
 				console.log(err);
 				return;
