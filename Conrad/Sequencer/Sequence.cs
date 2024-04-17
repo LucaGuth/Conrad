@@ -284,11 +284,7 @@ When responding, follow these rulse:
         private string GenerateOutputPrompt(string promptHistory, INotifierPlugin sender, string request, string pluginResults)
         {
             StringBuilder prompt = new($"You are a personal digital assistant called Conrad.\n");
-
             prompt.AppendLine();
-            prompt.AppendLine("--------------------------------------------------------");
-            prompt.AppendLine("Here is the message history:");
-            prompt.AppendLine(promptHistory);
             prompt.AppendLine("--------------------------------------------------------");
             prompt.AppendLine();
 
@@ -313,9 +309,14 @@ When responding, follow these rulse:
             prompt.AppendLine("--------------------------------------------------------");
             prompt.AppendLine();
 
+            prompt.AppendLine("Here is your conversation history, take it into account if appropriate:");
+            prompt.AppendLine(promptHistory);
+            prompt.AppendLine("--------------------------------------------------------");
+
             prompt.Append("Generate an answer to the request. Consider the plugin results above that were executed to address this request. The request was received from ");
             prompt.AppendLine($" {sender.Name} ({sender.Description}):\n```\n{request}\n```\n");
             prompt.AppendLine("Only use information you need to fulfill the request. Keep the answer short!");
+            prompt.AppendLine("If a plugin failed or couldn't provide the desired information, ask the user for further information about it's parameters!");
             return prompt.ToString();
 
         }
