@@ -1,0 +1,115 @@
+[
+  {
+    "PluginName": "BahnPlugin.BahnPlugin, BahnPlugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "PluginConfig": {
+      "ClientId": "",
+      "ApiKey": "",
+      "StationApiUrl": "https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/stations",
+      "TimetableApiUrl": "https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1/plan"
+    }
+  },
+  {
+    "PluginName": "CalendarPlugin.CalendarPlugin, CalendarPlugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "PluginConfig": {
+      "ServiceAccount": {
+        "Type": "",
+        "Project_Id": "",
+        "Private_Key_Id": "",
+        "Private_Key": "",
+        "Client_Email": "",
+        "Client_Id": "",
+        "Auth_Uri": "",
+        "Token_Uri": "",
+        "Auth_Provider_X509_Cert_Url": "",
+        "Client_X509_Cert_Url": "",
+        "Universe_Domain": ""
+      },
+      "CalendarId": "",
+      "ApplicationName": "Conrad"
+    }
+  },
+  {
+    "PluginName": "DebugOutputPluginPackage.DebugOutputPlugin, DebugOutputPlugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "PluginConfig": {
+      "Hostname": "",
+      "Port": 4001,
+      "WriteTimeoutInMs": 2000
+    }
+  },
+  {
+    "PluginName": "FoodPlugin.DishPlugin, DishPlugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "PluginConfig": {
+      "ApiKey": "",
+      "BaseUrl": "https://api.spoonacular.com/recipes/",
+      "Cuisine": "italian",
+      "Dish": "pasta"
+    }
+  },
+  {
+    "PluginName": "ExamplePluginPackage.ExampleNotifier2, ExamplePluginPackage, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "PluginConfig": {
+      "ImplementationSpecificVaiue": 0,
+      "Texts": [
+        "hallo",
+        "tsch\u00FCssi",
+        "hallihallo"
+      ]
+    }
+  },
+  {
+    "PluginName": "NewsPlugin.NewsPlugin, NewsPlugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "PluginConfig": {
+      "BaseUrl": "https://www.tagesschau.de/xml/rss2"
+    }
+  },
+  {
+    "PluginName": "OllamaPluginPackage.OllamaPlugin, OllamaPlugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "PluginConfig": {
+      "Uri": "http://[2a02:8070:483:b4c0:a70:3574:bcbd:fadf]:30444/",
+      "Model": "mixtral:latest",
+      "Timeout": 60000
+    }
+  },
+  {
+    "PluginName": "PiperOutputPlugin.PiperOutputPlugin, PiperPlugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "PluginConfig": {
+      "PiperPath": "/python_venv/bin/piper",
+      "ModelPath": "/app/piper_models/en_US-ryan-high.onnx",
+      "ConfigPath": "/app/piper_models/en_US-ryan-high.onnx.json",
+      "LengthScale": 1
+    }
+  },
+  {
+    "PluginName": "PlacesPlugin.PlacesPlugin, PlacesPlugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "PluginConfig": {
+      "ApiKey": "",
+      "NearbySearchUrl": "https://maps.googleapis.com/maps/api/place/nearbysearch/json",
+      "GeoCodeUrl": "https://maps.googleapis.com/maps/api/geocode/json",
+      "Radius": "1500"
+    }
+  },
+  {
+    "PluginName": "SharesPlugin.SharesPlugin, SharesPlugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "PluginConfig": {
+      "ApiKey": "",
+      "Interval": "60min",
+      "BaseUrl": "https://www.alphavantage.co/query?"
+    }
+  },
+  {
+    "PluginName": "UserInputNotifierPackage.UserInputNotifier, UserInputPlugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "PluginConfig": {
+      "ListenAddress": "0.0.0.0",
+      "TcpPort": 4000,
+      "TcpReadTimeoutInMs": 1000
+    }
+  },
+  {
+    "PluginName": "WeatherPlugin.WeatherPlugin, WeatherPlugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "PluginConfig": {
+      "ApiKey": "",
+      "BaseUrl": "https://api.openweathermap.org/data/2.5/forecast",
+      "Units": "metric"
+    }
+  }
+]
