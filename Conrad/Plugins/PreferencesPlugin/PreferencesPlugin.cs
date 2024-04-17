@@ -56,6 +56,8 @@ namespace PreferencesPlugin
                 {
                     case "setpreference":
                         var value = valueRegex.Match(parameter).Groups[1].Value.Trim(TRIM_CHARS);
+                        if (key == string.Empty || value == string.Empty)
+                            break;
                         _config.Preferences[key] = value;
                         OnConfigurationChange(this);
                         string message = $"Added '{key}' with '{value}' as preference.";
@@ -71,7 +73,10 @@ namespace PreferencesPlugin
                         }
                         else
                         {
-                            Log.Information("[Preferences Plugin]: Tried to remove nonexisting Key '{key}'", key);
+                            message = $"Tried to remove nonexisting Key '{key}.";
+                            messages.Append(message);
+                            Log.Information("[Preferences Pluign]: {message}", message);
+
                         }
                         break;
                     default:

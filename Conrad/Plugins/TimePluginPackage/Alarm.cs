@@ -20,7 +20,7 @@ namespace TimePluginPackage
         {
             get
             {
-                StringBuilder promptAdder = new($"The current time is: {DateTime.Now.ToString("HH:mm")} on {DateTime.Now.ToString("dddd, dd of MMMM yyyy")}.\n");
+                StringBuilder promptAdder = new();
 
                 if (_config.Alarms.Any())
                 {
