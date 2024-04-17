@@ -95,6 +95,7 @@ function sendDiscordMessage(message) {
     } else {
 	client.channels.cache.get(discord.textChannel).send(message);
     }
+	promptsRunning--;
 }
 
 function playAudio(file) {
@@ -210,20 +211,29 @@ function convertOggToMp3(oggFilePath, mp3FilePath) {
         .pipe(outStream, { end: true });
 }
 
+let promptsRunning = 0;
+async function sendTypingStatus() {
+	if (promptsRunning > 0) {
+		client.channels.cache.get(discord.textChannel).sendTyping();
+		setTimeout(() => sendTypingStatus(), 5000);
+	}
+}
+
 async function sendToConrad(text, count = 0) {
     const networkClient = new net.Socket();
 
     networkClient.connect(conrad.port, conrad.ip, () => {
-        console.log('Connected to server');
-
         // Send plain text message
         networkClient.write(text);
+	    promptsRunning++;
+	    sendTypingStatus();
     });
 
     networkClient.on('error', (error) => {
         if (count >= 5) {
             console.log('Connection refused too many times, giving up');
             client.channels.cache.get(discord.textChannel).send('Conrad is not available right now, please try again later!');
+	    promptsRunning--;
             return;
         }
         if (error.code === 'ECONNREFUSED') {
