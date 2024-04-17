@@ -27,7 +27,9 @@
     <ProjectReference Include="..\Conrad\Plugins\OllamaPlugin\OllamaPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\PlacesPlugin\PlacesPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\PreferencesPlugin\PreferencesPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Plugins\QuizPlugin\QuizPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\SharesPlugin\SharesPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Plugins\TechnologyRadarPlugin\TechnologyRadarPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\UserInputPlugin\UserInputPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\WeatherPlugin\WeatherPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Sequencer\Sequencer.csproj"/>

@@ -62,11 +62,16 @@ public class QuizPlugin : IExecutorPlugin, IConfigurablePlugin
             "config could not be loaded.");
     }
 
+    public void InjectHttpClient(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    } 
+
     #endregion
 
     #region Private
 
-    private readonly HttpClient _httpClient = new();
+    private HttpClient _httpClient = new();
 
     private QuizPluginConfig _config = new();
 
