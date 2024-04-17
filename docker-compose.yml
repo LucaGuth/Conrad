@@ -39,7 +39,8 @@ services:
     volumes:
       - ./ConradDiscordAdapter/config.json:/app/config.json:ro
       - ./ConradDiscordAdapter/index.js:/app/index.js:ro
-      - ./ConradDiscordAdapter/recordings:/app/recordings:delegated
+        #- ./ConradDiscordAdapter/recordings:/app/recordings:delegated
+      - ./ConradDiscordAdapter/stt_models:/app/models:delegated
     networks:
       - conrad
     build:

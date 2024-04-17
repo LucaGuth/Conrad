@@ -232,17 +232,19 @@ namespace Sequencer
             return prompt.ToString();
         }
 
-        private string GenerateOutputPrompt(INotifierPlugin sender, string request, string results)
+        private string GenerateOutputPrompt(INotifierPlugin sender, string request, string pluginResults)
         {
             StringBuilder prompt = new($"You are a personal digital assistant called Conrad.\n");
 
-            prompt.AppendLine("In a previous stage you gathered information. Now you get the information that was collected and should summarize them.");
-            prompt.AppendLine("Answer in full sentences, the output will be the input for a text to speech system. Therfore do not use abbreviations and write units in full words like degrees Celsius and Fahrenheit.");
+            prompt.AppendLine("In a previous stage you executed plugins to address a request. Write an answer to that request.");
+            prompt.AppendLine("Answer in full sentences, the output will be the input for a text to speech system. Therefore do not use abbreviations and write units in full words like degrees Celsius and Fahrenheit.");
             prompt.AppendLine("Only answer with the absolute nessesary information. Keep the answer short and to the point.");
 
             prompt.AppendLine();
-            prompt.AppendLine("Here is some background information. Use it only if you need it for the request.");
+            prompt.AppendLine("--------------------------------------------------------");
+            prompt.AppendLine();
 
+            prompt.AppendLine("Here is some background information. Use it only if you need it for the request.");
             foreach (var plugin in _pluginLoader.GetPlugins<IPromptAdderPlugin>())
             {
                 prompt.AppendLine($" - {plugin.Name}:");
@@ -250,10 +252,17 @@ namespace Sequencer
             }
 
             prompt.AppendLine();
-            prompt.AppendLine("Here are the results from the previous request.");
-            prompt.AppendLine(results);
+            prompt.AppendLine("--------------------------------------------------------");
+            prompt.AppendLine();
 
-            prompt.Append("Answer to the previous request from");
+            prompt.AppendLine("These are the results of the plugins that were executed to adress the request.");
+            prompt.AppendLine(pluginResults);
+
+            prompt.AppendLine();
+            prompt.AppendLine("--------------------------------------------------------");
+            prompt.AppendLine();
+
+            prompt.Append("Generate an answer to the request. Consider the plugin results above that were executed to address this request. Here is the request:");
             prompt.AppendLine($" {sender.Name} ({sender.Description}):\n```\n{request}\n```\n");
             prompt.AppendLine("Only use information you need to fulfill the request. Keep the answer short!");
             return prompt.ToString();
