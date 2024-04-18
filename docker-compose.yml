@@ -30,7 +30,7 @@ services:
       interval: 5s
       timeout: 10s
       retries: 10
-      
+
   discord_adapter:
     container_name: discord_adapter
     restart: unless-stopped
@@ -46,7 +46,7 @@ services:
     build:
       context: ConradDiscordAdapter
       dockerfile: Dockerfile
-    
+
 networks:
   conrad:
     driver: bridge
