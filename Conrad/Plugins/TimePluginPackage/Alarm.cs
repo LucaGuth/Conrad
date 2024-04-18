@@ -193,9 +193,11 @@ namespace TimePluginPackage
                 new AlarmEntry()
                 {
                     Daily = true,
-                    Description = " " +
-                          "Please use the WikipediaPlugin to tell me something about an interesting topic in the IT " +
-                          "sector and the TechnologyTrendsInformer to tell me about the latest technology trend. Please use the QuizPlugin to provide three questions and their answers.",
+                    Description = "Please use the WikipediaPlugin to tell me something about an interesting topic in " +
+                                  "the IT  sector and the TechnologyTrendsInformer to tell me about the latest " +
+                                  "technology trend. Furthermore, use the QuizPlugin to provide three questions and " +
+                                  "their answers. Please note that the quiz does not have to be related to the other " +
+                                  "two topics.",
                     RaiseTime = DateTime.Parse("16:00:00")
                 }
             },
