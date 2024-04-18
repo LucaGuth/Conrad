@@ -16,10 +16,23 @@ using System.IO;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 
-
 [TestClass]
 public class DishPluginTest
 {
+    [TestInitialize]
+    public void TestInit()
+    {
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
+    }
+    
+    [TestCleanup]
+    public void TestDispose()
+    {
+        Log.CloseAndFlush();
+    }
+
     [TestMethod]
     public async Task ValidResponseShouldBeParsed()
     {
@@ -140,4 +153,65 @@ public class DishPluginTest
         }
         Assert.IsTrue(exceptionThrown);
     }
+    
+    [TestMethod]
+    public async Task GetConfigurationShouldReturnConfiguration()
+    {
+        // Arrange
+        var _dishPlugin = new DishPlugin();
+        
+        // Act
+        var result = _dishPlugin.GetConfigiguration().ToString();
+        Console.WriteLine(result);
+        // Assert
+        Assert.IsTrue(result.Contains("italian"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldLoadConfiguration()
+    {
+        // Arrange
+        var _dishPlugin = new DishPlugin();
+        var config = new FoodPluginTestConfig();
+        // configString to json
+        var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(config));
+
+        // Act
+        _dishPlugin.LoadConfiguration(jsonNode);
+
+        var result = _dishPlugin.GetConfigiguration().ToString();
+        // Assert
+        Assert.IsTrue(result.Contains("testUrl"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldThrowException()
+    {
+        // Arrange
+        var _dishPlugin = new DishPlugin();
+
+        // Act
+        var exceptionThrown = false;
+        try{
+        _dishPlugin.LoadConfiguration(null);
+
+        Console.WriteLine(_dishPlugin.GetConfigiguration());
+        }
+        catch (Exception e)
+        {
+            exceptionThrown = true;
+        }
+        // Assert
+        Assert.IsTrue(exceptionThrown);
+    }
 }
+
+[Serializable]
+internal class FoodPluginTestConfig
+{
+    public string ApiKey { get; set; } = "";
+    public string BaseUrl { get; set; } = "testUrl";
+    public string Cuisine { get; set; } = "testCuisine";
+    public string Dish { get; set; } = "testDish";
+}
+

@@ -12,11 +12,26 @@ using System.Net;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
-
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 [TestClass]
 public class PlacesPluginTest
 {
+    [TestInitialize]
+    public void TestInit()
+    {
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
+    }
+    
+    [TestCleanup]
+    public void TestDispose()
+    {
+        Log.CloseAndFlush();
+    }
+    
     [TestMethod]
     public async Task ValidResponseShouldBeParsed()
     {
@@ -157,5 +172,63 @@ public class PlacesPluginTest
         // Assert
         Assert.IsTrue(exceptionThrown, "An exception should have been thrown for network error");
     }
+    [TestMethod]
+    public async Task GetConfigurationShouldReturnConfiguration()
+    {
+        // Arrange
+        var _placesPlugin = new PlacesPlugin();
+        
+        // Act
+        var result = _placesPlugin.GetConfigiguration().ToString();
+        Console.WriteLine(result);
+        // Assert
+        Assert.IsTrue(result.Contains("ApiKey"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldLoadConfiguration()
+    {
+        // Arrange
+        var _placesPlugin = new PlacesPlugin();
+        var config = new PlacesPluginTestConfig();
+        // configString to json
+        var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(config));
+
+        // Act
+        _placesPlugin.LoadConfiguration(jsonNode);
+
+        var result = _placesPlugin.GetConfigiguration().ToString();
+        // Assert
+        Assert.IsTrue(result.Contains("testUrl"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldThrowException()
+    {
+        // Arrange
+        var _placesPlugin = new PlacesPlugin();
+
+        // Act
+        var exceptionThrown = false;
+        try{
+        _placesPlugin.LoadConfiguration(null);
+
+        Console.WriteLine(_placesPlugin.GetConfigiguration());
+        }
+        catch (Exception e)
+        {
+            exceptionThrown = true;
+        }
+        // Assert
+        Assert.IsTrue(exceptionThrown);
+    }
 }
 
+[Serializable]
+internal class PlacesPluginTestConfig
+{
+    public string ApiKey { get; set; } = "";
+    public string NearbySearchUrl { get; set; } = "testUrl";
+    public string GeoCodeUrl { get; set; } = "testUrl";
+    public string Radius { get; set; } = "1500";
+}

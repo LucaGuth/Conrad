@@ -9,11 +9,28 @@ using System.IO;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 using System.Xml.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using Serilog;
 
 
 [TestClass]
 public class BahnPluginTest
 {
+    [TestInitialize]
+    public void TestInit()
+    {
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
+    }
+    
+    [TestCleanup]
+    public void TestDispose()
+    {
+        Log.CloseAndFlush();
+    }
+
     [TestMethod]
     public async Task ValidResponse()
     {
@@ -219,4 +236,66 @@ public class BahnPluginTest
         }
         Assert.IsFalse(exceptionThrown, "An exception should not have been thrown for parsable input parameter");
     }
+
+    [TestMethod]
+    public async Task GetConfigurationShouldReturnConfiguration()
+    {
+        // Arrange
+        var _bahnPlugin = new BahnPlugin();
+        
+        // Act
+        var result = _bahnPlugin.GetConfigiguration().ToString();
+        Console.WriteLine(result);
+        // Assert
+        Assert.IsTrue(result.Contains("ClientId"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldLoadConfiguration()
+    {
+        // Arrange
+        var _bahnPlugin = new BahnPlugin();
+        var config = new BahnPluginTestConfig();
+        // configString to json
+        var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(config));
+
+        // Act
+        _bahnPlugin.LoadConfiguration(jsonNode);
+
+        var result = _bahnPlugin.GetConfigiguration().ToString();
+        // Assert
+        Assert.IsTrue(result.Contains("TestUrl"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldThrowException()
+    {
+        // Arrange
+        var _bahnPlugin = new BahnPlugin();
+
+        // Act
+        var exceptionThrown = false;
+        try{
+        _bahnPlugin.LoadConfiguration(null);
+
+        Console.WriteLine(_bahnPlugin.GetConfigiguration());
+        }
+        catch (Exception e)
+        {
+            exceptionThrown = true;
+        }
+        // Assert
+        Assert.IsTrue(exceptionThrown);
+    }
 }
+
+[Serializable]
+    internal class BahnPluginTestConfig
+    {
+        public string ClientId { get; set; } = "";
+        public string ApiKey { get; set; } = "";
+        public string StationApiUrl { get; set; } =
+            "TestUrl";
+        public string TimetableApiUrl { get; set; } =
+            "TestUrl";
+    }

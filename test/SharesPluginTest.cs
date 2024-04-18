@@ -8,11 +8,29 @@ using System.Net;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
+using Serilog;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+
 
 
 [TestClass]
 public class SharesPluginTest
 {
+    [TestInitialize]
+    public void TestInit()
+    {
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
+    }
+    
+    [TestCleanup]
+    public void TestDispose()
+    {
+        Log.CloseAndFlush();
+    }
+
     [TestMethod]
     public async Task ValidResponseShouldBeParsed()
     {
@@ -87,4 +105,64 @@ public class SharesPluginTest
         // Assert
         Assert.IsTrue(exceptionThrown, "An exception should have been thrown for network error");
     }
+
+    [TestMethod]
+    public async Task GetConfigurationShouldReturnConfiguration()
+    {
+        // Arrange
+        var _sharesPlugin = new SharesPlugin();
+
+        // Act
+        var result = _sharesPlugin.GetConfigiguration().ToString();
+        Console.WriteLine(result);
+        // Assert
+        Assert.IsTrue(result.Contains("ApiKey"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldLoadConfiguration()
+    {
+        // Arrange
+        var _sharesPlugin = new SharesPlugin();
+        var config = new SharesPluginTestConfig();
+        // configString to json
+        var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(config));
+
+        // Act
+        _sharesPlugin.LoadConfiguration(jsonNode);
+
+        var result = _sharesPlugin.GetConfigiguration().ToString();
+        // Assert
+        Assert.IsTrue(result.Contains("TestUrl"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldThrowException()
+    {
+        // Arrange
+        var _sharesPlugin = new SharesPlugin();
+
+        // Act
+        var exceptionThrown = false;
+        try
+        {
+            _sharesPlugin.LoadConfiguration(null);
+
+            Console.WriteLine(_sharesPlugin.GetConfigiguration());
+        }
+        catch (Exception e)
+        {
+            exceptionThrown = true;
+        }
+        // Assert
+        Assert.IsTrue(exceptionThrown);
+    }
+}
+
+[Serializable]
+internal class SharesPluginTestConfig
+{
+    public string ApiKey { get; set; } = "";
+    public string Interval { get; set; } = "60min";
+    public string BaseUrl { get; set; } = "TestUrl";
 }

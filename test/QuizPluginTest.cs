@@ -15,11 +15,27 @@ using System.Net;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 
 [TestClass]
 public class QuizPluginTest
 {
+    [TestInitialize]
+    public void TestInit()
+    {
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
+    }
+    
+    [TestCleanup]
+    public void TestDispose()
+    {
+        Log.CloseAndFlush();
+    }
+    
     [TestMethod]
     public async Task ValidResponseShouldBeParsed()
     {
@@ -137,4 +153,62 @@ public class QuizPluginTest
         // assert
         Assert.IsTrue(exceptionThrown);
     }
+
+    [TestMethod]
+    public async Task GetConfigurationShouldReturnConfiguration()
+    {
+        // Arrange
+        var _quizPlugin = new QuizPlugin();
+        
+        // Act
+        var result = _quizPlugin.GetConfigiguration().ToString();
+        Console.WriteLine(result);
+        // Assert
+        Assert.IsTrue(result.Contains("BaseUrl"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldLoadConfiguration()
+    {
+        // Arrange
+        var _quizPlugin = new QuizPlugin();
+        var config = new QuizPluginTestConfig();
+        // configString to json
+        var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(config));
+
+        // Act
+        _quizPlugin.LoadConfiguration(jsonNode);
+
+        var result = _quizPlugin.GetConfigiguration().ToString();
+        // Assert
+        Assert.IsTrue(result.Contains("testUrl"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldThrowException()
+    {
+        // Arrange
+        var _quizPlugin = new QuizPlugin();
+
+        // Act
+        var exceptionThrown = false;
+        try{
+        _quizPlugin.LoadConfiguration(null);
+
+        Console.WriteLine(_quizPlugin.GetConfigiguration());
+        }
+        catch (Exception e)
+        {
+            exceptionThrown = true;
+        }
+        // Assert
+        Assert.IsTrue(exceptionThrown);
+    }
 }
+
+[Serializable]
+internal class QuizPluginTestConfig
+{
+    public string BaseUrl { get; set; } = "testUrl";
+}
+

@@ -190,7 +190,6 @@ public class CoffeePluginTest
         // Assert
         Assert.IsTrue(exceptionThrown);
     }
-    
 }
 
 [Serializable]
