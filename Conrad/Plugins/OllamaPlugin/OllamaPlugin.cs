@@ -92,7 +92,7 @@ namespace OllamaPluginPackage
     public class OllamaConfig
     {
         public string Uri { get; set; } = "http://ollama:11434";
-        public string Model { get; set; } = "gemma:latest";
+        public string Model { get; set; } = "mixtral:latest";
         public int Timeout { get; set; } = 60000;
     }
 }
