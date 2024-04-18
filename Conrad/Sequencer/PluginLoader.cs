@@ -1,5 +1,6 @@
-﻿using System.Net.Sockets;
+using System.Net.Sockets;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -71,6 +72,7 @@ namespace Sequencer
         /// <summary>
         /// Updates the configuration file with the current configuration of the plugins.
         /// </summary>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public void UpdateConfiguration()
         {
             var updatedConfig = GenerateConfig(configWithoutPlugins);

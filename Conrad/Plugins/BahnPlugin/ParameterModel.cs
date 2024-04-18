@@ -54,13 +54,11 @@ internal class ParameterModel
             }
             else
             {
-                Log.Warning("Found a datetime-like value, but it could not be parsed into a valid DateTime object.");
                 departureTime = SetDefaultDepartureTime();
             }
         }
         else
         {
-            Log.Warning("No datetime-like value was found in the input parameter.");
             departureTime = SetDefaultDepartureTime();
         }
 
@@ -134,8 +132,15 @@ internal class ParameterModel
             if (match.Groups["departureTime"].Success)
             {
                 var parsedDateTime = match.Groups["departureTime"].Value;
-                departureTime = DateTime.Parse(parsedDateTime, CultureInfo.InvariantCulture, DateTimeStyles.None)
-                    .ToString("yyyy-MM-dd HH:mm");
+
+                if (DateTime.TryParse(parsedDateTime, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
+                {
+                    departureTime = result.ToString("yyyy-MM-dd HH:mm");
+                }
+                else
+                {
+                    departureTime = SetDefaultDepartureTime();
+                }
             }
         }
         return (departureStation, destinationStation, departureTime);
@@ -160,7 +165,8 @@ internal class ParameterModel
     // Define a method to set departureTime with a default value, encapsulating repeated logic
     private string SetDefaultDepartureTime()
     {
-        Log.Warning("Setting default departure time. {DefaultTime} will be processed as default.",
+        Log.Warning("A datetime-like value could not be found or not be parsed into a valid DateTime " +
+                    "object. Setting default departure time. {DefaultTime} will be processed as default.",
             DateTime.Now.AddHours(1).ToString("yyyy-MM-dd HH:mm"));
         return DateTime.Now.AddHours(1).ToString("yyyy-MM-dd HH:mm");
     }

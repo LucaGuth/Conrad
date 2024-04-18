@@ -113,12 +113,6 @@ namespace DiscordOutputPlugin
             PiperProcess.StartInfo.Arguments = $"--model {config.ModelPath} --config {config.ConfigPath} --length-scale {config.LengthScale.ToString("0.00", CultureInfo.InvariantCulture)} --output_file {_piperTempAudioFile}";
         }
 
-
-        private void InitializeDiscord()
-        {
-            throw new NotImplementedException();
-        }
-
         private PiperOutputPluginConfig config = new();
 
         private readonly Process PiperProcess = new();

@@ -12,5 +12,12 @@ COPY package*.json ./
 # Install the dependencies
 RUN npm install
 
+# Install whisper openai
+RUN apt-get install python3-full -y
+RUN python3 -m venv /python_venv
+RUN chmod +x /python_venv/bin/activate
+RUN /python_venv/bin/activate
+RUN /python_venv/bin/pip3 install openai-whisper
+
 # Start the application
 CMD ["node", "index.js"]
