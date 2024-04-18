@@ -5,22 +5,22 @@ Conrad is the acronym for **c**ognitive **o**ptimiser for **n**otifications, **r
 A big part of the project was to set up an automatic routine so that some alerts and information would be sent to the user automatically, without them having to ask for it. However, it is still possible to interact with Conrad by asking questions directly. Each use cases has three so called monitoring services.
 
 ### The four main use cases are as follows:
-**Morning use case:**
+**Morning use case**
 - Getting information about the weather for the day
 - Getting the events the user has that day
 - Check the train connection to work
 
-**Culinary use case:**
+**Culinary use case**
 - Recommend a coffee 
 - Recommend recipes for cooking
 - Search for nearby restaurants
 
-**Entertainment use case:**
+**Entertainment use case**
 - Search for interesting facts on Wikipedia
 - Take a quiz on a random topic
 - Search for new upcoming technologies
 
-**Information Use Case:**
+**Information use case**
 - Get the latest news
 - Get the latest weather
 - Get the share details of a company
