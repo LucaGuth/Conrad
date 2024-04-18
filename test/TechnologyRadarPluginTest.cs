@@ -40,7 +40,7 @@ public class TechnologyRadarPluginTest
         var parameter = "";
         var expectedString = "Technology trend in the category";
 
-        var htmlFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "technology_radar_example.html");
+        var htmlFilePath = Path.Combine(@"..\..\..", "valid_api_responses/technology_radar_example.html");
         var htmlContent = File.ReadAllText(htmlFilePath);
 
         var mockHttp = new MockHttpMessageHandler();

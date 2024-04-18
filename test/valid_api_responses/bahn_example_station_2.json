@@ -1,0 +1,2000 @@
+{
+    "offset": 0,
+    "limit": 10000,
+    "total": 22,
+    "result": [
+        {
+            "number": 1824,
+            "ifopt": "de:08116:2103",
+            "name": "Stuttgart Flughafen/Messe",
+            "mailingAddress": {
+                "city": "Leinfelden - Echterdingen",
+                "zipcode": "70629",
+                "street": "Flughafenstrasse"
+            },
+            "category": 4,
+            "priceCategory": 4,
+            "hasParking": true,
+            "hasBicycleParking": false,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": true,
+            "hasTravelNecessities": true,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005768,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.19263,
+                            48.690648
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TFL",
+                    "isMain": true,
+                    "hasSteamPermission": false,
+                    "steamPermission": "entryBan",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.19263,
+                            48.690648
+                        ]
+                    },
+                    "primaryLocationCode": "20069"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Zentraler S-Bahnhof"
+            }
+        },
+        {
+            "number": 6070,
+            "ifopt": "de:08111:1604",
+            "name": "Stuttgart Ebitzweg",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70374",
+                "street": "Ebitzweg"
+            },
+            "category": 7,
+            "priceCategory": 7,
+            "hasParking": false,
+            "hasBicycleParking": false,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": false,
+            "hasSteplessAccess": "no",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005766,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.231701,
+                            48.803938
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSEB",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.231701,
+                            48.803938
+                        ]
+                    },
+                    "primaryLocationCode": "20064"
+                }
+            ],
+            "productLine": {
+                "productLine": "Zubringerbahnhof",
+                "segment": "Regionaler Zubringer"
+            }
+        },
+        {
+            "number": 6071,
+            "name": "Stuttgart Hbf",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70173",
+                "street": "Arnulf-Klett-Platz 2"
+            },
+            "category": 1,
+            "priceCategory": 1,
+            "hasParking": true,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": true,
+            "hasLockerSystem": true,
+            "hasTaxiRank": true,
+            "hasTravelNecessities": true,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "Ja, um Voranmeldung unter 030 65 21 28 88 (Ortstarif) wird gebeten",
+            "hasWiFi": true,
+            "hasTravelCenter": true,
+            "hasRailwayMission": true,
+            "hasDBLounge": true,
+            "hasLostAndFound": true,
+            "hasCarRental": true,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "NVBW",
+                "name": "Nahverkehrsgesellschaft Baden-Württemberg mbH"
+            },
+            "DBinformation": {
+                "availability": {
+                    "monday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    },
+                    "tuesday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    },
+                    "wednesday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    },
+                    "thursday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    },
+                    "friday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    },
+                    "saturday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    },
+                    "sunday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    },
+                    "holiday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    }
+                }
+            },
+            "localServiceStaff": {
+                "availability": {
+                    "monday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    },
+                    "tuesday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    },
+                    "wednesday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    },
+                    "thursday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    },
+                    "friday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    },
+                    "saturday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    },
+                    "sunday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    },
+                    "holiday": {
+                        "fromTime": "00:00",
+                        "toTime": "24:00"
+                    }
+                }
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8000096,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.181635,
+                            48.784084
+                        ]
+                    },
+                    "isMain": true
+                },
+                {
+                    "number": 8098096,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.179808,
+                            48.782999
+                        ]
+                    },
+                    "isMain": false
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TS",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.181635,
+                            48.784084
+                        ]
+                    },
+                    "primaryLocationCode": "20071"
+                },
+                {
+                    "rilIdentifier": "TS  B",
+                    "isMain": false,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "primaryLocationCode": "20062"
+                },
+                {
+                    "rilIdentifier": "TS  T",
+                    "isMain": false,
+                    "hasSteamPermission": false,
+                    "steamPermission": "entryBan",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.179808,
+                            48.782999
+                        ]
+                    },
+                    "primaryLocationCode": "20078"
+                },
+                {
+                    "rilIdentifier": "TST",
+                    "isMain": false,
+                    "hasSteamPermission": false,
+                    "steamPermission": "entryBan",
+                    "primaryLocationCode": "21706"
+                }
+            ],
+            "productLine": {
+                "productLine": "Metropolbahnhof",
+                "segment": "Metropolbahnhof"
+            },
+            "wirelessLan": {}
+        },
+        {
+            "number": 6072,
+            "ifopt": "de:08111:6080",
+            "name": "Stuttgart Neckarpark",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70372",
+                "street": "Alte Untertürkheimer Strasse"
+            },
+            "category": 4,
+            "priceCategory": 4,
+            "hasParking": false,
+            "hasBicycleParking": false,
+            "hasLocalPublicTransport": false,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": false,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8006743,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.241595,
+                            48.792173
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSNS",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.241595,
+                            48.792173
+                        ]
+                    },
+                    "primaryLocationCode": "20080"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Zentraler S-Bahnhof"
+            }
+        },
+        {
+            "number": 6073,
+            "ifopt": "de:08111:6295",
+            "name": "Stuttgart Nord",
+            "mailingAddress": {
+                "city": "Stuttgard-Nord",
+                "zipcode": "70174",
+                "street": "Nordbahnhofstrasse"
+            },
+            "category": 5,
+            "priceCategory": 5,
+            "hasParking": false,
+            "hasBicycleParking": false,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": true,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005767,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.188026,
+                            48.803769
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSN",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.188026,
+                            48.803769
+                        ]
+                    },
+                    "primaryLocationCode": "20084"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Zentraler S-Bahnhof"
+            }
+        },
+        {
+            "number": 6074,
+            "ifopt": "de:08111:34",
+            "name": "Stuttgart Nürnberger Straße",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70374",
+                "street": "Nürnberger Strasse"
+            },
+            "category": 5,
+            "priceCategory": 5,
+            "hasParking": false,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": false,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": false,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8004357,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.234858,
+                            48.806423
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSNU",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.234858,
+                            48.806423
+                        ]
+                    },
+                    "primaryLocationCode": "20085"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Zentraler S-Bahnhof"
+            }
+        },
+        {
+            "number": 6075,
+            "ifopt": "de:08111:6027",
+            "name": "Stuttgart Österfeld",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70563",
+                "street": "Paradiesstraße 70"
+            },
+            "category": 4,
+            "priceCategory": 4,
+            "hasParking": true,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": false,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": false,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005779,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.116774,
+                            48.737651
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSOS",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.116774,
+                            48.737651
+                        ]
+                    },
+                    "primaryLocationCode": "20088"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Zentraler S-Bahnhof"
+            }
+        },
+        {
+            "number": 6076,
+            "ifopt": "de:08111:6008",
+            "name": "Stuttgart Universität",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70569",
+                "street": "Universitätsstrasse"
+            },
+            "category": 4,
+            "priceCategory": 4,
+            "hasParking": false,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": false,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": true,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8006513,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.105398,
+                            48.745837
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSUN",
+                    "isMain": true,
+                    "hasSteamPermission": false,
+                    "steamPermission": "entryBan",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.105398,
+                            48.745837
+                        ]
+                    },
+                    "primaryLocationCode": "20093"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Zentraler S-Bahnhof"
+            }
+        },
+        {
+            "number": 6077,
+            "ifopt": "de:08111:6333",
+            "name": "Stuttgart-Bad Cannstatt",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70372",
+                "street": "Bahnhofstr. 30"
+            },
+            "category": 3,
+            "priceCategory": 3,
+            "hasParking": true,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": true,
+            "hasLockerSystem": true,
+            "hasTaxiRank": true,
+            "hasTravelNecessities": true,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": true,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "NVBW",
+                "name": "Nahverkehrsgesellschaft Baden-Württemberg mbH"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005769,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.217531,
+                            48.801377
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSC",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.217531,
+                            48.801377
+                        ]
+                    },
+                    "primaryLocationCode": "20095"
+                }
+            ],
+            "productLine": {
+                "productLine": "Knotenbahnhof",
+                "segment": "Großstadtknoten"
+            }
+        },
+        {
+            "number": 6078,
+            "ifopt": "de:08111:6157",
+            "name": "Stuttgart-Feuerbach",
+            "mailingAddress": {
+                "city": "Stuttgart-Feuerbach",
+                "zipcode": "70469",
+                "street": "Bahnhof 1"
+            },
+            "category": 3,
+            "priceCategory": 4,
+            "hasParking": false,
+            "hasBicycleParking": false,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": true,
+            "hasTravelNecessities": true,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005770,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.169382,
+                            48.813673
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSFE",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.169382,
+                            48.813673
+                        ]
+                    },
+                    "primaryLocationCode": "20098"
+                },
+                {
+                    "rilIdentifier": "TSZ F",
+                    "isMain": false,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.169382,
+                            48.813673
+                        ]
+                    },
+                    "primaryLocationCode": "20099"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Zentraler S-Bahnhof"
+            }
+        },
+        {
+            "number": 6079,
+            "ifopt": "de:08111:6221",
+            "name": "Stuttgart Feuersee",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70176",
+                "street": "Feuerseeplatz 14"
+            },
+            "category": 3,
+            "priceCategory": 3,
+            "hasParking": false,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": false,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8006699,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.166273,
+                            48.772768
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSFS",
+                    "isMain": true,
+                    "hasSteamPermission": false,
+                    "steamPermission": "entryBan",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.166273,
+                            48.772768
+                        ]
+                    },
+                    "primaryLocationCode": "20065"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Zentraler S-Bahnhof"
+            }
+        },
+        {
+            "number": 6080,
+            "ifopt": "de:08111:1504",
+            "name": "Stuttgart-Münster",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70376",
+                "street": "Nagold Str. 81"
+            },
+            "category": 7,
+            "priceCategory": 7,
+            "hasParking": false,
+            "hasBicycleParking": false,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": false,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005771,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.21586,
+                            48.820724
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSM",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.21586,
+                            48.820724
+                        ]
+                    },
+                    "primaryLocationCode": "20100"
+                }
+            ],
+            "productLine": {
+                "productLine": "Zubringerbahnhof",
+                "segment": "Regionaler Zubringer"
+            }
+        },
+        {
+            "number": 6081,
+            "ifopt": "de:08111:6091",
+            "name": "Stuttgart-Obertürkheim",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70329",
+                "street": "Obertürkheim"
+            },
+            "category": 4,
+            "priceCategory": 4,
+            "hasParking": true,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": true,
+            "hasLockerSystem": false,
+            "hasTaxiRank": true,
+            "hasTravelNecessities": true,
+            "hasSteplessAccess": "partial",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005772,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.267889,
+                            48.762013
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSOM",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.267889,
+                            48.762013
+                        ]
+                    },
+                    "primaryLocationCode": "20101"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Vorstädtischer S-Bahnhof"
+            }
+        },
+        {
+            "number": 6082,
+            "ifopt": "de:08111:6001",
+            "name": "Stuttgart-Rohr",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70565",
+                "street": "Egelhaafstraße"
+            },
+            "category": 4,
+            "priceCategory": 4,
+            "hasParking": true,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": false,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005773,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.108328,
+                            48.717902
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSRO",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.108328,
+                            48.717902
+                        ]
+                    },
+                    "primaryLocationCode": "20103"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Zentraler S-Bahnhof"
+            }
+        },
+        {
+            "number": 6083,
+            "ifopt": "de:08111:6052",
+            "name": "Stuttgart Schwabstraße",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70197",
+                "street": "Rotebühlstrasse"
+            },
+            "category": 3,
+            "priceCategory": 3,
+            "hasParking": false,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": true,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": true,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8006698,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.156959,
+                            48.770255
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSS",
+                    "isMain": true,
+                    "hasSteamPermission": false,
+                    "steamPermission": "entryBan",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.156959,
+                            48.770255
+                        ]
+                    },
+                    "primaryLocationCode": "20090"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Zentraler S-Bahnhof"
+            }
+        },
+        {
+            "number": 6084,
+            "ifopt": "de:08111:1300",
+            "name": "Stuttgart-Sommerrain",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70374",
+                "street": "Sommerrainstr. 90"
+            },
+            "category": 5,
+            "priceCategory": 5,
+            "hasParking": true,
+            "hasBicycleParking": false,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": false,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005774,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.248327,
+                            48.81527
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSSM",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.248327,
+                            48.81527
+                        ]
+                    },
+                    "primaryLocationCode": "20104"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Zentraler S-Bahnhof"
+            }
+        },
+        {
+            "number": 6085,
+            "ifopt": "de:08111:6056",
+            "name": "Stuttgart Stadtmitte",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70173",
+                "street": "Theodor-Heuss-Strasse"
+            },
+            "category": 3,
+            "priceCategory": 3,
+            "hasParking": false,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": true,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": true,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8006700,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.172925,
+                            48.776229
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSMI",
+                    "isMain": true,
+                    "hasSteamPermission": false,
+                    "steamPermission": "entryBan",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.172925,
+                            48.776229
+                        ]
+                    },
+                    "primaryLocationCode": "20092"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Zentraler S-Bahnhof"
+            }
+        },
+        {
+            "number": 6086,
+            "ifopt": "de:08111:6085",
+            "name": "Stuttgart-Untertürkheim Pbf",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70327",
+                "street": "Karl-Benz-Platz 15"
+            },
+            "category": 3,
+            "priceCategory": 3,
+            "hasParking": false,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": true,
+            "hasTravelNecessities": false,
+            "hasSteplessAccess": "partial",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005775,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.250569,
+                            48.779751
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSU",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.250569,
+                            48.779751
+                        ]
+                    },
+                    "primaryLocationCode": "20105"
+                },
+                {
+                    "rilIdentifier": "TSU P",
+                    "isMain": false,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.250569,
+                            48.779751
+                        ]
+                    },
+                    "primaryLocationCode": "20109"
+                },
+                {
+                    "rilIdentifier": "TSUH",
+                    "isMain": false,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.250569,
+                            48.779751
+                        ]
+                    },
+                    "primaryLocationCode": "20108"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Vorstädtischer S-Bahnhof"
+            }
+        },
+        {
+            "number": 6087,
+            "ifopt": "de:08111:6002",
+            "name": "Stuttgart-Vaihingen",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70563",
+                "street": "Am Bahnhof 1"
+            },
+            "category": 3,
+            "priceCategory": 3,
+            "hasParking": true,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": true,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": true,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": true,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005776,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.113226,
+                            48.726279
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSV",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.113226,
+                            48.726279
+                        ]
+                    },
+                    "primaryLocationCode": "20110"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Zentraler S-Bahnhof"
+            }
+        },
+        {
+            "number": 6088,
+            "ifopt": "de:08111:2270",
+            "name": "Stuttgart-Weilimdorf",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70499",
+                "street": "Mittlerer Pfad"
+            },
+            "category": 5,
+            "priceCategory": 5,
+            "hasParking": true,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": true,
+            "hasTravelNecessities": true,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8006268,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.094328,
+                            48.82208
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSWF",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.094328,
+                            48.82208
+                        ]
+                    },
+                    "primaryLocationCode": "20113"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Vorstädtischer S-Bahnhof"
+            }
+        },
+        {
+            "number": 6089,
+            "ifopt": "de:08111:1200",
+            "name": "Stuttgart-Zazenhausen",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70437",
+                "street": "Züttlingerstr.1"
+            },
+            "category": 7,
+            "priceCategory": 7,
+            "hasParking": false,
+            "hasBicycleParking": false,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": false,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": false,
+            "hasSteplessAccess": "no",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005777,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.199539,
+                            48.836034
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSZA",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.18243126,
+                            48.84485108
+                        ]
+                    },
+                    "primaryLocationCode": "20114"
+                },
+                {
+                    "rilIdentifier": "TSZAH",
+                    "isMain": false,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.199539,
+                            48.836034
+                        ]
+                    },
+                    "primaryLocationCode": "20115"
+                }
+            ],
+            "productLine": {
+                "productLine": "Zubringerbahnhof",
+                "segment": "Regionaler Zubringer"
+            }
+        },
+        {
+            "number": 6090,
+            "ifopt": "de:08111:6465",
+            "name": "Stuttgart-Zuffenhausen",
+            "mailingAddress": {
+                "city": "Stuttgart",
+                "zipcode": "70435",
+                "street": "Am Bahnhof 1"
+            },
+            "category": 3,
+            "priceCategory": 3,
+            "hasParking": true,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": true,
+            "hasLockerSystem": false,
+            "hasTaxiRank": true,
+            "hasTravelNecessities": true,
+            "hasSteplessAccess": "partial",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": true,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "VRStutt",
+                "name": "Verband Region Stuttgart"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Stuttgart"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 212,
+                "name": "Stuttgart"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005778,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.166739,
+                            48.829415
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSZ",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.166739,
+                            48.829415
+                        ]
+                    },
+                    "primaryLocationCode": "20116"
+                }
+            ],
+            "productLine": {
+                "productLine": "S-Bahnhof",
+                "segment": "Zentraler S-Bahnhof"
+            }
+        }
+    ]
+}
