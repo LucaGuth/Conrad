@@ -5,9 +5,8 @@
     "user": "",
     "textChannel": ""
   },
-  "openAIKey": "",
   "conrad":{
-    "ip": "127.0.0.1",
+    "ip": "conrad",
     "port": 4000
   },
   "inputRequests": {

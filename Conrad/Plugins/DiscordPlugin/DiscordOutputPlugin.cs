@@ -131,7 +131,7 @@ namespace DiscordOutputPlugin
         public string ModelPath { get; set; } = "/app/piper_models/en_US-ryan-high.onnx";
         public string ConfigPath { get; set; } = "/app/piper_models/en_US-ryan-high.onnx.json";
         public string TempPath { get; set; } = "./tmp";
-        public string DiscordBotEndpoint { get; set; } = "http://test";
+        public string DiscordBotEndpoint { get; set; } = "http://discord_adapter:6000";
         public double LengthScale { get; set; } = 1.0;
     }
 }
