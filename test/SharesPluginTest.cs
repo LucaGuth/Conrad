@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 using Serilog;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-
+using System.IO;
 
 
 [TestClass]
@@ -40,7 +40,7 @@ public class SharesPluginTest
 
 
         // Load valid JSON response from file
-        var jsonFilePath = Path.Combine(@"..\..\.." , "valid_api_responses/shares_example.json");
+        var jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "valid_api_responses/shares_example.json");
         var jsonContent = File.ReadAllText(jsonFilePath);
 
         var mockHttp = new MockHttpMessageHandler();

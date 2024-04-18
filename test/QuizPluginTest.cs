@@ -41,7 +41,7 @@ public class QuizPluginTest
     {
         var parameter = "";
         var expectedString = "Question: \"Windows NT\" is a monolithic kernel. Answer: False";
-        var JsonFilePath = Path.Combine(@"..\..\.." , "valid_api_responses/quiz_example.json");
+        var JsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "valid_api_responses/quiz_example.json");
         var JsonContent = File.ReadAllText(JsonFilePath);
 
         var mockHttp = new MockHttpMessageHandler();
@@ -211,4 +211,3 @@ internal class QuizPluginTestConfig
 {
     public string BaseUrl { get; set; } = "testUrl";
 }
-

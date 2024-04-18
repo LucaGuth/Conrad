@@ -38,7 +38,7 @@ public class WeatherPluginTest
         var city = "testcity";
         var expectedString = @"Weather forecast for the 2024-04-10 18:00 - A temperature of 11 degrees celsius with scattered clouds";
         // Load valid JSON response from file
-        var jsonFilePath = Path.Combine(@"..\..\..","valid_api_responses/weather_example.json");
+        var jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", ".." ,"valid_api_responses/weather_example.json");
         var jsonContent = File.ReadAllText(jsonFilePath);
 
         // Configure mock HTTP client to respond with the JSON loaded from the file

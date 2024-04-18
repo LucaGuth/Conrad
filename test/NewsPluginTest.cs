@@ -40,7 +40,7 @@ public class NewsPluginTest
         var parameter = ""; // no parameter needed
         var expectedString = @"News:";
 
-        var newsExampleFilePath = Path.Combine(@"..\..\..", "valid_api_responses/news_example.xml"); 
+        var newsExampleFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "valid_api_responses/news_example.xml");
         var newsExample = File.ReadAllText(newsExampleFilePath);
         var newsXml = XDocument.Parse(newsExample);
 

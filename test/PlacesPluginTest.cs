@@ -39,11 +39,11 @@ public class PlacesPluginTest
         var parameter = "Lerchenstraße 1, 70174 Stuttgart";
         var expectedString = "Restaurant 1: Hotel Royal, Address: Sophienstraße 35 in Stuttgart, Rating: 4/5";
 
-        var jsonFilePath1 = Path.Combine(@"..\..\..", "valid_api_responses/places_example_1.json"); 
+        var jsonFilePath1 = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "valid_api_responses/places_example_1.json");
         var jsonContent1 = File.ReadAllText(jsonFilePath1);
         var jsonResponse1 = JObject.Parse(jsonContent1);
         
-        var jsonFilePath2 = Path.Combine(@"..\..\..", "valid_api_responses/places_example_2.json"); 
+        var jsonFilePath2 = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "valid_api_responses/places_example_2.json");
         var jsonContent2 = File.ReadAllText(jsonFilePath2);
         var jsonResponse2 = JObject.Parse(jsonContent2);
 
@@ -73,7 +73,7 @@ public class PlacesPluginTest
         // Arrange
         var parameter = "Lerchenstraße 1, 70174 Stuttgart";
 
-        var jsonFilePath = Path.Combine(@"..\..\..", "valid_api_responses/places_example_1.json"); 
+        var jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "valid_api_responses/places_example_1.json");
         var jsonContent = File.ReadAllText(jsonFilePath);
         var jsonResponse = JObject.Parse(jsonContent);
 
@@ -103,7 +103,7 @@ public class PlacesPluginTest
         // Arrange
         var parameter = "Lerchenstraße 1, 70174 Stuttgart";
 
-        var jsonFilePath = Path.Combine(@"..\..\..", "valid_api_responses/places_example_1.json"); 
+        var jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "valid_api_responses/places_example_1.json");
         var jsonContent = File.ReadAllText(jsonFilePath);
         var jsonResponse = JObject.Parse(jsonContent);
 

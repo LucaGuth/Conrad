@@ -44,9 +44,9 @@ public class CoffeePluginTest
         var _coffeePlugin = new CoffeePlugin();
         var mockHttp = new MockHttpMessageHandler();
 
-        var htmlContentPath1 = Path.Combine(@"..\..\..", "valid_api_responses/coffee_example_1.html");
+        var htmlContentPath1 = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "valid_api_responses/coffee_example_1.html");
         var htmlContent1 = File.ReadAllText(htmlContentPath1);
-        var htmlContentPath2 = Path.Combine(@"..\..\..", "valid_api_responses/coffee_example_2.html");
+        var htmlContentPath2 = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "valid_api_responses/coffee_example_2.html");
         var htmlContent2 = File.ReadAllText(htmlContentPath2);
 
         mockHttp.When("https://us.jura.com/en/about-coffee/coffee-recipes?attributes=7E950F3C35AF4B84879284ED22719B58%2c70119DBFED7847C8A5819ED8FE23DE32%2cD0931460F83049F197ECB9A9CDEF5B33%2cBF989C52F9A74FB58A4140C426F00551")
