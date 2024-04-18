@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+using System.Net.Sockets;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -12,7 +13,7 @@ namespace Sequencer
     /// <summary>
     /// The class that is responsible for loading and managing the plugins.
     /// </summary>
-    internal class PluginLoader
+    public class PluginLoader
     {
         #region Public
         /// <summary>

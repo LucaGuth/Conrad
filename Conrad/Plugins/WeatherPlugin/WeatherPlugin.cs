@@ -67,7 +67,12 @@ public class WeatherPlugin : IExecutorPlugin, IConfigurablePlugin
 
     private WeatherPluginConfig _config = new();
 
-    private readonly HttpClient _httpClient = new();
+    private HttpClient _httpClient = new();
+
+    public void InjectHttpClient(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
 
     private string ExtractCity(string parameter)
     {

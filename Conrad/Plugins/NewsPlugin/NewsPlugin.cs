@@ -10,7 +10,7 @@ namespace NewsPlugin;
 
 public class NewsPlugin : IExecutorPlugin, IConfigurablePlugin
 {
-    private readonly HttpClient _httpClient = new();
+    private HttpClient _httpClient = new();
     private NewsPluginConfig _config = new();
 
     public string Name => "NewsProvider";
@@ -93,6 +93,11 @@ public class NewsPlugin : IExecutorPlugin, IConfigurablePlugin
     }
 
     public event ConfigurationChangeEventHandler? OnConfigurationChange;
+
+    public void InjectHttpClient(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
 }
 
 [Serializable]

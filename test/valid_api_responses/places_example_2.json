@@ -1,0 +1,1074 @@
+{
+    "html_attributions": [],
+    "next_page_token": "ATplDJZH_C39J52sHHThdCxtscYxFAEQjgIbQ9u48swsz0MzC7HnGhduXzkl5Fqpb5PrH84YqTeGPEruMnRuzAv-riwdyJhrRembEev5myZ9AzNtXrfCj7CRAeuFJ_ha4lsHZgO0mOvh6lTZFCa7V3ziVe-I4n4VsXLTE_r1w1dB6yQZMKrvEeNhhFj5Sd4t3hPkJETdtJoZdMGbKH_9w27GUHEnYsRqQ15coF3Ps_uZRyy6S1d8b4gQBjbfB6ZQMTL1eWwnHQl4bPS3p8HbvwGXfUt7-Sxm10XF-WtMszOCm3BJ5ZKa0i9TZt8XZj_LZRBAzTAk94V1efNsY0P9Sp8SBKyEzO9vBv1Ahp8y62gJosVwJmC7aua9gefEP3aQW61Di4uL81omBN_z2gf0JHVuW8eaqndWOF4h1h9pqRx528Pzbry0nKa2x053qonn",
+    "results": [
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.7732925,
+                    "lng": 9.172032399999999
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.77462013029149,
+                        "lng": 9.173480630291502
+                    },
+                    "southwest": {
+                        "lat": 48.7719221697085,
+                        "lng": 9.170782669708498
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/lodging-71.png",
+            "icon_background_color": "#909CE1",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/hotel_pinlet",
+            "name": "Hotel Royal",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 541,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/106617449919930816765\">Hotel Restaurant Royal</a>"
+                    ],
+                    "photo_reference": "ATplDJZE1KDE6z3_vPnLmtu6_3yeuBc0sT1hUrDQCULxfk3XZc_8oUmhXuIzku4Y52VofHBFLEDr8_b0P1z7KBqDK8Rn-6DI9PJcVp9OEVfOHc0IuPceoPsAOYTmXch5ilPEcn6Gd75nEJaoX-UfiV95TO5rm1p7tFffrJGDTMQgaCtohz_n",
+                    "width": 960
+                }
+            ],
+            "place_id": "ChIJE0SAI0nbmUcRZenL1F_y3Sw",
+            "plus_code": {
+                "compound_code": "Q5FC+8R Stuttgart, Germany",
+                "global_code": "8FWFQ5FC+8R"
+            },
+            "rating": 4,
+            "reference": "ChIJE0SAI0nbmUcRZenL1F_y3Sw",
+            "scope": "GOOGLE",
+            "types": [
+                "lodging",
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 668,
+            "vicinity": "Sophienstraße 35, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.7787909,
+                    "lng": 9.176285099999999
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.7801987302915,
+                        "lng": 9.177577030291504
+                    },
+                    "southwest": {
+                        "lat": 48.7775007697085,
+                        "lng": 9.174879069708499
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "Oggi",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 2268,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/115856619173502588702\">Antonio #harzvirus</a>"
+                    ],
+                    "photo_reference": "ATplDJbmAbetgWEA_bemXqoXsxbgtrMXWyIHLCpIKeKdjmZhllUoeMzS6WuIF9BEU8lk-hxcTO91GJchPgqx3DiTgvFwT975tG-bwBVyIlUoHJ4in6mFQxBY0mTxjAAUZOGcjATtYWGno9WFtbfyGsKCz1J3A91N2u1C2aTGux5cQGwi6N_b",
+                    "width": 4032
+                }
+            ],
+            "place_id": "ChIJZbodbTbbmUcR_bABih3Tkpc",
+            "plus_code": {
+                "compound_code": "Q5HG+GG Stuttgart, Germany",
+                "global_code": "8FWFQ5HG+GG"
+            },
+            "price_level": 2,
+            "rating": 4.2,
+            "reference": "ChIJZbodbTbbmUcR_bABih3Tkpc",
+            "scope": "GOOGLE",
+            "types": [
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 1869,
+            "vicinity": "Kleiner Schloßplatz 11, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.7774891,
+                    "lng": 9.178678799999998
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.7783907302915,
+                        "lng": 9.180181280291501
+                    },
+                    "southwest": {
+                        "lat": 48.7756927697085,
+                        "lng": 9.177483319708497
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "Alte Kanzlei",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 2272,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/104629127581675066155\">Martin “Maddin” Lehmann</a>"
+                    ],
+                    "photo_reference": "ATplDJZHtUc8TxfBHQmS3zp9WwPfYvCTWyHQ1F1OIZaYeDqQrx6Va9Ddm5Ez_mH8T7m2ZMlBEcmYbA_jpShl9PktEy7Xn1ZM6v4FpiD1_ZVbIR1Fdm9gq7kHqRwDYuCGjEvdcay5LFf2Gkw2O8Xb6mXUxLbSWwn982aSmQQgPX5C2EP5GV8b",
+                    "width": 4608
+                }
+            ],
+            "place_id": "ChIJMWD2kDXbmUcRNzE9hVrP2Jw",
+            "plus_code": {
+                "compound_code": "Q5GH+XF Stuttgart, Germany",
+                "global_code": "8FWFQ5GH+XF"
+            },
+            "price_level": 2,
+            "rating": 4.4,
+            "reference": "ChIJMWD2kDXbmUcRNzE9hVrP2Jw",
+            "scope": "GOOGLE",
+            "types": [
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 2947,
+            "vicinity": "Schillerplatz 5, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.7800979,
+                    "lng": 9.1780863
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.78138308029149,
+                        "lng": 9.179379530291502
+                    },
+                    "southwest": {
+                        "lat": 48.77868511970849,
+                        "lng": 9.176681569708498
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "5 Gourmet Restaurant & Bar",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 3995,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/114978450581987063129\">5 Gourmet Restaurant &amp; Bar</a>"
+                    ],
+                    "photo_reference": "ATplDJbZLj3MTOQn0c4itQqTI5i_ntsHvuEGAixkNOPwUHw2XlS5EB7TM2oXRIcO-qUfW03uXQmUkDhRFVRrHssvQeWkIB3lvo850T5hE-RscJ3EL2Jz9kx38HjvLj5D4_h_45JMQnT8uJ8Y_A8ZkRtaTqJFilNcy4CNGifCP1bjb2y9Ac7G",
+                    "width": 5992
+                }
+            ],
+            "place_id": "ChIJEX4pJTTbmUcRCwNHSMZJ0p0",
+            "plus_code": {
+                "compound_code": "Q5JH+26 Stuttgart, Germany",
+                "global_code": "8FWFQ5JH+26"
+            },
+            "price_level": 3,
+            "rating": 4.5,
+            "reference": "ChIJEX4pJTTbmUcRCwNHSMZJ0p0",
+            "scope": "GOOGLE",
+            "types": [
+                "cafe",
+                "night_club",
+                "bar",
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 895,
+            "vicinity": "Bolzstraße 8, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.7823164,
+                    "lng": 9.1759419
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.78374633029151,
+                        "lng": 9.177229730291502
+                    },
+                    "southwest": {
+                        "lat": 48.78104836970851,
+                        "lng": 9.174531769708498
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "Valle",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 1048,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/105378381406053675595\">Oliver Dudek</a>"
+                    ],
+                    "photo_reference": "ATplDJbkdOibMvIcPe5UTJo4VqZ3gIv6mVkSDb0r-KOaS4wbYuy7aAnWGuZ6VkrmsOXc0e0cYdgAugch6st3q3GDnQz3llC3U02sMt8AWze9siRzGFbT7Rd-ZNimCWywiiQ8X0vBmdoTvsQLnuQ4qRWTYwriY9bBDci2_i4tkCh2uiIUfdFO",
+                    "width": 1657
+                }
+            ],
+            "place_id": "ChIJG2pqNjHbmUcRBvJl6JPDA2Q",
+            "plus_code": {
+                "compound_code": "Q5JG+W9 Stuttgart, Germany",
+                "global_code": "8FWFQ5JG+W9"
+            },
+            "price_level": 2,
+            "rating": 4.5,
+            "reference": "ChIJG2pqNjHbmUcRBvJl6JPDA2Q",
+            "scope": "GOOGLE",
+            "types": [
+                "bar",
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 2792,
+            "vicinity": "Geschwister-Scholl-Straße 3, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.7730659,
+                    "lng": 9.1753052
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.7744927802915,
+                        "lng": 9.176695130291503
+                    },
+                    "southwest": {
+                        "lat": 48.7717948197085,
+                        "lng": 9.173997169708498
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "Enchilada Stuttgart",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 4016,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/102334659482080314462\">Fotograf Andreas Stedtler (Fotograf)</a>"
+                    ],
+                    "photo_reference": "ATplDJbB7QKcY4otGSPG7BZ0LvcTas2-o0rHPJEqqgMbbyawik28VSj-UuaCa3NsAVSNGUeqnbuhCpSGZtAC1Aj_khlF8hao4ZM2uhriTOCS0HfmESyihq5S-SPAAjWweeQY4qYRxQwa_-iFnKIsYdcrxnjoGGWkga9u6KMqVQgHHiOKUzXU",
+                    "width": 6016
+                }
+            ],
+            "place_id": "ChIJb11F50vbmUcRUXhaZNYL9LY",
+            "plus_code": {
+                "compound_code": "Q5FG+64 Stuttgart, Germany",
+                "global_code": "8FWFQ5FG+64"
+            },
+            "price_level": 2,
+            "rating": 3.9,
+            "reference": "ChIJb11F50vbmUcRUXhaZNYL9LY",
+            "scope": "GOOGLE",
+            "types": [
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 2213,
+            "vicinity": "Eberhardstraße 69-71, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.78000009999999,
+                    "lng": 9.177393499999999
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.7814083802915,
+                        "lng": 9.178837530291501
+                    },
+                    "southwest": {
+                        "lat": 48.7787104197085,
+                        "lng": 9.176139569708498
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "VAPIANO",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 800,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/102611209495262615809\">VAPIANO Stuttgart Bolzstrasse</a>"
+                    ],
+                    "photo_reference": "ATplDJb8-kcjDaH4omJs0kPdJLrcWD4N-powPeyBybrfo2nZ4U5jRHoXVz55_Pn7gxgX4onxt_l1WCRI3ohzGGvmVItJh8IhnfVaavRNLE9L3Sgap1YyY7yZ2jW4f36lvjczvfew5AOlDNJpOoKhvnnpoaOk7MopLWSjauoemJXNLZ7NW9o0",
+                    "width": 1200
+                }
+            ],
+            "place_id": "ChIJVcv2JTTbmUcRmOQB1xB6G2c",
+            "plus_code": {
+                "compound_code": "Q5JG+2X Stuttgart, Germany",
+                "global_code": "8FWFQ5JG+2X"
+            },
+            "price_level": 2,
+            "rating": 3.8,
+            "reference": "ChIJVcv2JTTbmUcRmOQB1xB6G2c",
+            "scope": "GOOGLE",
+            "types": [
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 2391,
+            "vicinity": "Bolzstraße 7, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.7748725,
+                    "lng": 9.1729146
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.7760846802915,
+                        "lng": 9.174085030291502
+                    },
+                    "southwest": {
+                        "lat": 48.7733867197085,
+                        "lng": 9.171387069708498
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "Paulaner am alten Postplatz",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 1192,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/104314469889031104189\">Paulaner am alten Postplatz</a>"
+                    ],
+                    "photo_reference": "ATplDJa_0EgqGquLm0hfJyxlA3mxnXYLGMG_v1wROiAdzNlDeYQbQDuMPJgmMDdnM5npxqbtyedHvf3deOaZOUuDnx1an7WXsU-nfHCjPdCi6isdgQBTJXXvt-esQxNqWgLreNYvrseh7Bk70XxOh6H6gvXNaZ8wiFFGZi0W4DgLriEL3oK4",
+                    "width": 2119
+                }
+            ],
+            "place_id": "ChIJdShBqUnbmUcR4zeK7WpqKNQ",
+            "plus_code": {
+                "compound_code": "Q5FF+W5 Stuttgart, Germany",
+                "global_code": "8FWFQ5FF+W5"
+            },
+            "price_level": 2,
+            "rating": 4.3,
+            "reference": "ChIJdShBqUnbmUcR4zeK7WpqKNQ",
+            "scope": "GOOGLE",
+            "types": [
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 3406,
+            "vicinity": "Calwer Straße 45, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.77552550000001,
+                    "lng": 9.1742051
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.77680573029151,
+                        "lng": 9.175544380291502
+                    },
+                    "southwest": {
+                        "lat": 48.77410776970851,
+                        "lng": 9.172846419708497
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "MAREDO Steakhaus Stuttgart",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 1280,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/114541403722983934712\">MAREDO Steakhaus Stuttgart</a>"
+                    ],
+                    "photo_reference": "ATplDJYSXzhYsg9fiTsUbF5PYR1BxTY07dKABHisVgtl6IBAbZ0GCMzqSlb1zSpVVB4uS1LTgCL0d0C79f6JifOAEuh97AzcW0iFQen-XbaSxEby0VLJLeOoPAJJ4TBpA7FVpflR6T0I2ZEYPrAWS-htRcvxiv5p8B6TDXTPH4P-7k8nBqcv",
+                    "width": 1920
+                }
+            ],
+            "place_id": "ChIJG77Jv0nbmUcRk_3ZzBLJ22c",
+            "plus_code": {
+                "compound_code": "Q5GF+6M Stuttgart, Germany",
+                "global_code": "8FWFQ5GF+6M"
+            },
+            "price_level": 2,
+            "rating": 4.2,
+            "reference": "ChIJG77Jv0nbmUcRk_3ZzBLJ22c",
+            "scope": "GOOGLE",
+            "types": [
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 1790,
+            "vicinity": "Lange Straße 9, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.7783889,
+                    "lng": 9.177536099999999
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.7796065802915,
+                        "lng": 9.178346830291501
+                    },
+                    "southwest": {
+                        "lat": 48.77690861970851,
+                        "lng": 9.175648869708496
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "CUBE Restaurant",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 2804,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/109553952376840579138\">CUBE Restaurant</a>"
+                    ],
+                    "photo_reference": "ATplDJatWOavKv00YqepA4KLDIRfs7QeXbSK0PW5UzSTnCkAhHmSlt4Ruxe4hgGHVAdCxT0Br3lty5HIJYxoZyPSAVT0xYGM8_QS4YIP0ZNyQwI1atF9XNV0PjEFVF7pWTXqudg9JXdMX4igh51RVsCC9UevfUDpS69LxH7nvdYC_vWtBFBU",
+                    "width": 4200
+                }
+            ],
+            "place_id": "ChIJy3mewTXbmUcR8Xfs_85lnGY",
+            "plus_code": {
+                "compound_code": "Q5HH+92 Stuttgart, Germany",
+                "global_code": "8FWFQ5HH+92"
+            },
+            "price_level": 3,
+            "rating": 4.3,
+            "reference": "ChIJy3mewTXbmUcR8Xfs_85lnGY",
+            "scope": "GOOGLE",
+            "types": [
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 1519,
+            "vicinity": "Kleiner Schloßplatz 1 KUNSTMUSEUM, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.78297269999999,
+                    "lng": 9.179202199999999
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.7842167302915,
+                        "lng": 9.180811030291501
+                    },
+                    "southwest": {
+                        "lat": 48.7815187697085,
+                        "lng": 9.178113069708496
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "Amici",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 1258,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/109829354648559649201\">Amici</a>"
+                    ],
+                    "photo_reference": "ATplDJbzEALocMFUB-HL2pvPE-n9tM93RzxXs31bwnm92LFFVIKnyWNWYfRqLaUbScAHCuFzMQsM6rMUuZ2af3CdkYVG3_Wg_Y_uCKR_sPmk6oby2SJa98mudnG3Yy7UtIsDUHA9a7RrlAH3StgR-c9uQRLDl2oslFbiZhPslPWv8Y_9xDu3",
+                    "width": 1772
+                }
+            ],
+            "place_id": "ChIJbWiyvzPbmUcRXsEQzTB2AKU",
+            "plus_code": {
+                "compound_code": "Q5MH+5M Stuttgart, Germany",
+                "global_code": "8FWFQ5MH+5M"
+            },
+            "price_level": 3,
+            "rating": 3.9,
+            "reference": "ChIJbWiyvzPbmUcRXsEQzTB2AKU",
+            "scope": "GOOGLE",
+            "types": [
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 852,
+            "vicinity": "Lautenschlagerstraße 2, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.7816658,
+                    "lng": 9.1780595
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.7829191302915,
+                        "lng": 9.179657380291502
+                    },
+                    "southwest": {
+                        "lat": 48.7802211697085,
+                        "lng": 9.176959419708497
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "CAVOS Taverna",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 1080,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/109836520271137573018\">CAVOS Taverna</a>"
+                    ],
+                    "photo_reference": "ATplDJZOv6yise-VJJql-TmKwOpJBIBhZSobQg84RtvocMZG9AyFYc2HXGJIC6t3NWm6kOqfUqQC7ih5oqedyawqDCVsSU-15vh2YenTK_Qwffk6clspoI0P_Y_VfPap5vbZtMsuu-QDeiis84NeLtorxXEY4g29ZGW3hISM0spV2rq_bMlL",
+                    "width": 608
+                }
+            ],
+            "place_id": "ChIJEx9PqjbbmUcRNPvV58aYQnM",
+            "plus_code": {
+                "compound_code": "Q5JH+M6 Stuttgart, Germany",
+                "global_code": "8FWFQ5JH+M6"
+            },
+            "price_level": 2,
+            "rating": 4.6,
+            "reference": "ChIJEx9PqjbbmUcRNPvV58aYQnM",
+            "scope": "GOOGLE",
+            "types": [
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 1264,
+            "vicinity": "Lautenschlagerstraße 20, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.78304350000001,
+                    "lng": 9.180260199999999
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.7845182802915,
+                        "lng": 9.181592930291501
+                    },
+                    "southwest": {
+                        "lat": 48.7818203197085,
+                        "lng": 9.178894969708496
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "Block House",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 1000,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/106496523251486254458\">BLOCK HOUSE Arnulf-Klett-Platz</a>"
+                    ],
+                    "photo_reference": "ATplDJYidsClB4hKsxCJi6nnqjvUvPHsHjJbaZsWZa2EotlvXFagdqvI0kI2zbj8EmjpsawOMcYDhT5JTJzRCcD3rg3Gc5CCTslnvs1Uv-v4c39sCqSQ2gJKp6-2liDPzrpLNf5EBLjc7iJoIXu_3Lp5tYQWTWRgsIdNrGv9Zk4fvD9mk4t6",
+                    "width": 667
+                }
+            ],
+            "place_id": "ChIJW-KpdjPbmUcRmsm1dvz7QjM",
+            "plus_code": {
+                "compound_code": "Q5MJ+64 Stuttgart, Germany",
+                "global_code": "8FWFQ5MJ+64"
+            },
+            "price_level": 2,
+            "rating": 4.3,
+            "reference": "ChIJW-KpdjPbmUcRmsm1dvz7QjM",
+            "scope": "GOOGLE",
+            "types": [
+                "meal_takeaway",
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 3671,
+            "vicinity": "Arnulf-Klett-Platz 3, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.779946,
+                    "lng": 9.178493099999999
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.7812292302915,
+                        "lng": 9.179846830291501
+                    },
+                    "southwest": {
+                        "lat": 48.7785312697085,
+                        "lng": 9.177148869708496
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "Café Le Théâtre",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 699,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/108194145539284126047\">Café Le Théâtre</a>"
+                    ],
+                    "photo_reference": "ATplDJbOR5OizC3pm_yUviRMgmikNVxJVUWt3IyLUMJt25wqqQqMl-CbxICTRw9Mtm16kjAERLjl-YqrD_t_IyxbIlaSYMzuB6Kd-vq-ASUtel0XifxQxeGSJGRfgTPY1JIgj-p0TXBTn_IAlk7yf69Sqi5N6b25OfaESwDl2jd5bCL9QQKR",
+                    "width": 1242
+                }
+            ],
+            "place_id": "ChIJ2SJpOTTbmUcR7D0SN6Fdz84",
+            "plus_code": {
+                "compound_code": "Q5HH+X9 Stuttgart, Germany",
+                "global_code": "8FWFQ5HH+X9"
+            },
+            "price_level": 2,
+            "rating": 4.1,
+            "reference": "ChIJ2SJpOTTbmUcR7D0SN6Fdz84",
+            "scope": "GOOGLE",
+            "types": [
+                "restaurant",
+                "cafe",
+                "bar",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 2400,
+            "vicinity": "In der Gloria Passage, Bolzstraße 6, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.7733558,
+                    "lng": 9.1777449
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.7747212302915,
+                        "lng": 9.179260630291504
+                    },
+                    "southwest": {
+                        "lat": 48.77202326970851,
+                        "lng": 9.176562669708499
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "BLOCK HOUSE Eberhardstraße",
+            "photos": [
+                {
+                    "height": 1000,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/109117925841454203393\">BLOCK HOUSE Eberhardstraße</a>"
+                    ],
+                    "photo_reference": "ATplDJbiKwDKTNRbHSNkJmOYjQ5t9ItcpeZAiub4Js49v8c7w0u6UgJqBwzWKWa5WFdsxm_GzR5FwUAjYoNNhe2kBRCv2iIKulNZASxNZbgkfRQWfTEXsvI8aZo2ECsMjOoeHRFTKEQ8K-d8-BWtLyWpdvCfj-yzzNcJwEBmX09CPTQNP4Nn",
+                    "width": 667
+                }
+            ],
+            "place_id": "ChIJjTWMo0vbmUcRb50k394oZKc",
+            "plus_code": {
+                "compound_code": "Q5FH+83 Stuttgart, Germany",
+                "global_code": "8FWFQ5FH+83"
+            },
+            "price_level": 2,
+            "rating": 4.3,
+            "reference": "ChIJjTWMo0vbmUcRb50k394oZKc",
+            "scope": "GOOGLE",
+            "types": [
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 2422,
+            "vicinity": "Eberhardstraße 10, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.78062,
+                    "lng": 9.161555999999997
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.7820052302915,
+                        "lng": 9.162987830291499
+                    },
+                    "southwest": {
+                        "lat": 48.7793072697085,
+                        "lng": 9.160289869708494
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "Il Pomodoro S-West",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 2377,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/112709637686284485836\">Micha Becker</a>"
+                    ],
+                    "photo_reference": "ATplDJYhnErvATQ82KitX1PSRNgUnUVRVQuXLwaTQ3DaSlpsNDo3-Bg7tNV5S0Sx1wMtiWh8E4lVJDZQ1EIm5n4wKQZhAgbodTVbaaDyZIOA2YLNsJslza1bqYORmr2lY4dMROBOajWdLrvtjjn6wbLRnnaCgdqPCVfHuWywPXZ22tt85sti",
+                    "width": 3171
+                }
+            ],
+            "place_id": "ChIJeZkQ_j7bmUcRjQmvrwB1Ifo",
+            "plus_code": {
+                "compound_code": "Q5J6+6J Stuttgart, Germany",
+                "global_code": "8FWFQ5J6+6J"
+            },
+            "price_level": 2,
+            "rating": 4.3,
+            "reference": "ChIJeZkQ_j7bmUcRjQmvrwB1Ifo",
+            "scope": "GOOGLE",
+            "types": [
+                "meal_takeaway",
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 975,
+            "vicinity": "Silberburgstraße 72, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.78240969999999,
+                    "lng": 9.173683199999997
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.78375868029148,
+                        "lng": 9.175032180291501
+                    },
+                    "southwest": {
+                        "lat": 48.78106071970849,
+                        "lng": 9.172334219708496
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "Mezzogiorno",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 1600,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/108305609711905521886\">Mezzogiorno</a>"
+                    ],
+                    "photo_reference": "ATplDJaUKjQ5njVKPqrjXolykHXilXLS2mDkl401e8bWEvcHcoxiLEBSTcWCwcTugZPuBtPKSA48avqvIKkErRJ8uJFpEmyQOD69ymSfjpqO_71Z4O3bkNLVK82NeElc5vTfsCJkwg641fkEyxYY8brQOsLAs_ybNaeMGvzsG5E1zzlAqFWX",
+                    "width": 1066
+                }
+            ],
+            "place_id": "ChIJI08btjDbmUcRGoh1atPFrXk",
+            "plus_code": {
+                "compound_code": "Q5JF+XF Stuttgart, Germany",
+                "global_code": "8FWFQ5JF+XF"
+            },
+            "price_level": 2,
+            "rating": 4.2,
+            "reference": "ChIJI08btjDbmUcRGoh1atPFrXk",
+            "scope": "GOOGLE",
+            "types": [
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 750,
+            "vicinity": "Kriegsbergstraße 55, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.77318859999999,
+                    "lng": 9.173593700000001
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.77455518029149,
+                        "lng": 9.175529730291503
+                    },
+                    "southwest": {
+                        "lat": 48.77185721970849,
+                        "lng": 9.172831769708498
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "Sakura",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 1836,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/109276431236445890300\">Stefan</a>"
+                    ],
+                    "photo_reference": "ATplDJaQ54MotFC9PLdR5qP9ORxeq2qW9ucsIKYktoqfQqI1GGxBA1CStlyUqRPtS50_4AVP9_92TkLlxkziypucjJngA7SDLK7Q0T0gz6yuAcctIMVblTqopHPiDFLi3odxOZspbIcBrfhy_RU0aNKmj46F7Q_t0_UY_KzYicEodSnaZCC2",
+                    "width": 3264
+                }
+            ],
+            "place_id": "ChIJ9Qb8QEnbmUcR3TSJ63hKMNs",
+            "plus_code": {
+                "compound_code": "Q5FF+7C Stuttgart, Germany",
+                "global_code": "8FWFQ5FF+7C"
+            },
+            "price_level": 2,
+            "rating": 3.7,
+            "reference": "ChIJ9Qb8QEnbmUcR3TSJ63hKMNs",
+            "scope": "GOOGLE",
+            "types": [
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 1040,
+            "vicinity": "Kleine Königstraße 11, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.7802944,
+                    "lng": 9.1781404
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.7816004302915,
+                        "lng": 9.179530430291502
+                    },
+                    "southwest": {
+                        "lat": 48.77890246970851,
+                        "lng": 9.176832469708497
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "Brauhaus Schönbuch",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 3072,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/115465302081769379931\">Reli</a>"
+                    ],
+                    "photo_reference": "ATplDJbqs0ZvBLy1rmw5rLLdTmPmZ95K5AwLrIv638CZFTui0ZP4JkCp2oZ6kdByPf-hsCo3Q0WDMrJs68d6QX0KA_XHUUaY1EL0SapG9N1mDaEdI41FoMnHJdcBSXffrdgHRY-fqW2BB5njvWNiUjcWt-cM5PMU4uJhVAJOxl5VknFb_GKH",
+                    "width": 4080
+                }
+            ],
+            "place_id": "ChIJOT6MJDTbmUcRxD2iG-IxWb0",
+            "plus_code": {
+                "compound_code": "Q5JH+47 Stuttgart, Germany",
+                "global_code": "8FWFQ5JH+47"
+            },
+            "price_level": 2,
+            "rating": 4.1,
+            "reference": "ChIJOT6MJDTbmUcRxD2iG-IxWb0",
+            "scope": "GOOGLE",
+            "types": [
+                "restaurant",
+                "bar",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 3707,
+            "vicinity": "Bolzstraße 10, Stuttgart"
+        },
+        {
+            "business_status": "OPERATIONAL",
+            "geometry": {
+                "location": {
+                    "lat": 48.7751878,
+                    "lng": 9.173185500000001
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.7762750302915,
+                        "lng": 9.174185380291503
+                    },
+                    "southwest": {
+                        "lat": 48.7735770697085,
+                        "lng": 9.171487419708498
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+            "icon_background_color": "#FF9E67",
+            "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+            "name": "IL NUOVO POSITANO",
+            "opening_hours": {
+                "open_now": true
+            },
+            "photos": [
+                {
+                    "height": 4000,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/107259378865824618561\">IL NUOVO POSITANO</a>"
+                    ],
+                    "photo_reference": "ATplDJYfiJJzr3RF8-BVQQRJPiVe-6EDZJO365JBCE1M9ONwkXg_5uLqpjZOa9z4kejdnr4pEtMtzTa6vE8V1dV9X1WMZ2N7qjdqZev6XbajB72s9mYADr2OrtYc8s2FiOZNGE8_3dsA3L1-FAtZ-bLvzfAtW9tT5C8hO8JVcUeIajBDlYzI",
+                    "width": 6000
+                }
+            ],
+            "place_id": "ChIJbcAPsEnbmUcRsHcbbBgwhIg",
+            "plus_code": {
+                "compound_code": "Q5GF+37 Stuttgart, Germany",
+                "global_code": "8FWFQ5GF+37"
+            },
+            "price_level": 2,
+            "rating": 4.5,
+            "reference": "ChIJbcAPsEnbmUcRsHcbbBgwhIg",
+            "scope": "GOOGLE",
+            "types": [
+                "bar",
+                "restaurant",
+                "point_of_interest",
+                "food",
+                "establishment"
+            ],
+            "user_ratings_total": 753,
+            "vicinity": "Calwer Straße 39, Stuttgart"
+        }
+    ],
+    "status": "OK"
+}

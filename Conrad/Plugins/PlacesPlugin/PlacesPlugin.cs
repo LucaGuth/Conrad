@@ -66,13 +66,18 @@ public class PlacesPlugin : IConfigurablePlugin, IExecutorPlugin
             "config could not be loaded.");
     }
 
+    public void InjectHttpClient(HttpClient client)
+    {
+        _client = client;
+    }
+
     #endregion
 
     #region Private
 
         private PlacesPluginConfig _config = new();
 
-        private readonly HttpClient _client = new();
+        private HttpClient _client = new();
 
         private static IEnumerable<Restaurant> ParseRestaurants(string jsonResponse)
     {

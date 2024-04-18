@@ -2,7 +2,7 @@
 namespace CalendarPlugin;
 
 [Serializable]
-internal class ServiceAccount
+public class ServiceAccount
 {
     public string Type { get; set; } = string.Empty;
     public string Project_Id { get; set; } = string.Empty;

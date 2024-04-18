@@ -81,8 +81,13 @@ namespace DiscordOutputPlugin
         public void Initialize()
         {
             InitializePiper();
-
         }
+
+        void injectHttpClient(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
         #endregion
 
         #region private
@@ -112,7 +117,7 @@ namespace DiscordOutputPlugin
 
         private readonly Process PiperProcess = new();
 
-        private readonly HttpClient _httpClient = new();
+        private HttpClient _httpClient = new();
 
         private string _piperTempAudioFile = "";
 

@@ -65,11 +65,16 @@ public class DishPlugin : IExecutorPlugin, IConfigurablePlugin
             "config could not be loaded.");
     }
 
+    public void InjectHttpClient(HttpClient client)
+    {
+        _client = client;
+    }
+
     #endregion
 
     #region Private
 
-    private readonly HttpClient _client = new();
+    private HttpClient _client = new();
 
     private FoodPluginConfig _config = new();
 
@@ -193,7 +198,7 @@ public class DishPlugin : IExecutorPlugin, IConfigurablePlugin
 internal class FoodPluginConfig
 {
     public string ApiKey { get; set; } = "";
-    public string BaseUrl { get; set; } = "https://api.spoonacular.com/recipes/";
+    public string BaseUrl { get; set; } = "https://api.spoonacular.com/recipes";
     public string Cuisine { get; set; } = "italian";
     public string Dish { get; set; } = "pasta";
 }

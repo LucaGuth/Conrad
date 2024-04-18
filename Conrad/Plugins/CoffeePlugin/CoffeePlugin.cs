@@ -44,9 +44,9 @@ public class CoffeePlugin : IExecutorPlugin, IConfigurablePlugin
                 case HttpRequestException:
                     return e.Message;
                 default:
-                    Log.Error($"An error has occurred while retrieving the wikipedia information:\n" +
+                    Log.Error($"An error has occurred while retrieving the coffee recipe:\n" +
                               $" {e.Source}: {e.Message}");
-                    return "An error has occurred while retrieving the wikipedia information.";
+                    return "An error has occurred while retrieving the coffee recipe.";
             }
         }
 
@@ -66,11 +66,16 @@ public class CoffeePlugin : IExecutorPlugin, IConfigurablePlugin
             "config could not be loaded.");
     }
 
+    public void InjectHttpClient(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
+
     #endregion
 
     #region Private
 
-    private readonly HttpClient _httpClient = new();
+    private HttpClient _httpClient = new();
     private CoffeePluginConfig _config = new();
 
     private readonly Dictionary<string, string> _filters = new()

@@ -61,11 +61,16 @@ public class SharesPlugin : IExecutorPlugin, IConfigurablePlugin
             "config could not be loaded.");
     }
 
+    public void InjectHttpClient(HttpClient httpClient)
+    {
+        _client = httpClient;
+    }
+
     #endregion
 
     #region Private
 
-    private readonly HttpClient _client = new();
+    private HttpClient _client = new();
 
     private SharesPluginConfig _config = new();
 
