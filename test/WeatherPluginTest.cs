@@ -35,10 +35,10 @@ public class WeatherPluginTest
     public async Task ValidResponseShouldBeParsed()
     {
         // Arrange
-        var city = "test_city";
-        var expectedString = @"Weather forecast for the 2024-04-10 18:00 - A temperature of 11,25°C with scattered clouds and a wind speed of 1,55 m/s.";
+        var city = "testcity";
+        var expectedString = @"Weather forecast for the 2024-04-10 18:00 - A temperature of 11 degrees celsius with scattered clouds";
         // Load valid JSON response from file
-        var jsonFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "weather_example.json"); // weather_example.json is required to be in the same directory as the test assembly
+        var jsonFilePath = Path.Combine(@"..\..\..","valid_api_responses/weather_example.json");
         var jsonContent = File.ReadAllText(jsonFilePath);
 
         // Configure mock HTTP client to respond with the JSON loaded from the file
@@ -160,4 +160,5 @@ internal class WeatherPluginTestConfig
     public string ApiKey { get; set; } = "";
     public string BaseUrl { get; set; } = "TestUrl";
     public string Units { get; set; } = "metric";
+    public decimal WindThresholdInMS { get; set; } = 8.5m;
 }

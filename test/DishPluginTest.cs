@@ -46,10 +46,12 @@ public class DishPluginTest
         var parameter = "dish:'pasta', cuisine:'italian'";
         var expectedString = "For the dish 'BLT Pizza' one needs the following ingredients: shredded colby jack cheese, fat free light cream cheese, garlic powder, lettuce, pizza crust, light ranch dressing, diced tomato, cooked turkey bacon"; 
 
-        var jsonFilePath1 = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "dish_example_1.json");
+        // var jsonFilePath1 = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "dish_example_1.json");
+        var jsonFilePath1 = Path.Combine(@"..\..\..", "valid_api_responses/dish_example_1.json");
         var jsonContent1 = File.ReadAllText(jsonFilePath1);
         var jsonResponse1 = JObject.Parse(jsonContent1);
-        var jsonFilePath2 = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "dish_example_2.json");
+        // var jsonFilePath2 = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "dish_example_2.json");
+        var jsonFilePath2 = Path.Combine(@"..\..\..", "valid_api_responses/dish_example_2.json");
         var jsonContent2 = File.ReadAllText(jsonFilePath2);
         var jsonResponse2 = JObject.Parse(jsonContent2);
     

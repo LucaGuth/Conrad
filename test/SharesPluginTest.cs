@@ -40,9 +40,8 @@ public class SharesPluginTest
 
 
         // Load valid JSON response from file
-        var jsonFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "shares_example.json"); // shares_example.json is required to be in the same directory as the test assembly
+        var jsonFilePath = Path.Combine(@"..\..\.." , "valid_api_responses/shares_example.json");
         var jsonContent = File.ReadAllText(jsonFilePath);
-        var jsonResponse = JObject.Parse(jsonContent);
 
         var mockHttp = new MockHttpMessageHandler();
         mockHttp.When("https://www.alphavantage.co/*")

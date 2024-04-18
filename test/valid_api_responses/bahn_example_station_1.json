@@ -1,0 +1,90 @@
+{
+    "offset": 0,
+    "limit": 10000,
+    "total": 1,
+    "result": [
+        {
+            "number": 6111,
+            "ifopt": "de:08119:4952",
+            "name": "Sulzbach (Murr)",
+            "mailingAddress": {
+                "city": "Sulzbach (Murr)",
+                "zipcode": "71560",
+                "street": "Bahnhof 1"
+            },
+            "category": 5,
+            "priceCategory": 5,
+            "hasParking": true,
+            "hasBicycleParking": true,
+            "hasLocalPublicTransport": true,
+            "hasPublicFacilities": true,
+            "hasLockerSystem": false,
+            "hasTaxiRank": false,
+            "hasTravelNecessities": false,
+            "hasSteplessAccess": "yes",
+            "hasMobilityService": "no",
+            "hasWiFi": false,
+            "hasTravelCenter": false,
+            "hasRailwayMission": false,
+            "hasDBLounge": false,
+            "hasLostAndFound": false,
+            "hasCarRental": false,
+            "federalState": "Baden-Württemberg",
+            "regionalbereich": {
+                "number": 6,
+                "name": "RB Südwest",
+                "shortName": "RB Südwest"
+            },
+            "aufgabentraeger": {
+                "shortName": "NVBW",
+                "name": "Nahverkehrsgesellschaft Baden-Württemberg mbH"
+            },
+            "timeTableOffice": {
+                "email": "DBS.Fahrplan.BadenWuerttemberg@deutschebahn.com",
+                "name": "Ulm"
+            },
+            "szentrale": {
+                "number": 33,
+                "publicPhoneNumber": "0711/20921055",
+                "name": "Stuttgart Hbf"
+            },
+            "stationManagement": {
+                "number": 214,
+                "name": "Ulm"
+            },
+            "evaNumbers": [
+                {
+                    "number": 8005795,
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.500409,
+                            48.999461
+                        ]
+                    },
+                    "isMain": true
+                }
+            ],
+            "ril100Identifiers": [
+                {
+                    "rilIdentifier": "TSBM",
+                    "isMain": true,
+                    "hasSteamPermission": true,
+                    "steamPermission": "unrestricted",
+                    "geographicCoordinates": {
+                        "type": "Point",
+                        "coordinates": [
+                            9.500409,
+                            48.999461
+                        ]
+                    },
+                    "primaryLocationCode": "20147"
+                }
+            ],
+            "productLine": {
+                "productLine": "Zubringerbahnhof",
+                "segment": "Regionaler Zubringer"
+            }
+        }
+    ]
+}

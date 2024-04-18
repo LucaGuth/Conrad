@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<timetable station='Sulzbach(Murr)'>
+    <s id="-6038487735114022939-2404111526-7">
+        <tl t="p" o="8006D6" c="MEX" n="17535"/>
+        <ar pt="2404111604" pp="2" l="19" ppth="Stuttgart Hbf|Stuttgart-Bad Cannstatt|Waiblingen|Winnenden|Backnang|Oppenweiler(Württ)"/>
+        <dp pt="2404111604" pp="2" l="19" ppth="Murrhardt|Fornsbach|Fichtenberg|Gaildorf West"/>
+    </s>
+    <s id="7486625193269981695-2404111555-7">
+        <tl t="p" o="8006D6" c="MEX" n="17539"/>
+        <ar pt="2404111633" pp="2" l="90" ppth="Stuttgart Hbf|Stuttgart-Bad Cannstatt|Waiblingen|Winnenden|Backnang|Oppenweiler(Württ)"/>
+        <dp pt="2404111634" pp="2" l="90" ppth="Murrhardt|Gaildorf West|Schwäbisch Hall-Hessental"/>
+    </s>
+    <s id="-5911437884506228680-2404111438-14">
+        <tl f="N" t="p" o="GARE" c="RE" n="88618"/>
+        <ar pt="2404111624" pp="2" l="90" ppth="Nürnberg Hbf|Roßtal|Heilsbronn|Wicklesgreuth|Ansbach|Leutershausen-Wiedersbach|Dombühl|Schnelldorf|Crailsheim|Eckartshausen-Ilshofen|Schwäbisch Hall-Hessental|Gaildorf West|Murrhardt"/>
+        <dp pt="2404111625" pp="2" l="90" ppth="Oppenweiler(Württ)|Backnang|Winnenden|Waiblingen|Stuttgart-Bad Cannstatt|Stuttgart Hbf"/>
+    </s>
+    <s id="250597710433460170-2404111632-5">
+        <tl t="p" o="8006D6" c="MEX" n="17548"/>
+        <ar pt="2404111652" pp="2" l="19" ppth="Gaildorf West|Fichtenberg|Fornsbach|Murrhardt"/>
+        <dp pt="2404111653" pp="2" l="19" ppth="Oppenweiler(Württ)|Backnang|Winnenden|Waiblingen|Stuttgart-Bad Cannstatt|Stuttgart Hbf"/>
+    </s>
+</timetable>

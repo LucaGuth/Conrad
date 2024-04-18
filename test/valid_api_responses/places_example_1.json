@@ -1,0 +1,105 @@
+{
+    "results": [
+        {
+            "address_components": [
+                {
+                    "long_name": "1",
+                    "short_name": "1",
+                    "types": [
+                        "street_number"
+                    ]
+                },
+                {
+                    "long_name": "Lerchenstraße",
+                    "short_name": "Lerchenstraße",
+                    "types": [
+                        "route"
+                    ]
+                },
+                {
+                    "long_name": "Stuttgart-Mitte",
+                    "short_name": "Stuttgart-Mitte",
+                    "types": [
+                        "political",
+                        "sublocality",
+                        "sublocality_level_1"
+                    ]
+                },
+                {
+                    "long_name": "Stuttgart",
+                    "short_name": "Stuttgart",
+                    "types": [
+                        "locality",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "Stuttgart",
+                    "short_name": "Stuttgart",
+                    "types": [
+                        "administrative_area_level_3",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "Stuttgart",
+                    "short_name": "Süd",
+                    "types": [
+                        "administrative_area_level_2",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "Baden-Württemberg",
+                    "short_name": "BW",
+                    "types": [
+                        "administrative_area_level_1",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "Germany",
+                    "short_name": "DE",
+                    "types": [
+                        "country",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "70174",
+                    "short_name": "70174",
+                    "types": [
+                        "postal_code"
+                    ]
+                }
+            ],
+            "formatted_address": "Lerchenstraße 1, 70174 Stuttgart, Germany",
+            "geometry": {
+                "location": {
+                    "lat": 48.7828538,
+                    "lng": 9.166687399999999
+                },
+                "location_type": "ROOFTOP",
+                "viewport": {
+                    "northeast": {
+                        "lat": 48.78428653029149,
+                        "lng": 9.167974580291501
+                    },
+                    "southwest": {
+                        "lat": 48.7815885697085,
+                        "lng": 9.165276619708496
+                    }
+                }
+            },
+            "place_id": "ChIJ78ZR4DvbmUcREvwPxMQ1z-Q",
+            "plus_code": {
+                "compound_code": "Q5M8+4M Stuttgart, Germany",
+                "global_code": "8FWFQ5M8+4M"
+            },
+            "types": [
+                "street_address"
+            ]
+        }
+    ],
+    "status": "OK"
+}

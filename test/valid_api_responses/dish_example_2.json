@@ -1,0 +1,130 @@
+{
+    "ingredients": [
+        {
+            "name": "shredded colby jack cheese",
+            "image": "colby-jack.jpg",
+            "amount": {
+                "metric": {
+                    "value": 113.398,
+                    "unit": "g"
+                },
+                "us": {
+                    "value": 4.0,
+                    "unit": "oz"
+                }
+            }
+        },
+        {
+            "name": "shredded colby jack cheese",
+            "image": "cheddar-cheese.png",
+            "amount": {
+                "metric": {
+                    "value": 113.398,
+                    "unit": "g"
+                },
+                "us": {
+                    "value": 4.0,
+                    "unit": "oz"
+                }
+            }
+        },
+        {
+            "name": "fat free light cream cheese",
+            "image": "cream-cheese.jpg",
+            "amount": {
+                "metric": {
+                    "value": 85.049,
+                    "unit": "g"
+                },
+                "us": {
+                    "value": 3.0,
+                    "unit": "oz"
+                }
+            }
+        },
+        {
+            "name": "garlic powder",
+            "image": "garlic-powder.png",
+            "amount": {
+                "metric": {
+                    "value": 3.0,
+                    "unit": "servings"
+                },
+                "us": {
+                    "value": 3.0,
+                    "unit": "servings"
+                }
+            }
+        },
+        {
+            "name": "lettuce",
+            "image": "iceberg-lettuce.jpg",
+            "amount": {
+                "metric": {
+                    "value": 144.0,
+                    "unit": "g"
+                },
+                "us": {
+                    "value": 2.0,
+                    "unit": "cups"
+                }
+            }
+        },
+        {
+            "name": "pizza crust",
+            "image": "pizza-dough.jpg",
+            "amount": {
+                "metric": {
+                    "value": 1.0,
+                    "unit": ""
+                },
+                "us": {
+                    "value": 1.0,
+                    "unit": ""
+                }
+            }
+        },
+        {
+            "name": "light ranch dressing",
+            "image": "ranch-dressing.jpg",
+            "amount": {
+                "metric": {
+                    "value": 1.0,
+                    "unit": "Tbsp"
+                },
+                "us": {
+                    "value": 1.0,
+                    "unit": "Tbsp"
+                }
+            }
+        },
+        {
+            "name": "diced tomato",
+            "image": "tomato.png",
+            "amount": {
+                "metric": {
+                    "value": 1.0,
+                    "unit": "large"
+                },
+                "us": {
+                    "value": 1.0,
+                    "unit": "large"
+                }
+            }
+        },
+        {
+            "name": "cooked turkey bacon",
+            "image": "bacon-turkey.jpg",
+            "amount": {
+                "metric": {
+                    "value": 10.0,
+                    "unit": ""
+                },
+                "us": {
+                    "value": 10.0,
+                    "unit": ""
+                }
+            }
+        }
+    ]
+}

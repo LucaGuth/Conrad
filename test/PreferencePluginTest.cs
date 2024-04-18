@@ -38,7 +38,7 @@ public class PreferencesPluginTest
         var result = _preferencesPlugin.GetConfigiguration().ToString();
         Console.WriteLine(result);
         // Assert
-        Assert.IsTrue(result.Contains("DefaultPreferences"));
+        Assert.IsTrue(result.Contains("Preferences"));
     }
 
     [TestMethod]
@@ -55,7 +55,7 @@ public class PreferencesPluginTest
 
         var result = _preferencesPlugin.GetConfigiguration().ToString();
         // Assert
-        Assert.IsTrue(result.Contains("test:preference"));
+        Assert.IsTrue(result.Contains("test"));
     }
 
     [TestMethod]
@@ -84,6 +84,5 @@ public class PreferencesPluginTest
 [Serializable]
 internal class PreferencesPluginTestConfig
 {
-    public string DefaultPreferences { get; set; } = "test:preference";
-    public string CustomizedPreferences { get; set; } = "";
+    public Dictionary<string, string> Preferences { get; set; } = new Dictionary<string, string>() { { "test", "test" } };
 }

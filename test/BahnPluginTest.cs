@@ -39,7 +39,7 @@ public class BahnPluginTest
         var expectedString = @"Connection 1: RE 90 to Stuttgart Hauptbahnhof, departure on 24-04-11 at 16:25, via Oppenweiler Württ, Backnang, Winnenden, Waiblingen, Stuttgart-Bad Cannstatt, Stuttgart Hauptbahnhof";
 
         // Load Json and Xml responses from files
-        var resourcePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        var resourcePath = Path.Combine(@"..\..\..", "valid_api_responses");
         var station1JsonFilePath = Path.Combine(resourcePath, "bahn_example_station_1.json");
         var station1JsonContent = File.ReadAllText(station1JsonFilePath);
         var station1JsonResponse = JObject.Parse(station1JsonContent);
@@ -170,7 +170,7 @@ public class BahnPluginTest
         // Arrange
         var parameter = "DepartureStation:'Sulzbach an der Murr', DestinationStation:'Stuttgart', DepartureTime:'2024-04-11 16:00"; // valid input parameter
         // Load Json responses from files
-        var resourcePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        var resourcePath = Path.Combine(@"..\..\..", "valid_api_responses");
         var station1JsonFilePath = Path.Combine(resourcePath, "bahn_example_station_1.json");
         var station1JsonContent = File.ReadAllText(station1JsonFilePath);
         var station1JsonResponse = JObject.Parse(station1JsonContent);
