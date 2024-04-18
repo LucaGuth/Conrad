@@ -32,6 +32,7 @@
     <ProjectReference Include="..\Conrad\Plugins\TechnologyRadarPlugin\TechnologyRadarPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\UserInputPlugin\UserInputPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Plugins\WeatherPlugin\WeatherPlugin.csproj"/>
+    <ProjectReference Include="..\Conrad\Plugins\WikipediaPlugin\WikipediaPlugin.csproj"/>
     <ProjectReference Include="..\Conrad\Sequencer\Sequencer.csproj"/>
   </ItemGroup>
 </Project>

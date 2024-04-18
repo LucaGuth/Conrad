@@ -9,10 +9,28 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WeatherPlugin;
+using Serilog;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+
 
 [TestClass]
 public class WeatherPluginTest
 {
+    [TestInitialize]
+    public void TestInit()
+    {
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
+    }
+    
+    [TestCleanup]
+    public void TestDispose()
+    {
+        Log.CloseAndFlush();
+    }
+
     [TestMethod]
     public async Task ValidResponseShouldBeParsed()
     {
@@ -22,7 +40,6 @@ public class WeatherPluginTest
         // Load valid JSON response from file
         var jsonFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "weather_example.json"); // weather_example.json is required to be in the same directory as the test assembly
         var jsonContent = File.ReadAllText(jsonFilePath);
-        var jsonResponse = JObject.Parse(jsonContent);
 
         // Configure mock HTTP client to respond with the JSON loaded from the file
         var mockHttp = new MockHttpMessageHandler();
@@ -84,4 +101,63 @@ public class WeatherPluginTest
         // Assert
         Assert.IsTrue(exceptionThrown, "An exception should have been thrown for network error");
     }
+
+    [TestMethod]
+    public async Task GetConfigurationShouldReturnConfiguration()
+    {
+        // Arrange
+        var _weatherPlugin = new WeatherPlugin();
+        
+        // Act
+        var result = _weatherPlugin.GetConfigiguration().ToString();
+        Console.WriteLine(result);
+        // Assert
+        Assert.IsTrue(result.Contains("BaseUrl"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldLoadConfiguration()
+    {
+        // Arrange
+        var _weatherPlugin = new WeatherPlugin();
+        var config = new WeatherPluginTestConfig();
+        // configString to json
+        var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(config));
+
+        // Act
+        _weatherPlugin.LoadConfiguration(jsonNode);
+
+        var result = _weatherPlugin.GetConfigiguration().ToString();
+        // Assert
+        Assert.IsTrue(result.Contains("TestUrl"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldThrowException()
+    {
+        // Arrange
+        var _weatherPlugin = new WeatherPlugin();
+
+        // Act
+        var exceptionThrown = false;
+        try{
+        _weatherPlugin.LoadConfiguration(null);
+
+        Console.WriteLine(_weatherPlugin.GetConfigiguration());
+        }
+        catch (Exception e)
+        {
+            exceptionThrown = true;
+        }
+        // Assert
+        Assert.IsTrue(exceptionThrown);
+    }
+}
+
+[Serializable]
+internal class WeatherPluginTestConfig
+{
+    public string ApiKey { get; set; } = "";
+    public string BaseUrl { get; set; } = "TestUrl";
+    public string Units { get; set; } = "metric";
 }

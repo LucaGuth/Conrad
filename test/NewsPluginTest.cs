@@ -19,6 +19,20 @@ using System.Xml.Linq;
 [TestClass]
 public class NewsPluginTest
 {
+    [TestInitialize]
+    public void TestInit()
+    {
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
+    }
+    
+    [TestCleanup]
+    public void TestDispose()
+    {
+        Log.CloseAndFlush();
+    }
+
     [TestMethod]
     public async Task ValidResponseShouldBeParsed()
     {
@@ -86,4 +100,61 @@ public class NewsPluginTest
         }
         Assert.IsTrue(exceptionThrown);
     }
+
+    [TestMethod]
+    public async Task GetConfigurationShouldReturnConfiguration()
+    {
+        // Arrange
+        var _newsPlugin = new NewsPlugin();
+        
+        // Act
+        var result = _newsPlugin.GetConfigiguration().ToString();
+        Console.WriteLine(result);
+        // Assert
+        Assert.IsTrue(result.Contains("BaseUrl"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldLoadConfiguration()
+    {
+        // Arrange
+        var _newsPlugin = new NewsPlugin();
+        var config = new NewsPluginTestConfig();
+        // configString to json
+        var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(config));
+
+        // Act
+        _newsPlugin.LoadConfiguration(jsonNode);
+
+        var result = _newsPlugin.GetConfigiguration().ToString();
+        // Assert
+        Assert.IsTrue(result.Contains("TestUrl"));
+    }
+
+    [TestMethod]
+    public async Task LoadConfigurationShouldThrowException()
+    {
+        // Arrange
+        var _newsPlugin = new NewsPlugin();
+
+        // Act
+        var exceptionThrown = false;
+        try{
+        _newsPlugin.LoadConfiguration(null);
+
+        Console.WriteLine(_newsPlugin.GetConfigiguration());
+        }
+        catch (Exception e)
+        {
+            exceptionThrown = true;
+        }
+        // Assert
+        Assert.IsTrue(exceptionThrown);
+    }
+}
+
+[Serializable]
+internal class NewsPluginTestConfig
+{
+    public string BaseUrl { get; set; } = "TestUrl";
 }
