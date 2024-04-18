@@ -35,9 +35,14 @@ public class PluginLoaderTest
     public void GetPluginsShouldReturnPlugins()
     {
         // Arrange
-        var pluginLoader = new PluginLoader(@"TestPluginFolder", "PluginLoader_config.json"); // requires TestPluginFolder with example plugin dll 
+        var testPluginFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "..","..","..",@"TestPluginFolder");
+        if (!Directory.Exists(testPluginFolderPath) || Directory.GetFiles(testPluginFolderPath).Length == 0)
+        {
+            Assert.Inconclusive("TestPluginFolder does not exist. Please create the folder \"TestPluginFolder\" in the test directory and add the ExamplePluginPackage.dll"); 
+        }
+        var pluginLoader = new PluginLoader( testPluginFolderPath, "PluginLoader_config.json"); // requires TestPluginFolder with ExamplePluginPackage.dll 
         var mockPlugin = new Mock<IPlugin>();
-
+        
         // Act
         var plugins = pluginLoader.GetPlugins<IPlugin>();
 
@@ -51,7 +56,13 @@ public class PluginLoaderTest
     public void GetPluginsByNameShouldReturnPlugins()
     {
         // Arrange
-        var pluginLoader = new PluginLoader(@"TestPluginFolder", "PluginLoader_config.json");
+        var testPluginFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "..","..","..",@"TestPluginFolder");
+        // if directory is empty or does not exist, return inconclusive
+        if (!Directory.Exists(testPluginFolderPath) || Directory.GetFiles(testPluginFolderPath).Length == 0)
+        {
+            Assert.Inconclusive("TestPluginFolder does not exist. Please create the folder \"TestPluginFolder\" in the test directory and add the ExamplePluginPackage.dll"); 
+        }
+        var pluginLoader = new PluginLoader(testPluginFolderPath, "PluginLoader_config.json");
         var mockPlugin = new Mock<IPlugin>();
         var name = "ExampleNotifier";
 
