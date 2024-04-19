@@ -17,9 +17,7 @@ public class CalendarPlugin : IExecutorPlugin, IConfigurablePlugin
 
     public string Name => "CalendarProvider";
     public string Description => "This plugin returns the events of a date.";
-    public string ParameterFormat => "Date:'{YYYY-MM-DD}'\n" +
-                                     "\tA valid example for the 2nd of April 2024 would be:\n" +
-                                     "\tDate:'2024-04-02'";
+    public string ParameterFormat => "Date:'{YYYY-MM-dd}'\n";
 
     public event ConfigurationChangeEventHandler? OnConfigurationChange;
 
